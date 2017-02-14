@@ -16,24 +16,32 @@ MainWindow::MainWindow(QWidget *parent) :
     languageWidget = new LanguageWidget(this);
     mainToolBar->addWidget(languageWidget);
     //Add window buttons
+#ifndef Q_OS_MAC
+    //Minimize and maximize (not on mac, needs testing on linux)
     maximizeButton = new QPushButton(QIcon(":/icons/maximize"),"");
     QPushButton *minimizeButton = new QPushButton(QIcon(":/icons/minimize"),"");
-    QPushButton *quitButton = new QPushButton(QIcon(":/icons/close"),"");
     connect(maximizeButton,SIGNAL(clicked()),this,SLOT(maximizeButton_clicked()));
     connect(minimizeButton,SIGNAL(clicked()),this,SLOT(showMinimized()));
-    connect(quitButton,SIGNAL(clicked()),qApp,SLOT(quit()));
     mainToolBar->addWidget(minimizeButton);
     mainToolBar->addWidget(maximizeButton);
+#endif
+    QPushButton *quitButton = new QPushButton(QIcon(":/icons/close"),"");
+    connect(quitButton,SIGNAL(clicked()),qApp,SLOT(quit()));
     mainToolBar->addWidget(quitButton);
     //drag window
     toolBarClicked = false;
     mainToolBar->installEventFilter(this);
-
 }
 
 void MainWindow::updateCSS()
 {
-    QFile cssFile("../../Dutranslator/needed/style.css");
+#ifdef Q_OS_MAC
+    QDir bundle = QCoreApplication::applicationDirPath();
+    bundle.cdUp();
+    QFile cssFile(bundle.path() + "/Resources/" + "style.css");
+#else
+    QFile cssFile("style.css");
+#endif
     cssFile.open(QFile::ReadOnly);
     QString css = QString(cssFile.readAll());
     cssFile.close();
@@ -125,21 +133,6 @@ void MainWindow::on_actionOpen_triggered()
     this->setEnabled(true);
 }
 
-void MainWindow::maximizeButton_clicked()
-{
-    if (this->isMaximized())
-    {
-        maximizeButton->setIcon(QIcon(":/icons/maximize"));
-        this->showNormal();
-    }
-    else
-    {
-        maximizeButton->setIcon(QIcon(":/icons/minimize2"));
-        this->showMaximized();
-    }
-
-}
-
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
   if (event->type() == QEvent::MouseButtonPress)
@@ -169,12 +162,14 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
       toolBarClicked = false;
       return true;
   }
+#ifndef Q_OS_MAC
   else if (event->type() == QEvent::MouseButtonDblClick)
   {
       maximizeButton_clicked();
       event->accept();
       return true;
   }
+#endif
   else
   {
       // standard event processing
@@ -194,6 +189,7 @@ bool MainWindow::checkLanguage()
         QMessageBox::warning(this,"Wrong language name","You must specify a language name");
         return false;
     }
+    return true;
 }
 
 void MainWindow::on_actionSave_triggered()
@@ -245,3 +241,20 @@ void MainWindow::on_actionAbout_triggered()
 {
     AboutDialog().exec();
 }
+
+#ifndef Q_OS_MAC
+void MainWindow::maximizeButton_clicked()
+{
+    if (this->isMaximized())
+    {
+        maximizeButton->setIcon(QIcon(":/icons/maximize"));
+        this->showNormal();
+    }
+    else
+    {
+        maximizeButton->setIcon(QIcon(":/icons/minimize2"));
+        this->showMaximized();
+    }
+
+}
+#endif

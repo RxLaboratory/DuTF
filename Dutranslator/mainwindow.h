@@ -25,7 +25,9 @@ public:
 private slots:
     void on_actionOpen_triggered();
     // =======WINDOW BUTTONS
+#ifndef Q_OS_MAC
     void maximizeButton_clicked();
+#endif
     void on_actionSave_triggered();
     void on_actionSave_as_triggered();
 
@@ -43,7 +45,9 @@ private:
     QPoint dragPosition;
     bool toolBarClicked;
     //buttons
+#ifndef Q_OS_MAC
     QPushButton *maximizeButton;
+#endif
     //language
     LanguageWidget *languageWidget;
 
