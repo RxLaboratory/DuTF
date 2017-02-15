@@ -13,6 +13,7 @@
 #include <QSpinBox>
 #include <QMessageBox>
 #include <QTextStream>
+#include <QTextCodec>
 #include "aboutdialog.h"
 #include "languagewidget.h"
 

@@ -198,6 +198,7 @@ void MainWindow::on_actionSave_triggered()
 
     workingFile.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream out(&workingFile);
+    out.setCodec(QTextCodec::codecForName("UTF-8"));
 
     //add new array
     out << "Dutranslator.languages.push(['" + languageWidget->getCode() + "','" +  languageWidget->getLanguage() + "']);" << endl;
