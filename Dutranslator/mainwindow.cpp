@@ -82,10 +82,23 @@ void MainWindow::on_actionOpen_triggered()
     //parse file
     workingFile.open(QIODevice::ReadOnly | QIODevice::Text);
     QTextStream in(&workingFile);
+    //set to UTF8 by default
+    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+    in.setCodec(codec);
+    //line
     QString line;
     while (!in.atEnd())
     {
+        qint64 pos = in.pos();
         line = in.readLine().trimmed();
+        //if not UTF-8, try locale
+        if (line.indexOf("�") > 0)
+        {
+            QTextCodec *codec = QTextCodec::codecForLocale();
+            in.setCodec(codec);
+            in.seek(pos);
+            line = in.readLine().trimmed();
+        }
         if (line.startsWith("DutranslatorArray.push("))
         {
             //get the first string
