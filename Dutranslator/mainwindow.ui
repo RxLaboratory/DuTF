@@ -60,7 +60,7 @@
        <bool>true</bool>
       </property>
       <property name="columnCount">
-       <number>3</number>
+       <number>4</number>
       </property>
       <attribute name="verticalHeaderDefaultSectionSize">
        <number>50</number>
@@ -78,6 +78,11 @@
       <column>
        <property name="text">
         <string>Translated</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Comment</string>
        </property>
       </column>
      </widget>

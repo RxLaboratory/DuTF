@@ -1,4 +1,8 @@
 #include "mainwindow.h"
+#ifdef QT_DEBUG
+#include <QtDebug>
+#include <QMessageBox>
+#endif
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -87,6 +91,14 @@ void MainWindow::on_actionOpen_triggered()
     in.setCodec(codec);
     //line
     QString line;
+    QString rxString = "\\\"([^\\\"\\\\]*(?:\\\\.[^\\\"\\\\]*)*?)\\\" *, *(\\d*) *, *\\\"([^\\\"\\\\]*(?:\\\\.[^\\\"\\\\]*)*?)\\\" *]\\); *(?:\\/\\/(.*))*";
+/*#ifdef QT_DEBUG
+    displayTable->setRowCount(displayTable->rowCount()+1);
+    QTextEdit *rxItem = new QTextEdit();
+    rxItem->setPlainText(rxString);
+    rxItem->setReadOnly(true);
+    displayTable->setCellWidget(displayTable->rowCount()-1,0,rxItem);
+#endif*/
     while (!in.atEnd())
     {
         qint64 pos = in.pos();
@@ -99,10 +111,9 @@ void MainWindow::on_actionOpen_triggered()
             in.seek(pos);
             line = in.readLine().trimmed();
         }
+        //get the string and comment
         if (line.startsWith("DutranslatorArray.push("))
         {
-            //get the first string
-            QString rxString = "\\\"([^\\\"\\\\]*(?:\\\\.[^\\\"\\\\]*)*?)\\\",(\\d*),\\\"([^\\\"\\\\]*(?:\\\\.[^\\\"\\\\]*)*?)\\\"";
             QRegularExpression rx(rxString);
             QRegularExpressionMatch match = rx.match(line);
             if (match.hasMatch())
@@ -110,6 +121,7 @@ void MainWindow::on_actionOpen_triggered()
                 QString original = match.captured(1);
                 int context = match.captured(2).toInt();
                 QString translated = match.captured(3);
+                QString comment = match.captured(4);
                 QTextEdit *originalItem = new QTextEdit();
                 originalItem->setPlainText(unEscape(original));
                 originalItem->setReadOnly(true);
@@ -117,10 +129,13 @@ void MainWindow::on_actionOpen_triggered()
                 contextItem->setValue(context);
                 QTextEdit *translatedItem = new QTextEdit();
                 translatedItem->setPlainText(unEscape(translated));
+                QLineEdit *commentItem = new QLineEdit();
+                commentItem->setText(unEscape(comment));
                 displayTable->setRowCount(displayTable->rowCount()+1);
                 displayTable->setCellWidget(displayTable->rowCount()-1,0,originalItem);
                 displayTable->setCellWidget(displayTable->rowCount()-1,1,contextItem);
                 displayTable->setCellWidget(displayTable->rowCount()-1,2,translatedItem);
+                displayTable->setCellWidget(displayTable->rowCount()-1,3,commentItem);
             }
         }
         else if (line.startsWith("Dutranslator.languages.push"))
@@ -223,12 +238,19 @@ void MainWindow::on_actionSave_triggered()
         QTextEdit *originalEdit = (QTextEdit*)displayTable->cellWidget(row,0);
         QSpinBox *contextBox = (QSpinBox*)displayTable->cellWidget(row,1);
         QTextEdit *translatedEdit = (QTextEdit*)displayTable->cellWidget(row,2);
+        QLineEdit *commentEdit = (QLineEdit*)displayTable->cellWidget(row,3);
         QString original = originalEdit->toPlainText();
         original = escape(original);
         QString translated = translatedEdit->toPlainText();
         translated = escape(translated);
         QString context = QString::number(contextBox->value());
-        out << "DutranslatorArray.push([\"" << original << "\"," << context << ",\"" << translated << "\"]);" << endl;
+        QString comment = commentEdit->text();
+        out << "DutranslatorArray.push([\"" << original << "\"," << context << ",\"" << translated << "\"]);";
+        if (comment != "")
+        {
+            out << " //" << comment;
+        }
+        out << endl;
     }
 
     //add array and free memory
