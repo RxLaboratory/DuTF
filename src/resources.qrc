@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="icons/minimize">../resources/icons/angle down 2.png</file>
+        <file alias="icons/minimize2">../resources/icons/angle down double 2.png</file>
+        <file alias="icons/maximize">../resources/icons/angle up double 2.png</file>
+        <file alias="icons/close">../resources/icons/close 2.png</file>
+        <file alias="styles/default">../resources/styles/style.css</file>
+    </qresource>
+</RCC>
