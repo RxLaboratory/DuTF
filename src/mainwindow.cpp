@@ -207,14 +207,17 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 
 bool MainWindow::checkLanguage()
 {
+
     if (languageWidget->getCode() == "")
     {
-        QMessageBox::warning(this,"Wrong language code","You must specify a language code");
+        QMessageBox mb(QMessageBox::Information,"Wrong language code","You must specify a language code",QMessageBox::Ok,this,Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
+        mb.exec();
         return false;
     }
     if (languageWidget->getLanguage() == "")
     {
-        QMessageBox::warning(this,"Wrong language name","You must specify a language name");
+        QMessageBox mb(QMessageBox::Information,"Wrong language name","You must specify a language name",QMessageBox::Ok,this,Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
+        mb.exec();
         return false;
     }
     return true;
