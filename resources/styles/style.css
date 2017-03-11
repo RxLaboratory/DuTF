@@ -214,6 +214,29 @@ QToolBar QPushButton {
 	color: #6d6d6d;
 }
 
+QToolBar QCheckBox {
+	color: #9d9d9d;
+}
+
+QToolBar QCheckBox:checked {
+	color: #e3e3e3;
+}
+
+QToolBar QCheckBox::indicator:hover {
+	background-color: #e3e3e3;
+}
+
+QCheckBox::indicator:hover:pressed {
+	background-color: #434343;
+}
+
+QCheckBox::indicator:checked {
+	background-color: #e3e3e3;
+}
+
+QCheckBox::indicator:checked:hover {
+	background-color: #434343;
+}
 
 QToolButton:!enabled {
 	color: #434343;
@@ -226,6 +249,10 @@ QToolButton:checked {
 QToolBar QPushButton:checked {
 	background-color: #9d9d9d;
 	color: #434343;
+}
+
+SearchWidget QPushButton {
+	background-color: #6d6d6d;
 }
 
 QToolButton:pressed:hover,  QToolBar QPushButton:pressed:hover {

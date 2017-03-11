@@ -20,6 +20,7 @@
 #include "aboutdialog.h"
 #include "languagewidget.h"
 #include "jsxparser.h"
+#include "searchwidget.h"
 
 class MainWindow : public QMainWindow, private Ui::MainWindow
 {
@@ -37,6 +38,9 @@ private slots:
     void on_actionSave_triggered();
     void on_actionSave_as_triggered();
     void on_actionAbout_triggered();
+    // =======OTHER USER INTERACTIONS
+    void search(QString s);
+    void clearSearch();
     // =======OTHER
     void newTranslation(QStringList translation);
     void newLanguage(QStringList language);
@@ -64,6 +68,8 @@ private:
     //status
     QLabel *statusLabel;
     QProgressBar *progressBar;
+    //search
+    SearchWidget *searchWidget;
     //parser
     JsxParser *jsxParser;
     QThread parserThread;

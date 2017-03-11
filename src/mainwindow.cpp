@@ -15,6 +15,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     // UI
+    //search widget
+    searchWidget = new SearchWidget(this);
+    connect(searchWidget,SIGNAL(search(QString)),this,SLOT(search(QString)));
+    connect(searchWidget,SIGNAL(clear()),this,SLOT(clearSearch()));
+    mainToolBar->addWidget(searchWidget);
     //language widget
     languageWidget = new LanguageWidget(this);
     mainToolBar->addWidget(languageWidget);
@@ -50,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(jsxParser,SIGNAL(languageFound(QStringList)),this,SLOT(newLanguage(QStringList)));
     connect(jsxParser,SIGNAL(newTranslation(QStringList)),this,SLOT(newTranslation(QStringList)));
     connect(jsxParser,SIGNAL(parsingFinished()),this,SLOT(jsxParsed()));
+    connect(jsxParser,SIGNAL(progress(int)),progressBar,SLOT(setValue(int)));
 }
 
 void MainWindow::updateCSS()
@@ -108,6 +114,7 @@ void MainWindow::openJsxinc(QString fileName)
     //parse
     this->setEnabled(false);
     mainStatusBar->showMessage("Loading...");
+    progressBar->setMaximum(100);
     progressBar->show();
     this->repaint();
     jsxParser->parseJsxinc(&workingFile);
@@ -168,6 +175,62 @@ bool MainWindow::checkLanguage()
         return false;
     }
     return true;
+}
+
+void MainWindow::search(QString s)
+{
+    mainStatusBar->showMessage("Searching...");
+    progressBar->setMaximum(displayTable->rowCount()-1);
+    progressBar->show();
+
+    bool original = searchWidget->searchOriginal();
+    bool translated = searchWidget->searchTranslated();
+    bool comment = searchWidget->searchComment();
+    Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive;
+    if (searchWidget->caseSensitive()) caseSensitive = Qt::CaseSensitive;
+
+    for (int row = 0 ; row < displayTable->rowCount() ; row++)
+    {
+        progressBar->setValue(row);
+        bool found = false;
+        //TODO highlight found strings
+        if (original || (!original && !translated && !comment))
+        {
+            QTextEdit *originalEdit = (QTextEdit*)displayTable->cellWidget(row,0);
+            if (originalEdit->toPlainText().indexOf(s,0,caseSensitive) >= 0) found = true;
+        }
+        if (translated || (!original && !translated && !comment))
+        {
+            QTextEdit *translatedEdit = (QTextEdit*)displayTable->cellWidget(row,2);
+            if (translatedEdit->toPlainText().indexOf(s,0,caseSensitive) >= 0) found = true;
+        }
+        if (comment || (!original && !translated && !comment))
+        {
+            QLineEdit *commentEdit = (QLineEdit*)displayTable->cellWidget(row,3);
+            if (commentEdit->text().indexOf(s,0,caseSensitive) >= 0) found = true;
+        }
+        displayTable->setRowHidden(row,!found);
+    }
+
+    mainStatusBar->clearMessage();
+    progressBar->hide();
+}
+
+void MainWindow::clearSearch()
+{
+    mainStatusBar->showMessage("Clear!");
+    progressBar->setMaximum(displayTable->rowCount()-1);
+    progressBar->show();
+
+    for (int row = 0 ; row < displayTable->rowCount() ; row++)
+    {
+        progressBar->setValue(row);
+
+        displayTable->setRowHidden(row,false);
+    }
+
+    mainStatusBar->clearMessage();
+    progressBar->hide();
 }
 
 void MainWindow::on_actionSave_triggered()
@@ -280,6 +343,7 @@ void MainWindow::dropEvent(QDropEvent *event)
             displayTable->clearContents();
             displayTable->setRowCount(0);
             mainStatusBar->showMessage("Loading");
+            progressBar->setMaximum(100);
             progressBar->show();
             //parse
             jsxParser->parseJsxinc(&text);

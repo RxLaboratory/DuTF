@@ -10,5 +10,7 @@
         <file alias="icons/save">../resources/icons/save.png</file>
         <file alias="icons/saveAs">../resources/icons/save-as.png</file>
         <file alias="icons/app">../resources/icons/dutr_app.ico</file>
+        <file alias="icons/search">../resources/icons/icones-86.png</file>
+        <file alias="icons/clear">../resources/icons/close3.png</file>
     </qresource>
 </RCC>

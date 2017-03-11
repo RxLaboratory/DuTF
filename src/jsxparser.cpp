@@ -32,6 +32,7 @@ void JsxParser::parseJsxinc(QTextStream *jsxinc)
     QString line;
     QString rxString = "\\\"([^\\\"\\\\]*(?:\\\\.[^\\\"\\\\]*)*?)\\\" *, *(\\d*) *, *\\\"([^\\\"\\\\]*(?:\\\\.[^\\\"\\\\]*)*?)\\\" *]\\); *(?:\\/\\/(.*))*";
 
+
     while (!jsxinc->atEnd())
     {
         qint64 pos = jsxinc->pos();

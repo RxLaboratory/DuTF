@@ -14,9 +14,10 @@ public:
     explicit JsxParser(QObject *parent = 0);
 
 signals:
-    void newTranslation(QStringList tr);
-    void languageFound(QStringList lang);
+    void newTranslation(QStringList);
+    void languageFound(QStringList);
     void parsingFinished();
+    void progress(int);
 
 public slots:
     void parseJsxinc(QFile *file);
