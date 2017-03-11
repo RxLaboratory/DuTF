@@ -14,6 +14,7 @@
 #include <QMessageBox>
 #include <QTextStream>
 #include <QTextCodec>
+#include <QMimeData>
 #include "aboutdialog.h"
 #include "languagewidget.h"
 
@@ -39,6 +40,8 @@ private:
     QString unEscape(QString s);
     QString escape(QString s);
     bool checkLanguage();
+    void openJsxinc(QString fileName);
+    void parseJsxinc(QTextStream *jsxinc);
     //OBJECTS
     QFile workingFile;
     //drag main window
@@ -54,6 +57,11 @@ private:
 protected:
     //events
     bool eventFilter(QObject *obj, QEvent *event);
+    //drag and drop events
+    void dropEvent(QDropEvent *event);
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dragMoveEvent(QDragMoveEvent *event);
+    void dragLeaveEvent(QDragLeaveEvent *event);
 };
 
 #endif // MAINWINDOW_H

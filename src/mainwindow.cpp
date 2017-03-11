@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #ifdef QT_DEBUG
 #include <QtDebug>
-#include <QMessageBox>
 #endif
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -68,27 +67,49 @@ QString MainWindow::escape(QString s)
 
 void MainWindow::on_actionOpen_triggered()
 {
-    //get file
-    QString fileName = QFileDialog::getOpenFileName(this,"Open a translation file","","JavaScript (*.jsx *.jsxinc *.js);;Text files (*.txt);;All files (*.*)");
-    if (fileName.isNull()) return;
-
-    //clear table
-    displayTable->clearContents();
-    displayTable->setRowCount(0);
-
     this->setEnabled(false);
     this->repaint();
+
+    //get file
+    QString fileName = QFileDialog::getOpenFileName(this,"Open a translation file","","JavaScript (*.jsx *.jsxinc *.js);;Text files (*.txt);;All files (*.*)");
+
+    openJsxinc(fileName);
+
+    this->setEnabled(true);
+}
+
+void MainWindow::openJsxinc(QString fileName)
+{
+    if (fileName.isNull()) return;
 
     workingFile.setFileName(fileName);
     QStringList filePath = fileName.split("/");
     languageWidget->setFile(filePath[filePath.count()-1]);
 
-    //parse file
+    //open file
     workingFile.open(QIODevice::ReadOnly | QIODevice::Text);
     QTextStream in(&workingFile);
+
+    //parse file
+    parseJsxinc(&in);
+
+    //close file
+    workingFile.close();
+
+    //resize sections
+    displayTable->resizeColumnsToContents();
+}
+
+void MainWindow::parseJsxinc(QTextStream *jsxinc)
+{
+    //clear table
+    displayTable->clearContents();
+    displayTable->setRowCount(0);
+
+
     //set to UTF8 by default
     QTextCodec *codec = QTextCodec::codecForName("UTF-8");
-    in.setCodec(codec);
+    jsxinc->setCodec(codec);
     //line
     QString line;
     QString rxString = "\\\"([^\\\"\\\\]*(?:\\\\.[^\\\"\\\\]*)*?)\\\" *, *(\\d*) *, *\\\"([^\\\"\\\\]*(?:\\\\.[^\\\"\\\\]*)*?)\\\" *]\\); *(?:\\/\\/(.*))*";
@@ -99,17 +120,17 @@ void MainWindow::on_actionOpen_triggered()
     rxItem->setReadOnly(true);
     displayTable->setCellWidget(displayTable->rowCount()-1,0,rxItem);
 #endif*/
-    while (!in.atEnd())
+    while (!jsxinc->atEnd())
     {
-        qint64 pos = in.pos();
-        line = in.readLine().trimmed();
+        qint64 pos = jsxinc->pos();
+        line = jsxinc->readLine().trimmed();
         //if not UTF-8, try locale
         if (line.indexOf("�") > 0)
         {
             QTextCodec *codec = QTextCodec::codecForLocale();
-            in.setCodec(codec);
-            in.seek(pos);
-            line = in.readLine().trimmed();
+            jsxinc->setCodec(codec);
+            jsxinc->seek(pos);
+            line = jsxinc->readLine().trimmed();
         }
         //get the string and comment
         if (line.startsWith("DutranslatorArray.push("))
@@ -153,56 +174,6 @@ void MainWindow::on_actionOpen_triggered()
             }
         }
     }
-    workingFile.close();
-
-    //resize sections
-    displayTable->resizeColumnsToContents();
-
-    this->setEnabled(true);
-}
-
-bool MainWindow::eventFilter(QObject *obj, QEvent *event)
-{
-  if (event->type() == QEvent::MouseButtonPress)
-  {
-      QMouseEvent *mouseEvent = (QMouseEvent*)event;
-      if (mouseEvent->button() == Qt::LeftButton)
-      {
-        toolBarClicked = true;
-        dragPosition = mouseEvent->globalPos() - this->frameGeometry().topLeft();
-        event->accept();
-      }
-      return true;
-  }
-  else if (event->type() == QEvent::MouseMove)
-  {
-    QMouseEvent *mouseEvent = (QMouseEvent*)event;
-    if (mouseEvent->buttons() & Qt::LeftButton && toolBarClicked)
-    {
-        if (this->isMaximized()) this->showNormal();
-        this->move(mouseEvent->globalPos() - dragPosition);
-        event->accept();
-    }
-    return true;
-  }
-  else if (event->type() == QEvent::MouseButtonRelease)
-  {
-      toolBarClicked = false;
-      return true;
-  }
-#ifndef Q_OS_MAC
-  else if (event->type() == QEvent::MouseButtonDblClick)
-  {
-      maximizeButton_clicked();
-      event->accept();
-      return true;
-  }
-#endif
-  else
-  {
-      // standard event processing
-      return QObject::eventFilter(obj, event);
-  }
 }
 
 bool MainWindow::checkLanguage()
@@ -297,3 +268,104 @@ void MainWindow::maximizeButton_clicked()
 
 }
 #endif
+
+//DRAG AND DROP
+
+void MainWindow::dropEvent(QDropEvent *event)
+{
+    const QMimeData *mimeData = event->mimeData();
+
+    if (mimeData->hasUrls())
+    {
+        //open the first file found
+        QUrl url = mimeData->urls()[0];
+        QString fileName = url.toLocalFile();
+        //only if it exists
+        if (QFile(fileName).exists())
+        {
+            openJsxinc(fileName);
+        }
+    }
+    else if (mimeData->hasText())
+    {
+        //get text
+        QString text = mimeData->text();
+        //if it is a file path, open the file
+        if (QFile(text).exists())
+        {
+            openJsxinc(text);
+        }
+        //else try to parse the text
+        else
+        {
+            parseJsxinc(new QTextStream(&text,QIODevice::ReadOnly));
+        }
+    }
+
+    event->acceptProposedAction();
+    this->setEnabled(true);
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent *event)
+{
+    this->setEnabled(false);
+    this->repaint();
+    event->acceptProposedAction();
+}
+
+void MainWindow::dragMoveEvent(QDragMoveEvent *event)
+{
+     event->acceptProposedAction();
+}
+
+void MainWindow::dragLeaveEvent(QDragLeaveEvent *event)
+{
+    this->setEnabled(true);
+    event->accept();
+}
+
+//EVENT FILTER
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+  if (event->type() == QEvent::MouseButtonPress)
+  {
+      QMouseEvent *mouseEvent = (QMouseEvent*)event;
+      if (mouseEvent->button() == Qt::LeftButton)
+      {
+        toolBarClicked = true;
+        dragPosition = mouseEvent->globalPos() - this->frameGeometry().topLeft();
+        event->accept();
+      }
+      return true;
+  }
+  else if (event->type() == QEvent::MouseMove)
+  {
+    QMouseEvent *mouseEvent = (QMouseEvent*)event;
+    if (mouseEvent->buttons() & Qt::LeftButton && toolBarClicked)
+    {
+        if (this->isMaximized()) this->showNormal();
+        this->move(mouseEvent->globalPos() - dragPosition);
+        event->accept();
+    }
+    return true;
+  }
+  else if (event->type() == QEvent::MouseButtonRelease)
+  {
+      toolBarClicked = false;
+      return true;
+  }
+#ifndef Q_OS_MAC
+  else if (event->type() == QEvent::MouseButtonDblClick)
+  {
+      maximizeButton_clicked();
+      event->accept();
+      return true;
+  }
+#endif
+  else
+  {
+      // standard event processing
+      return QObject::eventFilter(obj, event);
+  }
+}
