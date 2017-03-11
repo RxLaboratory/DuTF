@@ -9,5 +9,6 @@
         <file alias="icons/question">../resources/icons/question.png</file>
         <file alias="icons/save">../resources/icons/save.png</file>
         <file alias="icons/saveAs">../resources/icons/save-as.png</file>
+        <file alias="icons/app">../resources/icons/dutr_app.ico</file>
     </qresource>
 </RCC>

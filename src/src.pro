@@ -18,3 +18,5 @@ FORMS    += mainwindow.ui \
     aboutdialog.ui
 
 RESOURCES += resources.qrc
+
+RC_ICONS = ../resources/icons/dutr_app.ico
