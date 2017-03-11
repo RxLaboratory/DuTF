@@ -110,27 +110,66 @@
    </property>
   </widget>
   <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/open</normaloff>:/icons/open</iconset>
+   </property>
    <property name="text">
     <string>Open</string>
    </property>
+   <property name="toolTip">
+    <string>Open an existing translation file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
   </action>
   <action name="actionSave">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/save</normaloff>:/icons/save</iconset>
+   </property>
    <property name="text">
     <string>Save</string>
    </property>
+   <property name="toolTip">
+    <string>Save the current translations</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
   </action>
   <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/question</normaloff>:/icons/question</iconset>
+   </property>
    <property name="text">
-    <string>About</string>
+    <string>Help</string>
+   </property>
+   <property name="toolTip">
+    <string>Need help? Click here!</string>
    </property>
   </action>
   <action name="actionSave_as">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/saveAs</normaloff>:/icons/saveAs</iconset>
+   </property>
    <property name="text">
     <string>Save as...</string>
+   </property>
+   <property name="toolTip">
+    <string>Save current translations as...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
    </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>
