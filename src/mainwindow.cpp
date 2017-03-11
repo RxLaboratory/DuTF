@@ -37,6 +37,12 @@ MainWindow::MainWindow(QWidget *parent) :
     //status
     statusLabel = new QLabel("Ready");
     mainStatusBar->addWidget(statusLabel,10);
+    progressBar = new QProgressBar();
+    progressBar->setMinimum(0);
+    progressBar->setMaximum(0);
+    progressBar->setMaximumWidth(200);
+    mainStatusBar->addPermanentWidget(progressBar);
+    progressBar->hide();
 
     //Parser
     jsxParser = new JsxParser();
@@ -102,6 +108,7 @@ void MainWindow::openJsxinc(QString fileName)
     //parse
     this->setEnabled(false);
     mainStatusBar->showMessage("Loading...");
+    progressBar->show();
     this->repaint();
     jsxParser->parseJsxinc(&workingFile);
     statusLabel->setText(displayFileName);
@@ -141,6 +148,7 @@ void MainWindow::newLanguage(QStringList language)
 void MainWindow::jsxParsed()
 {
     mainStatusBar->clearMessage();
+    progressBar->hide();
     this->setEnabled(true);
 }
 
@@ -272,6 +280,7 @@ void MainWindow::dropEvent(QDropEvent *event)
             displayTable->clearContents();
             displayTable->setRowCount(0);
             mainStatusBar->showMessage("Loading");
+            progressBar->show();
             //parse
             jsxParser->parseJsxinc(&text);
         }
@@ -283,6 +292,8 @@ void MainWindow::dropEvent(QDropEvent *event)
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 {
+    mainStatusBar->showMessage("Drop any file or text here to load it.");
+    progressBar->show();
     event->acceptProposedAction();
     this->setEnabled(false);
 }
@@ -294,6 +305,8 @@ void MainWindow::dragMoveEvent(QDragMoveEvent *event)
 
 void MainWindow::dragLeaveEvent(QDragLeaveEvent *event)
 {
+    mainStatusBar->clearMessage();
+    progressBar->hide();
     this->setEnabled(true);
     event->accept();
 }

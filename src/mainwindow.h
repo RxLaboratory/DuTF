@@ -16,6 +16,7 @@
 #include <QTextCodec>
 #include <QMimeData>
 #include <QThread>
+#include <QProgressBar>
 #include "aboutdialog.h"
 #include "languagewidget.h"
 #include "jsxparser.h"
@@ -62,6 +63,7 @@ private:
     LanguageWidget *languageWidget;
     //status
     QLabel *statusLabel;
+    QProgressBar *progressBar;
     //parser
     JsxParser *jsxParser;
     QThread parserThread;
