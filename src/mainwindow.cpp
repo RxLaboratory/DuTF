@@ -34,6 +34,16 @@ MainWindow::MainWindow(QWidget *parent) :
     //drag window
     toolBarClicked = false;
     mainToolBar->installEventFilter(this);
+    //status
+    statusLabel = new QLabel("Ready");
+    mainStatusBar->addWidget(statusLabel,10);
+
+    //Parser
+    jsxParser = new JsxParser();
+    jsxParser->moveToThread(&parserThread);
+    connect(jsxParser,SIGNAL(languageFound(QStringList)),this,SLOT(newLanguage(QStringList)));
+    connect(jsxParser,SIGNAL(newTranslation(QStringList)),this,SLOT(newTranslation(QStringList)));
+    connect(jsxParser,SIGNAL(parsingFinished()),this,SLOT(jsxParsed()));
 }
 
 void MainWindow::updateCSS()
@@ -68,7 +78,6 @@ QString MainWindow::escape(QString s)
 void MainWindow::on_actionOpen_triggered()
 {
     this->setEnabled(false);
-    this->repaint();
 
     //get file
     QString fileName = QFileDialog::getOpenFileName(this,"Open a translation file","","JavaScript (*.jsx *.jsxinc *.js);;Text files (*.txt);;All files (*.*)");
@@ -84,96 +93,55 @@ void MainWindow::openJsxinc(QString fileName)
 
     workingFile.setFileName(fileName);
     QStringList filePath = fileName.split("/");
-    languageWidget->setFile(filePath[filePath.count()-1]);
+    QString displayFileName = filePath[filePath.count()-1];
+    languageWidget->setFile(displayFileName);
 
-    //open file
-    workingFile.open(QIODevice::ReadOnly | QIODevice::Text);
-    QTextStream in(&workingFile);
+    //clear table
+    displayTable->clearContents();
+    displayTable->setRowCount(0);
+    //parse
+    this->setEnabled(false);
+    mainStatusBar->showMessage("Loading...");
+    this->repaint();
+    jsxParser->parseJsxinc(&workingFile);
+    statusLabel->setText(displayFileName);
+}
 
-    //parse file
-    parseJsxinc(&in);
-
-    //close file
-    workingFile.close();
+void MainWindow::newTranslation(QStringList translation)
+{
+    QString original = translation[0];
+    int context = translation[1].toInt();
+    QString translated = translation[2];
+    QString comment = translation[3];
+    QTextEdit *originalItem = new QTextEdit();
+    originalItem->setPlainText(unEscape(original));
+    originalItem->setReadOnly(true);
+    QSpinBox *contextItem = new QSpinBox();
+    contextItem->setValue(context);
+    QTextEdit *translatedItem = new QTextEdit();
+    translatedItem->setPlainText(unEscape(translated));
+    QLineEdit *commentItem = new QLineEdit();
+    commentItem->setText(unEscape(comment));
+    displayTable->setRowCount(displayTable->rowCount()+1);
+    displayTable->setCellWidget(displayTable->rowCount()-1,0,originalItem);
+    displayTable->setCellWidget(displayTable->rowCount()-1,1,contextItem);
+    displayTable->setCellWidget(displayTable->rowCount()-1,2,translatedItem);
+    displayTable->setCellWidget(displayTable->rowCount()-1,3,commentItem);
 
     //resize sections
     displayTable->resizeColumnsToContents();
 }
 
-void MainWindow::parseJsxinc(QTextStream *jsxinc)
+void MainWindow::newLanguage(QStringList language)
 {
-    //clear table
-    displayTable->clearContents();
-    displayTable->setRowCount(0);
+    languageWidget->setLanguage(language[1]);
+    languageWidget->setCode(language[0]);
+}
 
-
-    //set to UTF8 by default
-    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
-    jsxinc->setCodec(codec);
-    //line
-    QString line;
-    QString rxString = "\\\"([^\\\"\\\\]*(?:\\\\.[^\\\"\\\\]*)*?)\\\" *, *(\\d*) *, *\\\"([^\\\"\\\\]*(?:\\\\.[^\\\"\\\\]*)*?)\\\" *]\\); *(?:\\/\\/(.*))*";
-/*#ifdef QT_DEBUG
-    displayTable->setRowCount(displayTable->rowCount()+1);
-    QTextEdit *rxItem = new QTextEdit();
-    rxItem->setPlainText(rxString);
-    rxItem->setReadOnly(true);
-    displayTable->setCellWidget(displayTable->rowCount()-1,0,rxItem);
-#endif*/
-    while (!jsxinc->atEnd())
-    {
-        qint64 pos = jsxinc->pos();
-        line = jsxinc->readLine().trimmed();
-        //if not UTF-8, try locale
-        if (line.indexOf("�") > 0)
-        {
-            QTextCodec *codec = QTextCodec::codecForLocale();
-            jsxinc->setCodec(codec);
-            jsxinc->seek(pos);
-            line = jsxinc->readLine().trimmed();
-        }
-        //get the string and comment
-        if (line.startsWith("DutranslatorArray.push("))
-        {
-            QRegularExpression rx(rxString);
-            QRegularExpressionMatch match = rx.match(line);
-            if (match.hasMatch())
-            {
-                QString original = match.captured(1);
-                int context = match.captured(2).toInt();
-                QString translated = match.captured(3);
-                QString comment = match.captured(4);
-                QTextEdit *originalItem = new QTextEdit();
-                originalItem->setPlainText(unEscape(original));
-                originalItem->setReadOnly(true);
-                QSpinBox *contextItem = new QSpinBox();
-                contextItem->setValue(context);
-                QTextEdit *translatedItem = new QTextEdit();
-                translatedItem->setPlainText(unEscape(translated));
-                QLineEdit *commentItem = new QLineEdit();
-                commentItem->setText(unEscape(comment));
-                displayTable->setRowCount(displayTable->rowCount()+1);
-                displayTable->setCellWidget(displayTable->rowCount()-1,0,originalItem);
-                displayTable->setCellWidget(displayTable->rowCount()-1,1,contextItem);
-                displayTable->setCellWidget(displayTable->rowCount()-1,2,translatedItem);
-                displayTable->setCellWidget(displayTable->rowCount()-1,3,commentItem);
-            }
-        }
-        else if (line.startsWith("Dutranslator.languages.push"))
-        {
-            //get language code
-            QString rxString = "'([^\\\\\\*\\.\\s/]+)','([^\\\\\\*\\.\\s/]+)'";
-            QRegularExpression rx(rxString);
-            QRegularExpressionMatch match = rx.match(line);
-            if (match.hasMatch())
-            {
-                QString langCode = match.captured(1);
-                QString lang = match.captured(2);
-                languageWidget->setLanguage(lang);
-                languageWidget->setCode(langCode);
-            }
-        }
-    }
+void MainWindow::jsxParsed()
+{
+    mainStatusBar->clearMessage();
+    this->setEnabled(true);
 }
 
 bool MainWindow::checkLanguage()
@@ -275,6 +243,8 @@ void MainWindow::dropEvent(QDropEvent *event)
 {
     const QMimeData *mimeData = event->mimeData();
 
+    //TODO ask if merge or open
+
     if (mimeData->hasUrls())
     {
         //open the first file found
@@ -298,7 +268,12 @@ void MainWindow::dropEvent(QDropEvent *event)
         //else try to parse the text
         else
         {
-            parseJsxinc(new QTextStream(&text,QIODevice::ReadOnly));
+            //clear table
+            displayTable->clearContents();
+            displayTable->setRowCount(0);
+            mainStatusBar->showMessage("Loading");
+            //parse
+            jsxParser->parseJsxinc(&text);
         }
     }
 
@@ -308,9 +283,8 @@ void MainWindow::dropEvent(QDropEvent *event)
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 {
-    this->setEnabled(false);
-    this->repaint();
     event->acceptProposedAction();
+    this->setEnabled(false);
 }
 
 void MainWindow::dragMoveEvent(QDragMoveEvent *event)

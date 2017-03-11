@@ -15,8 +15,10 @@
 #include <QTextStream>
 #include <QTextCodec>
 #include <QMimeData>
+#include <QThread>
 #include "aboutdialog.h"
 #include "languagewidget.h"
+#include "jsxparser.h"
 
 class MainWindow : public QMainWindow, private Ui::MainWindow
 {
@@ -25,14 +27,19 @@ class MainWindow : public QMainWindow, private Ui::MainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
 private slots:
-    void on_actionOpen_triggered();
     // =======WINDOW BUTTONS
 #ifndef Q_OS_MAC
     void maximizeButton_clicked();
 #endif
+    // =======ACTIONS
+    void on_actionOpen_triggered();
     void on_actionSave_triggered();
     void on_actionSave_as_triggered();
     void on_actionAbout_triggered();
+    // =======OTHER
+    void newTranslation(QStringList translation);
+    void newLanguage(QStringList language);
+    void jsxParsed();
 
 private:
     //METHODS
@@ -53,6 +60,11 @@ private:
 #endif
     //language
     LanguageWidget *languageWidget;
+    //status
+    QLabel *statusLabel;
+    //parser
+    JsxParser *jsxParser;
+    QThread parserThread;
 
 protected:
     //events

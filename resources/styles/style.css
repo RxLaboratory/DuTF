@@ -499,6 +499,8 @@ QStatusBar::item {
 
 QStatusBar QLabel {
 	color: #6d6d6d;
+	margin-bottom: 3px;
+	margin-left: 3px;
 }
 
 QStatusBar QProgressBar {

@@ -108,14 +108,7 @@
    <addaction name="actionSave_as"/>
    <addaction name="actionAbout"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar">
-   <property name="maximumSize">
-    <size>
-     <width>16777215</width>
-     <height>10</height>
-    </size>
-   </property>
-  </widget>
+  <widget class="QStatusBar" name="mainStatusBar"/>
   <action name="actionOpen">
    <property name="icon">
     <iconset resource="resources.qrc">

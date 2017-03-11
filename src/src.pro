@@ -7,11 +7,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
     mainwindow.cpp \
     languagewidget.cpp \
-    aboutdialog.cpp
+    aboutdialog.cpp \
+    jsxparser.cpp
 
 HEADERS  += mainwindow.h \
     languagewidget.h \
-    aboutdialog.h
+    aboutdialog.h \
+    jsxparser.h
 
 FORMS    += mainwindow.ui \
     languagewidget.ui \
