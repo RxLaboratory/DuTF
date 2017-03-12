@@ -24,4 +24,7 @@ FORMS    += mainwindow.ui \
 
 RESOURCES += resources.qrc
 
-RC_ICONS = ../resources/icons/dutr_app.ico
+#WIN ICON
+RC_ICONS = ../resources/icons/dutr_win.ico
+#MAC ICON
+ICON = ../resources/icons/dutr_mac.icns

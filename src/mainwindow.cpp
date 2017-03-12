@@ -11,9 +11,6 @@ MainWindow::MainWindow(QWidget *parent) :
     //load default stylesheet
     updateCSS();
 
-    this->setWindowFlags(Qt::FramelessWindowHint);
-
-
     // UI
     //search widget
     searchWidget = new SearchWidget(this);
@@ -25,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mainToolBar->addWidget(languageWidget);
     //Add window buttons
 #ifndef Q_OS_MAC
+    this->setWindowFlags(Qt::FramelessWindowHint);
     //Minimize and maximize (not on mac, needs testing on linux)
     maximizeButton = new QPushButton(QIcon(":/icons/maximize"),"");
     QPushButton *minimizeButton = new QPushButton(QIcon(":/icons/minimize"),"");
@@ -61,9 +59,10 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::updateCSS()
 {
 #ifdef Q_OS_MAC // Maybe not needed anymore ?
-    QDir bundle = QCoreApplication::applicationDirPath();
-    bundle.cdUp();
-    QFile cssFile(bundle.path() + "/Resources/" + "style.css");
+    //QDir bundle = QCoreApplication::applicationDirPath();
+    //bundle.cdUp();
+    //QFile cssFile(bundle.path() + "/Resources/" + "style.css");
+    QFile cssFile(":/styles/default");
 #else
     QFile cssFile(":/styles/default");
 #endif
