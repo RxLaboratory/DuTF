@@ -58,14 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::updateCSS()
 {
-#ifdef Q_OS_MAC // Maybe not needed anymore ?
-    //QDir bundle = QCoreApplication::applicationDirPath();
-    //bundle.cdUp();
-    //QFile cssFile(bundle.path() + "/Resources/" + "style.css");
     QFile cssFile(":/styles/default");
-#else
-    QFile cssFile(":/styles/default");
-#endif
     cssFile.open(QFile::ReadOnly);
     QString css = QString(cssFile.readAll());
     cssFile.close();
