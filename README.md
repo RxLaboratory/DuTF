@@ -1,9 +1,11 @@
 # Dutranslator
 Translation framework for Adobe ExtendScript/JavaScript UI
 
-/Dutranslator/ Contains the translation tool
+/src/ Contains the translation tool source
 
-/needed/ Contains needed files to run the tools
+/resources/ Contains needed files to run the tools
+
+/examples/ Contains example and test translations
 
 ## Compile the source code
 
