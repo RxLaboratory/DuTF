@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<dutranslator version="1.0" languageId="fr_FR" languageName="Français">
+    <translations>
+        <message contextId=1 context="accueil" comment="exemple de traduction">
+            <source>"first item"</original>
+            <translation>"premier élément"</translated>
+        </message>
+        <message contextId=1 context="accueil" comment="autre exemple">
+            <source>"second item"</original>
+            <translation>"deuxième élément"</translated>
+        </message>
+    </translations>
+</dutranslator>
