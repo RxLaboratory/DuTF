@@ -6,5 +6,4 @@
             { "source": "first item", "translation": "premier élément", "context": "accueil", "contextId": 1, "comment": "exemple de traduction"},
             { "source": "second item", "translation": "deuxième élément", "context": "accueil", "contextId": 2, "comment": "autre exemple"}
         ]
-        }
 }
