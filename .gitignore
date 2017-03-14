@@ -12,6 +12,8 @@
 
 # Qt-es
 
+Dutranslator
+moc_predefs.h
 /.qmake.cache
 /.qmake.stash
 *.pro.user
