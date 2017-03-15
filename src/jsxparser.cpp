@@ -116,7 +116,6 @@ void JsxParser::parseContent(QTextStream *jsxinc)
             }
         }
 
-        sleep(1);
     }
 
 
