@@ -4,39 +4,42 @@
 #endif
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent)
+    QMainWindow(parent),
+    Ui::MainWindow()
 {
     setupUi(this);
 
-    //load default stylesheet
+    // load default stylesheet
     updateCSS();
 
     // UI
-    //search widget
+
+    // search widget
     searchWidget = new SearchWidget(this);
-    connect(searchWidget,SIGNAL(search(QString)),this,SLOT(search(QString)));
-    connect(searchWidget,SIGNAL(clear()),this,SLOT(clearSearch()));
     mainToolBar->addWidget(searchWidget);
-    //language widget
+
+    // language widget
     languageWidget = new LanguageWidget(this);
     mainToolBar->addWidget(languageWidget);
-    //Add window buttons
+
+    // window buttons
+
 #ifndef Q_OS_MAC
+    // Maximize and minimize only on linux and windows
     this->setWindowFlags(Qt::FramelessWindowHint);
-    //Minimize and maximize (not on mac, needs testing on linux)
     maximizeButton = new QPushButton(QIcon(":/icons/maximize"),"");
-    QPushButton *minimizeButton = new QPushButton(QIcon(":/icons/minimize"),"");
-    connect(maximizeButton,SIGNAL(clicked()),this,SLOT(maximizeButton_clicked()));
-    connect(minimizeButton,SIGNAL(clicked()),this,SLOT(showMinimized()));
+    minimizeButton = new QPushButton(QIcon(":/icons/minimize"),"");
     mainToolBar->addWidget(minimizeButton);
     mainToolBar->addWidget(maximizeButton);
 #endif
-    QPushButton *quitButton = new QPushButton(QIcon(":/icons/close"),"");
-    connect(quitButton,SIGNAL(clicked()),qApp,SLOT(quit()));
+
+    quitButton = new QPushButton(QIcon(":/icons/close"),"");
     mainToolBar->addWidget(quitButton);
+
     //drag window
     toolBarClicked = false;
     mainToolBar->installEventFilter(this);
+
     //status
     statusLabel = new QLabel("Ready");
     mainStatusBar->addWidget(statusLabel,10);
@@ -50,10 +53,8 @@ MainWindow::MainWindow(QWidget *parent) :
     //Parser
     jsxParser = new JsxParser();
     jsxParser->moveToThread(&parserThread);
-    connect(jsxParser,SIGNAL(languageFound(QStringList)),this,SLOT(newLanguage(QStringList)));
-    connect(jsxParser,SIGNAL(newTranslation(QStringList)),this,SLOT(newTranslation(QStringList)));
-    connect(jsxParser,SIGNAL(parsingFinished()),this,SLOT(jsxParsed()));
-    connect(jsxParser,SIGNAL(progress(int)),progressBar,SLOT(setValue(int)));
+
+    mapEvents();
 }
 
 void MainWindow::updateCSS()
@@ -63,6 +64,33 @@ void MainWindow::updateCSS()
     QString css = QString(cssFile.readAll());
     cssFile.close();
     qApp->setStyleSheet(css);
+}
+
+void MainWindow::mapEvents(){
+    // Parser
+    connect(jsxParser,SIGNAL(languageFound(QStringList)),this,SLOT(newLanguage(QStringList)));
+    connect(jsxParser,SIGNAL(newTranslation(QStringList)),this,SLOT(newTranslation(QStringList)));
+    connect(jsxParser,SIGNAL(parsingFinished()),this,SLOT(jsxParsed()));
+    connect(jsxParser,SIGNAL(progress(int)),progressBar,SLOT(setValue(int)));
+
+    // Actions
+    connect(this->btn_actionSaveAs, SIGNAL(triggered(bool)), this, SLOT(actionSaveAs()));
+    connect(this->btn_actionSave, SIGNAL(triggered(bool)), this, SLOT(actionSave()));
+    connect(this->btn_actionOpen, SIGNAL(triggered(bool)), this, SLOT(actionOpen()));
+    connect(this->btn_actionAbout, SIGNAL(triggered(bool)), this, SLOT(actionAbout()));
+
+    // Search
+    connect(searchWidget,SIGNAL(search(QString)),this,SLOT(search(QString)));
+    connect(searchWidget,SIGNAL(clear()),this,SLOT(clearSearch()));
+
+    // Window management
+#ifndef Q_OS_MAC
+    // Windows and linux
+    connect(maximizeButton,SIGNAL(clicked()),this,SLOT(maximize()));
+    connect(minimizeButton,SIGNAL(clicked()),this,SLOT(showMinimized()));
+#endif
+    connect(quitButton,SIGNAL(clicked()),qApp,SLOT(quit()));
+
 }
 
 QString MainWindow::unEscape(QString s)
@@ -79,7 +107,7 @@ QString MainWindow::escape(QString s)
     return s;
 }
 
-void MainWindow::on_actionOpen_triggered()
+void MainWindow::actionOpen()
 {
     this->setEnabled(false);
 
@@ -225,7 +253,7 @@ void MainWindow::clearSearch()
     progressBar->hide();
 }
 
-void MainWindow::on_actionSave_triggered()
+void MainWindow::actionSave()
 {
     if (!checkLanguage()) return;
 
@@ -265,7 +293,7 @@ void MainWindow::on_actionSave_triggered()
     workingFile.close();
 }
 
-void MainWindow::on_actionSave_as_triggered()
+void MainWindow::actionSaveAs()
 {
     if (!checkLanguage()) return;
     //get file
@@ -275,17 +303,18 @@ void MainWindow::on_actionSave_as_triggered()
     workingFile.setFileName(fileName);
     QStringList filePath = fileName.split("/");
     languageWidget->setFile(filePath[filePath.count()-1]);
-    on_actionSave_triggered();
+    actionSave();
 }
 
-void MainWindow::on_actionAbout_triggered()
+void MainWindow::actionAbout()
 {
     AboutDialog().exec();
 }
 
 #ifndef Q_OS_MAC
-void MainWindow::maximizeButton_clicked()
+void MainWindow::maximize()
 {
+
     if (this->isMaximized())
     {
         maximizeButton->setIcon(QIcon(":/icons/maximize"));
@@ -401,7 +430,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 #ifndef Q_OS_MAC
   else if (event->type() == QEvent::MouseButtonDblClick)
   {
-      maximizeButton_clicked();
+      maximize();
       event->accept();
       return true;
   }
