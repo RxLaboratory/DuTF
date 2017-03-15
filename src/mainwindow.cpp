@@ -51,10 +51,15 @@ MainWindow::MainWindow(QWidget *parent) :
     progressBar->hide();
 
     //Parser
-    jsxParser = new JsxParser();
-    jsxParser->moveToThread(&parserThread);
+    jsxParser = new JsxParser(this);
 
     mapEvents();
+}
+
+MainWindow::~MainWindow(){
+    jsxParser->quit();
+    jsxParser->wait();
+    delete jsxParser;
 }
 
 void MainWindow::updateCSS()
@@ -70,8 +75,10 @@ void MainWindow::mapEvents(){
     // Parser
     connect(jsxParser,SIGNAL(languageFound(QStringList)),this,SLOT(newLanguage(QStringList)));
     connect(jsxParser,SIGNAL(newTranslation(QStringList)),this,SLOT(newTranslation(QStringList)));
-    connect(jsxParser,SIGNAL(parsingFinished()),this,SLOT(jsxParsed()));
+    connect(jsxParser,SIGNAL(parsingFinished()),this,SLOT(parsingFinished()));
+    connect(jsxParser,SIGNAL(parsingFailed()),this,SLOT(parsingFailed()));
     connect(jsxParser,SIGNAL(progress(int)),progressBar,SLOT(setValue(int)));
+
 
     // Actions
     connect(this->btn_actionSaveAs, SIGNAL(triggered(bool)), this, SLOT(actionSaveAs()));
@@ -110,18 +117,21 @@ QString MainWindow::escape(QString s)
 void MainWindow::actionOpen()
 {
     this->setEnabled(false);
+    // The ui will be re-enabled when the parser sends an END signal
 
     //get file
     QString fileName = QFileDialog::getOpenFileName(this,"Open a translation file","","JavaScript (*.jsx *.jsxinc *.js);;Text files (*.txt);;All files (*.*)");
 
     openJsxinc(fileName);
 
-    this->setEnabled(true);
 }
 
 void MainWindow::openJsxinc(QString fileName)
 {
-    if (fileName.isNull()) return;
+    if (fileName.isNull()){
+        this->setEnabled(true);
+        return;
+    }
 
     workingFile.setFileName(fileName);
     QStringList filePath = fileName.split("/");
@@ -132,13 +142,11 @@ void MainWindow::openJsxinc(QString fileName)
     displayTable->clearContents();
     displayTable->setRowCount(0);
     //parse
-    this->setEnabled(false);
     mainStatusBar->showMessage("Loading...");
     progressBar->setMaximum(100);
     progressBar->show();
-    this->repaint();
-    jsxParser->parseJsxinc(&workingFile);
     statusLabel->setText(displayFileName);
+    jsxParser->parseFile(&workingFile);
 }
 
 void MainWindow::newTranslation(QStringList translation)
@@ -172,11 +180,21 @@ void MainWindow::newLanguage(QStringList language)
     languageWidget->setCode(language[0]);
 }
 
-void MainWindow::jsxParsed()
+void MainWindow::parsingFinished()
 {
     mainStatusBar->clearMessage();
     progressBar->hide();
     this->setEnabled(true);
+}
+
+void MainWindow::parsingFailed(){
+    mainStatusBar->clearMessage();
+    progressBar->hide();
+    statusLabel->clear();
+    this->setEnabled(true);
+    QMessageBox mb(QMessageBox::Information,"Parsing failed","An error has occured while parsing the file",QMessageBox::Ok,this,Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
+    mb.exec();
+
 }
 
 bool MainWindow::checkLanguage()
@@ -367,7 +385,7 @@ void MainWindow::dropEvent(QDropEvent *event)
             progressBar->setMaximum(100);
             progressBar->show();
             //parse
-            jsxParser->parseJsxinc(&text);
+            jsxParser->parseText(&text);
         }
     }
 

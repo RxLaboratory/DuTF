@@ -2,12 +2,13 @@
 #define JSXPARSER_H
 
 #include <QObject>
+#include <QThread>
 #include <QFile>
 #include <QTextStream>
 #include <QTextCodec>
 #include <QRegularExpression>
 
-class JsxParser : public QObject
+class JsxParser : public QThread
 {
     Q_OBJECT
 public:
@@ -16,14 +17,48 @@ public:
 signals:
     void newTranslation(QStringList);
     void languageFound(QStringList);
+
+    /**
+     * @brief Signal emited when the parsing is over
+     */
     void parsingFinished();
+
+    /**
+     * @brief Signal emited when the parsing has failed
+     */
+    void parsingFailed();
+
     void progress(int);
 
 public slots:
-    void parseJsxinc(QFile *file);
-    void parseJsxinc(QString *jsxinc);
+    void parseFile(QFile *file);
+    void parseText(QString *jsxinc);
+
+protected:
+
+    // Reimplemented from QThread
+    void run();
 private:
-    void parseJsxinc(QTextStream *jsxinc);
+
+    /**
+     * @brief The current text behing parsed
+     */
+    QString * currentText;
+
+    /**
+     * @brief Current file being parsed
+     */
+    QFile * currentFile;
+
+    /**
+     * @brief Parsing mode
+     * 0 : nothing
+     * 1 : Parse the current file
+     * 2 : Parse the current string
+     */
+    int mode;
+
+    void parseContent(QTextStream *jsxinc);
 };
 
 #endif // JSXPARSER_H

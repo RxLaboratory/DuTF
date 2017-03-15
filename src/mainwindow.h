@@ -41,6 +41,11 @@ public:
      */
     explicit MainWindow(QWidget *parent = 0);
 
+    /**
+     * @brief Destructor
+     */
+    ~MainWindow();
+
 private slots:
 
 #ifndef Q_OS_MAC
@@ -108,9 +113,14 @@ private slots:
     void newLanguage(QStringList language);
 
     /**
-     * @brief Mark the end of the jsx parsing
+     * @brief Mark the end of the  parsing
      */
-    void jsxParsed();
+    void parsingFinished();
+
+    /**
+     * @brief Alert user that the parsing has failed
+     */
+    void parsingFailed();
 
 private:
 
@@ -230,11 +240,6 @@ private:
      * @brief The Parser
      */
     JsxParser *jsxParser;
-
-    /**
-     * @brief The thread parser
-     */
-    QThread parserThread;
 
 protected:
 
