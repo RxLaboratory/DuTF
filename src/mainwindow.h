@@ -22,62 +22,229 @@
 #include "jsxparser.h"
 #include "searchwidget.h"
 
+namespace Ui {
+    class MainWindow;
+}
+
+/**
+ * @brief The aplication's main window class
+ */
 class MainWindow : public QMainWindow, private Ui::MainWindow
 {
     Q_OBJECT
 
 public:
+
+    /**
+     * @brief Default constructor
+     * @param parent	Windows's parent widget
+     */
     explicit MainWindow(QWidget *parent = 0);
+
+    /**
+     * @brief Destructor
+     */
+    ~MainWindow();
+
 private slots:
-    // =======WINDOW BUTTONS
+
 #ifndef Q_OS_MAC
-    void maximizeButton_clicked();
+    /**
+     * @brief Maximize the window
+     * Has effect only on Windows and Linux
+     */
+    void maximize();
 #endif
+
+
+
     // =======ACTIONS
-    void on_actionOpen_triggered();
-    void on_actionSave_triggered();
-    void on_actionSave_as_triggered();
-    void on_actionAbout_triggered();
+
+
+    /**
+     * @brief Create a dialog for openning a new file
+     */
+    void actionOpen();
+
+    /**
+     * @brief Save the current file
+     */
+    void actionSave();
+
+    /**
+     * @brief Save the current file as something else
+     */
+    void actionSaveAs();
+
+    /**
+     * @brief Open an about dialog
+     */
+    void actionAbout();
+
+
     // =======OTHER USER INTERACTIONS
+
+
+    /**
+     * @brief Search for a given string in the translation file
+     * @param s		The string to look for
+     */
     void search(QString s);
+
+    /**
+     * @brief Clear the current search
+     */
     void clearSearch();
+
+
     // =======OTHER
+
+
+    /**
+     * @brief Add a new translation to the current translation file
+     * @param translation	Translation to add
+     */
     void newTranslation(QStringList translation);
+
+    /**
+     * @brief Start a new language translation
+     * @param language		Langauge name and code
+     */
     void newLanguage(QStringList language);
-    void jsxParsed();
+
+    /**
+     * @brief Mark the end of the  parsing
+     */
+    void parsingFinished();
+
+    /**
+     * @brief Alert user that the parsing has failed
+     */
+    void parsingFailed();
 
 private:
-    //METHODS
+
+
+    // METHODS
+
+
+    /**
+     * @brief Update the windows stylesheet
+     */
     void updateCSS();
+
+    /**
+     * @brief unescape foreslashs of a string
+     * @param s		String to unescape
+     * @return		The unescaped string
+     */
     QString unEscape(QString s);
+
+    /**
+     * @brief escaped foreslashes of a string
+     * @param s		String to escape
+     * @return		The escaped string
+     */
     QString escape(QString s);
+
+    /**
+     * @brief Connect required signals and slots
+     * Executed on construction only
+     */
+    void mapEvents();
+
+    /**
+     * @brief Check if languages fields are completed
+     * @return	True if fields are completed
+     */
     bool checkLanguage();
+
+    /**
+     * @brief Open a js translation file
+     * @param fileName	Js file name
+     */
     void openJsxinc(QString fileName);
+
+    /**
+     * @brief Parse a js translation text
+     * @param jsxinc	The text to parse
+     */
     void parseJsxinc(QTextStream *jsxinc);
-    //OBJECTS
+
+
+    // OBJECTS
+
+
+    /**
+     * @brief The current translation working file
+     */
     QFile workingFile;
-    //drag main window
+
+    /**
+     * @brief Drag position
+     * Used for drag n drop feature
+     */
     QPoint dragPosition;
+
+    /**
+     * @brief Is the tool bar currently clicked or not
+     */
     bool toolBarClicked;
-    //buttons
+
+
+    // BUTTONS
+
 #ifndef Q_OS_MAC
+    /**
+     * @brief Maximize window button
+     * Only on linux and windows
+     */
     QPushButton *maximizeButton;
+
+    /**
+     * @brief Minimize window button
+     * Only on linux and windows
+     */
+    QPushButton *minimizeButton;
 #endif
-    //language
+
+    /**
+     * @brief Quit application button
+     */
+    QPushButton *quitButton;
+
+    /**
+     * @brief The language widget
+     * Contains the language code and name
+     */
     LanguageWidget *languageWidget;
-    //status
+
+    /**
+     * @brief A status label
+     * Used to give feedback to the user
+     */
     QLabel *statusLabel;
+
+    /**
+     * @brief A progressbar
+     * Used to give feedback on processes
+     */
     QProgressBar *progressBar;
-    //search
+
+    /**
+     * @brief The search bar
+     */
     SearchWidget *searchWidget;
-    //parser
+
+    /**
+     * @brief The Parser
+     */
     JsxParser *jsxParser;
-    QThread parserThread;
 
 protected:
-    //events
+
+    // Reimplemented methods
     bool eventFilter(QObject *obj, QEvent *event);
-    //drag and drop events
     void dropEvent(QDropEvent *event);
     void dragEnterEvent(QDragEnterEvent *event);
     void dragMoveEvent(QDragMoveEvent *event);

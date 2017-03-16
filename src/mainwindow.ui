@@ -109,13 +109,13 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionOpen"/>
-   <addaction name="actionSave"/>
-   <addaction name="actionSave_as"/>
-   <addaction name="actionAbout"/>
+   <addaction name="btn_actionOpen"/>
+   <addaction name="btn_actionSave"/>
+   <addaction name="btn_actionSaveAs"/>
+   <addaction name="btn_actionAbout"/>
   </widget>
   <widget class="QStatusBar" name="mainStatusBar"/>
-  <action name="actionOpen">
+  <action name="btn_actionOpen">
    <property name="icon">
     <iconset resource="resources.qrc">
      <normaloff>:/icons/open</normaloff>:/icons/open</iconset>
@@ -130,7 +130,7 @@
     <string>Ctrl+O</string>
    </property>
   </action>
-  <action name="actionSave">
+  <action name="btn_actionSave">
    <property name="icon">
     <iconset resource="resources.qrc">
      <normaloff>:/icons/save</normaloff>:/icons/save</iconset>
@@ -145,7 +145,7 @@
     <string>Ctrl+S</string>
    </property>
   </action>
-  <action name="actionAbout">
+  <action name="btn_actionAbout">
    <property name="icon">
     <iconset resource="resources.qrc">
      <normaloff>:/icons/question</normaloff>:/icons/question</iconset>
@@ -157,7 +157,7 @@
     <string>Need help? Click here!</string>
    </property>
   </action>
-  <action name="actionSave_as">
+  <action name="btn_actionSaveAs">
    <property name="icon">
     <iconset resource="resources.qrc">
      <normaloff>:/icons/saveAs</normaloff>:/icons/saveAs</iconset>

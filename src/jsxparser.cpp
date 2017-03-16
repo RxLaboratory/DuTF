@@ -1,29 +1,49 @@
 #include "jsxparser.h"
 
-JsxParser::JsxParser(QObject *parent) : QObject(parent)
+JsxParser::JsxParser(QObject *parent) :
+    QThread(parent)
 {
 
 }
 
-void JsxParser::parseJsxinc(QFile *file)
-{
-    //open file
-    file->open(QIODevice::ReadOnly | QIODevice::Text);
-    QTextStream in(file);
+void JsxParser::run(){
+    if(mode == 1){
+        //open file
+        currentFile->open(QIODevice::ReadOnly | QIODevice::Text);
+        QTextStream in(currentFile);
 
-    //parse file
-    parseJsxinc(&in);
+        //parse file
+        parseContent(&in);
 
-    //close file
-    file->close();
+        //close file
+        currentFile->close();
+
+    }else if(mode == 2){
+        parseContent(new QTextStream(currentText,QIODevice::ReadOnly));
+    }
+
+    if(mode){
+        currentFile = 0;
+        currentText = 0;
+        mode = 0;
+    }
 }
 
-void JsxParser::parseJsxinc(QString *jsxinc)
+void JsxParser::parseFile(QFile *file)
 {
-    parseJsxinc(new QTextStream(jsxinc,QIODevice::ReadOnly));
+    currentFile = file;
+    mode = 1;
+    start();
 }
 
-void JsxParser::parseJsxinc(QTextStream *jsxinc)
+void JsxParser::parseText(QString *jsxinc)
+{
+    currentText = jsxinc;
+    mode = 2;
+    start();
+}
+
+void JsxParser::parseContent(QTextStream *jsxinc)
 {
     //set to UTF8 by default
     QTextCodec *codec = QTextCodec::codecForName("UTF-8");
@@ -31,10 +51,29 @@ void JsxParser::parseJsxinc(QTextStream *jsxinc)
     //line
     QString line;
     QString rxString = "\\\"([^\\\"\\\\]*(?:\\\\.[^\\\"\\\\]*)*?)\\\" *, *(\\d*) *, *\\\"([^\\\"\\\\]*(?:\\\\.[^\\\"\\\\]*)*?)\\\" *]\\); *(?:\\/\\/(.*))*";
+    int nbLines = 0;
+    while(!jsxinc->atEnd()){
+        nbLines++;
+        jsxinc->readLine();
+    }
+    if(!jsxinc->seek(0)){
+        emit parsingFailed();
+        return;
+    }
 
 
+    int lineNb = 1;
+    int lastProgress = 0, currentProgress = 0;
     while (!jsxinc->atEnd())
     {
+
+        currentProgress = (lineNb * 1.0 / nbLines * 1.0) * 100;
+        lineNb++;
+        if(currentProgress > lastProgress + 5){
+            emit progress(currentProgress);
+            lastProgress = currentProgress;
+        }
+
         qint64 pos = jsxinc->pos();
         line = jsxinc->readLine().trimmed();
         //if not UTF-8, try locale
@@ -76,7 +115,10 @@ void JsxParser::parseJsxinc(QTextStream *jsxinc)
                 emit languageFound(language);
             }
         }
+
     }
 
+
     emit parsingFinished();
+
 }
