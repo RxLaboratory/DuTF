@@ -137,7 +137,7 @@ void MainWindow::openJsxinc(QString fileName)
     }
 
     // Restart table
-    tableFreeIndex = 0;
+    tableFreeIndex = 0;    
 
     workingFile.setFileName(fileName);
     QStringList filePath = fileName.split("/");
@@ -178,6 +178,8 @@ void MainWindow::parsingFinished()
     mainStatusBar->clearMessage();
     progressBar->hide();
     this->setEnabled(true);
+    //restart filling the table with empty lines
+    fillTableTimer.start();
 }
 
 void MainWindow::parsingFailed(){
@@ -211,15 +213,15 @@ void MainWindow::addTableRow(){
     displayTable->setCellWidget(displayTable->rowCount()-1,2,translatedItem);
     displayTable->setCellWidget(displayTable->rowCount()-1,3,commentItem);
 
-    if(displayTable->rowCount() >= MAX_AUTO_ROW && fillTableTimer.isActive()){
+    if(displayTable->rowCount()-tableFreeIndex >= MAX_AUTO_ROW && fillTableTimer.isActive()){
         // This function can be used outside the timer
         // so we must check if it wasn't the timer 
         fillTableTimer.stop();
-    } 
+    }
 
-    displayTable->setRowHidden(displayTable->rowCount() -1,true);
+
     // Make the ui blink (not on windows ; test on Mac)
-
+    displayTable->setRowHidden(displayTable->rowCount() -1,true);
 }
 
 void MainWindow::addTableRowContent(QStringList content){
@@ -282,6 +284,9 @@ void MainWindow::clearTableToTheEnd(){
                ->cellWidget(index, 1));
        contextItem->setValue(0);
        contextItem->setEnabled(false);
+
+       // Make the ui blink (not on windows ; test on Mac)
+       displayTable->setRowHidden(index,true);
    }
 
 }

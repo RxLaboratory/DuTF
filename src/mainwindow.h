@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #define INC_TIMER 50  // Time span between each widget creation
-#define MAX_AUTO_ROW 1000  // Number of maximum created in parallel
+#define MAX_AUTO_ROW 500  // Maximum number of empty rows created in background
 
 #include "ui_mainwindow.h"
 #include <QStyleFactory>
@@ -134,7 +134,7 @@ private slots:
 
     /**
      * @brief Add content to the last row available
-     * If any row is availbe, one is created
+     * If no row is available, a new one is created
      *
      * @param content   A list of 4 strings
      * original: [0]
