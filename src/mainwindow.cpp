@@ -155,15 +155,20 @@ void MainWindow::newTranslation(QStringList translation)
     // context: translation[1]
     // translated: translation[2]
     // comment: translation[3]
+    //
     QTextEdit *originalItem = new QTextEdit();
     originalItem->setPlainText(unEscape(translation[0]));
     originalItem->setReadOnly(true);
+
     QSpinBox *contextItem = new QSpinBox();
     contextItem->setValue(translation[1].toInt());
+
     QTextEdit *translatedItem = new QTextEdit();
     translatedItem->setPlainText(unEscape(translation[2]));
+
     QLineEdit *commentItem = new QLineEdit();
     commentItem->setText(unEscape(translation[3]));
+
     displayTable->setRowCount(displayTable->rowCount()+1);
     displayTable->setCellWidget(displayTable->rowCount()-1,0,originalItem);
     displayTable->setCellWidget(displayTable->rowCount()-1,1,contextItem);
