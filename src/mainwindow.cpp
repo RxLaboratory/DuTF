@@ -13,6 +13,9 @@ MainWindow::MainWindow(QWidget *parent) :
     updateCSS();
 
     // UI
+    
+    // toolbar
+    mainToolBar->setContextMenuPolicy(Qt::PreventContextMenu);
 
     // search widget
     searchWidget = new SearchWidget(this);
