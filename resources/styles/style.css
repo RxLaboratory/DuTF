@@ -313,9 +313,9 @@ QListWidget QScrollBar::handle:hover {
 }
 
 QScrollBar::add-line, QScrollBar::sub-line {
-    border: 2px solid #333333;
-	border-radius:5px;
-    background: #434343;
+    border: none;
+	width:0;
+	height:0;
 }
 
 /* VERTICAL */
@@ -328,16 +328,6 @@ QScrollBar::handle:vertical {
     min-height: 20px;
 }
 
-QScrollBar::add-line:vertical {
-    height: 15px;
-    subcontrol-position: bottom;
-}
-
-QScrollBar::sub-line:vertical {
-    height: 15px;
-    subcontrol-position: top;
-}
-
 /* HORIZONTAL */
 
 QScrollBar:horizontal {
@@ -346,16 +336,6 @@ QScrollBar:horizontal {
 
 QScrollBar::handle:horizontal {
     min-width: 20px;
-}
-
-QScrollBar::add-line:horizontal {
-    width: 15px;
-    subcontrol-position: right;
-}
-
-QScrollBar::sub-line:horizontal {
-    width: 15px;
-    subcontrol-position: left;
 }
 
 /* COMBO BOX */
