@@ -1,6 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#define INC_TIMER 50  // Time span between each widget creation
+#define MAX_AUTO_ROW 1000  // Number of maximum created in parallel
+
 #include "ui_mainwindow.h"
 #include <QStyleFactory>
 #include <QFile>
@@ -16,6 +19,7 @@
 #include <QTextCodec>
 #include <QMimeData>
 #include <QThread>
+#include <QTimer>
 #include <QProgressBar>
 #include "aboutdialog.h"
 #include "languagewidget.h"
@@ -122,6 +126,31 @@ private slots:
      */
     void parsingFailed();
 
+    /**
+     * @brief Add an empty row in the table
+     * Stops when the MAX_AUTO_ROW is reached
+     */
+    void addTableRow();
+
+    /**
+     * @brief Add content to the last row available
+     * If any row is availbe, one is created
+     *
+     * @param content   A list of 4 strings
+     * original: [0]
+     * context: [1]
+     * translated: [2]
+     * comment: [3]
+     */
+    void addTableRowContent(QStringList content);
+
+    /**
+     * @brief Clear the table content
+     * The clear goes from tableFreeIndex to the last row
+     * This allows to modify the rows and only the clear the rows not in use
+     */
+    void clearTableToTheEnd();
+
 private:
 
 
@@ -173,9 +202,19 @@ private:
     QPoint dragPosition;
 
     /**
+     * @brief Timer used to create the table widgets
+     */
+    QTimer fillTableTimer;
+
+    /**
      * @brief Is the tool bar currently clicked or not
      */
     bool toolBarClicked;
+
+    /**
+     * @brief The index of the first availabe row in the table
+     */
+    int tableFreeIndex;
 
 
     // BUTTONS

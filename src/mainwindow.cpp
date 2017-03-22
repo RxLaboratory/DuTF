@@ -6,7 +6,9 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    Ui::MainWindow()
+    Ui::MainWindow(),
+    fillTableTimer(this),
+    tableFreeIndex(0)
 {
     setupUi(this);
 
@@ -14,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
     updateCSS();
 
     // UI
+    
+    displayTable->setEnabled(false);
     
     // toolbar
     mainToolBar->setContextMenuPolicy(Qt::PreventContextMenu);
@@ -58,6 +62,10 @@ MainWindow::MainWindow(QWidget *parent) :
     jsxParser = new JsxParser(this);
 
     mapEvents();
+
+    // Timer
+    fillTableTimer.setInterval(INC_TIMER);
+    fillTableTimer.start();
 }
 
 MainWindow::~MainWindow(){
@@ -102,12 +110,17 @@ void MainWindow::mapEvents(){
 #endif
     connect(quitButton,SIGNAL(clicked()),qApp,SLOT(quit()));
 
+    // Timer
+    connect(&fillTableTimer, SIGNAL(timeout()), this, SLOT(addTableRow()));
+
 }
 
 void MainWindow::actionOpen()
 {
     this->setEnabled(false);
     // The ui will be re-enabled when the parser sends an END signal
+
+    fillTableTimer.stop();
 
     //get file
     QString fileName = QFileDialog::getOpenFileName(this,"Open a translation file","","JavaScript (*.jsx *.jsxinc *.js);;Text files (*.txt);;All files (*.*)");
@@ -123,14 +136,14 @@ void MainWindow::openJsxinc(QString fileName)
         return;
     }
 
+    // Restart table
+    tableFreeIndex = 0;
+
     workingFile.setFileName(fileName);
     QStringList filePath = fileName.split("/");
     QString displayFileName = filePath[filePath.count()-1];
     languageWidget->setFile(displayFileName);
 
-    //clear table
-    displayTable->clearContents();
-    displayTable->setRowCount(0);
     //parse
     mainStatusBar->showMessage("Loading...");
     progressBar->setMaximum(100);
@@ -146,25 +159,7 @@ void MainWindow::newTranslation(QStringList translation)
     // translated: translation[2]
     // comment: translation[3]
     //
-    QTextEdit *originalItem = new QTextEdit();
-    originalItem->setPlainText(utils::unEscape(translation[0]));
-    originalItem->setReadOnly(true);
-
-    QSpinBox *contextItem = new QSpinBox();
-    contextItem->setValue(translation[1].toInt());
-
-    QTextEdit *translatedItem = new QTextEdit();
-    translatedItem->setPlainText(utils::unEscape(translation[2]));
-
-    QLineEdit *commentItem = new QLineEdit();
-    commentItem->setText(utils::unEscape(translation[3]));
-
-    displayTable->setRowCount(displayTable->rowCount()+1);
-    displayTable->setCellWidget(displayTable->rowCount()-1,0,originalItem);
-    displayTable->setCellWidget(displayTable->rowCount()-1,1,contextItem);
-    displayTable->setCellWidget(displayTable->rowCount()-1,2,translatedItem);
-    displayTable->setCellWidget(displayTable->rowCount()-1,3,commentItem);
-
+    addTableRowContent(translation);
 }
 
 void MainWindow::newLanguage(QStringList language)
@@ -176,7 +171,9 @@ void MainWindow::newLanguage(QStringList language)
 void MainWindow::parsingFinished()
 {
     //resize sections
+    clearTableToTheEnd();
     displayTable->resizeColumnsToContents();
+    displayTable->setEnabled(true);
 
     mainStatusBar->clearMessage();
     progressBar->hide();
@@ -190,6 +187,100 @@ void MainWindow::parsingFailed(){
     this->setEnabled(true);
     QMessageBox mb(QMessageBox::Information,"Parsing failed","An error has occured while parsing the file",QMessageBox::Ok,this,Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
     mb.exec();
+
+}
+
+void MainWindow::addTableRow(){
+    
+
+    QTextEdit *originalItem = new QTextEdit();
+    originalItem->setReadOnly(true);
+    originalItem->setEnabled(false);
+
+    QSpinBox *contextItem = new QSpinBox();
+    contextItem->setEnabled(false);
+
+    QTextEdit *translatedItem = new QTextEdit();
+    translatedItem->setEnabled(false);
+
+    QLineEdit *commentItem = new QLineEdit();
+    commentItem->setEnabled(false);
+
+    displayTable->setRowCount(displayTable->rowCount()+1);
+    displayTable->setCellWidget(displayTable->rowCount()-1,0,originalItem);
+    displayTable->setCellWidget(displayTable->rowCount()-1,1,contextItem);
+    displayTable->setCellWidget(displayTable->rowCount()-1,2,translatedItem);
+    displayTable->setCellWidget(displayTable->rowCount()-1,3,commentItem);
+
+    if(displayTable->rowCount() >= MAX_AUTO_ROW && fillTableTimer.isActive()){
+        // This function can be used outside the timer
+        // so we must check if it wasn't the timer 
+        fillTableTimer.stop();
+    }
+
+    // displayTable->setRowHidden(displayTable->rowCount() -1,true);
+    // Make the ui blink
+
+}
+
+void MainWindow::addTableRowContent(QStringList content){
+
+    if(tableFreeIndex > displayTable->rowCount() -1) addTableRow();
+
+    
+    QTextEdit * originalItem = dynamic_cast<QTextEdit *>(displayTable
+            ->cellWidget(tableFreeIndex, 0));
+    originalItem->setPlainText(utils::unEscape(content[0]));
+    originalItem->setEnabled(true);
+
+    QTextEdit * translatedItem = dynamic_cast<QTextEdit *>(displayTable
+            ->cellWidget(tableFreeIndex, 2));
+    translatedItem->setPlainText(utils::unEscape(content[2]));
+    translatedItem->setEnabled(true);
+
+    QLineEdit * commentItem = dynamic_cast<QLineEdit *>(displayTable
+            ->cellWidget(tableFreeIndex, 3));
+    commentItem->setText(utils::unEscape(content[3]));
+    commentItem->setEnabled(true);
+
+    QSpinBox * contextItem = dynamic_cast<QSpinBox *>(displayTable
+            ->cellWidget(tableFreeIndex, 1));
+    contextItem->setValue(content[1].toInt());
+    contextItem->setEnabled(true);
+    
+
+    tableFreeIndex++;
+
+}
+
+void MainWindow::clearTableToTheEnd(){
+
+   QTextEdit * originalItem, * translatedItem;
+   QLineEdit * commentItem;
+   QSpinBox * contextItem;
+
+   int index;
+   for(index = tableFreeIndex; index < displayTable->rowCount(); index++){
+       originalItem = dynamic_cast<QTextEdit *>(displayTable
+               ->cellWidget(index, 0));
+       originalItem->setPlainText("");
+       originalItem->setEnabled(false);
+
+       translatedItem = dynamic_cast<QTextEdit *>(displayTable
+               ->cellWidget(index, 2));
+       translatedItem->setPlainText("");
+       translatedItem->setEnabled(false);
+
+       commentItem = dynamic_cast<QLineEdit *>(displayTable
+               ->cellWidget(index, 3));
+       commentItem->setText("");
+       commentItem->setEnabled(false);
+
+       contextItem = dynamic_cast<QSpinBox *>(displayTable
+               ->cellWidget(index, 1));
+       contextItem->setValue(0);
+       contextItem->setEnabled(false);
+   }
 
 }
 
