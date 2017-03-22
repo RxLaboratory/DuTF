@@ -11,13 +11,15 @@ SOURCES += main.cpp\
     languagewidget.cpp \
     aboutdialog.cpp \
     jsxparser.cpp \
-    searchwidget.cpp
+    searchwidget.cpp \
+    utils.cpp
 
 HEADERS  += mainwindow.h \
     languagewidget.h \
     aboutdialog.h \
     jsxparser.h \
-    searchwidget.h
+    searchwidget.h \
+    utils.h
 
 FORMS    += mainwindow.ui \
     languagewidget.ui \

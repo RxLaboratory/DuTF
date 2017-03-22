@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "utils.h"
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
@@ -100,20 +101,6 @@ void MainWindow::mapEvents(){
 
 }
 
-QString MainWindow::unEscape(QString s)
-{
-    s = s.replace("\\n","\n");
-    s = s.replace("\\\"","\"");
-    return s;
-}
-
-QString MainWindow::escape(QString s)
-{
-    s = s.replace("\n","\\n");
-    s = s.replace("\"","\\\"");
-    return s;
-}
-
 void MainWindow::actionOpen()
 {
     this->setEnabled(false);
@@ -157,17 +144,17 @@ void MainWindow::newTranslation(QStringList translation)
     // comment: translation[3]
     //
     QTextEdit *originalItem = new QTextEdit();
-    originalItem->setPlainText(unEscape(translation[0]));
+    originalItem->setPlainText(utils::unEscape(translation[0]));
     originalItem->setReadOnly(true);
 
     QSpinBox *contextItem = new QSpinBox();
     contextItem->setValue(translation[1].toInt());
 
     QTextEdit *translatedItem = new QTextEdit();
-    translatedItem->setPlainText(unEscape(translation[2]));
+    translatedItem->setPlainText(utils::unEscape(translation[2]));
 
     QLineEdit *commentItem = new QLineEdit();
-    commentItem->setText(unEscape(translation[3]));
+    commentItem->setText(utils::unEscape(translation[3]));
 
     displayTable->setRowCount(displayTable->rowCount()+1);
     displayTable->setCellWidget(displayTable->rowCount()-1,0,originalItem);
@@ -297,9 +284,9 @@ void MainWindow::actionSave()
         QTextEdit *translatedEdit = (QTextEdit*)displayTable->cellWidget(row,2);
         QLineEdit *commentEdit = (QLineEdit*)displayTable->cellWidget(row,3);
         QString original = originalEdit->toPlainText();
-        original = escape(original);
+        original = utils::escape(original);
         QString translated = translatedEdit->toPlainText();
-        translated = escape(translated);
+        translated = utils::escape(translated);
         QString context = QString::number(contextBox->value());
         QString comment = commentEdit->text();
         out << "DutranslatorArray.push([\"" << original << "\"," << context << ",\"" << translated << "\"]);";
