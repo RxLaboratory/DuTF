@@ -192,7 +192,6 @@ void MainWindow::parsingFailed(){
 
 void MainWindow::addTableRow(){
     
-
     QTextEdit *originalItem = new QTextEdit();
     originalItem->setReadOnly(true);
     originalItem->setEnabled(false);
@@ -216,10 +215,10 @@ void MainWindow::addTableRow(){
         // This function can be used outside the timer
         // so we must check if it wasn't the timer 
         fillTableTimer.stop();
-    }
+    } 
 
-    // displayTable->setRowHidden(displayTable->rowCount() -1,true);
-    // Make the ui blink
+    displayTable->setRowHidden(displayTable->rowCount() -1,true);
+    // Make the ui blink (not on windows ; test on Mac)
 
 }
 
@@ -248,8 +247,11 @@ void MainWindow::addTableRowContent(QStringList content){
     contextItem->setValue(content[1].toInt());
     contextItem->setEnabled(true);
     
+    displayTable->setRowHidden(tableFreeIndex,false);
 
     tableFreeIndex++;
+
+
 
 }
 
