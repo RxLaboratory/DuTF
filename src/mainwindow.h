@@ -1,8 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#define INC_TIMER 50  // Time span between each widget creation
-#define MAX_AUTO_ROW 500  // Maximum number of empty rows created in background
+#define INC_TIMER 2  // Time span between each widget creation
 
 #include "ui_mainwindow.h"
 #include <QStyleFactory>

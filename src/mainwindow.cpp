@@ -62,14 +62,14 @@ MainWindow::MainWindow(QWidget *parent) :
     //main status
     mainStatusLabel->setText("Ready");
 
-    //show display page
-    mainStack->setCurrentIndex(0);
-
     //Parser
     jsxParser = new JsxParser(this);
 
     mapEvents();
 
+    //wait until table has 1000 lines
+    setWaiting(true,"Initializing Dutranslator...",1000);
+    //UI will be reenabled when the 1000th line is added
     // Timer
     fillTableTimer.setInterval(INC_TIMER);
     fillTableTimer.start();
@@ -180,8 +180,7 @@ void MainWindow::parsingFinished()
 
     mainStatusBar->clearMessage();
     setWaiting(false);
-    //restart filling the table with empty lines
-    fillTableTimer.start();
+
 }
 
 void MainWindow::parsingFailed(){
@@ -215,14 +214,21 @@ void MainWindow::addTableRow(){
     displayTable->setCellWidget(displayTable->rowCount()-1,2,translatedItem);
     displayTable->setCellWidget(displayTable->rowCount()-1,3,commentItem);
 
-    if(displayTable->rowCount()-tableFreeIndex >= MAX_AUTO_ROW && fillTableTimer.isActive()){
+    if(displayTable->rowCount() >= MAX_AUTO_ROW && fillTableTimer.isActive())
+    {
         // This function can be used outside the timer
-        // so we must check if it wasn't the timer 
+        // so we must check if it wasn't the timer
         fillTableTimer.stop();
+        setWaiting(false);
     }
 
+    if (fillTableTimer.isActive())
+    {
+        //if the timer is running, the progressbar must be updated
+        mainProgressBar->setValue(displayTable->rowCount());
+    }
 
-    // Make the ui blink (not on windows ; test on Mac)
+    //make the UI blink on Linux, needs to check if it still the case when the table is hidden
     displayTable->setRowHidden(displayTable->rowCount() -1,true);
 }
 
