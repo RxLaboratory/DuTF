@@ -16,9 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     updateCSS();
 
     // UI
-    
-    displayTable->setEnabled(false);
-    
+        
     // toolbar
     mainToolBar->setContextMenuPolicy(Qt::PreventContextMenu);
 
@@ -51,12 +49,21 @@ MainWindow::MainWindow(QWidget *parent) :
     //status
     statusLabel = new QLabel("Ready");
     mainStatusBar->addWidget(statusLabel,10);
+    //small progress bar
     progressBar = new QProgressBar();
     progressBar->setMinimum(0);
     progressBar->setMaximum(0);
     progressBar->setMaximumWidth(200);
     mainStatusBar->addPermanentWidget(progressBar);
     progressBar->hide();
+    //main progress bar
+    mainProgressBar->setMinimum(0);
+    mainProgressBar->setMaximum(0);
+    //main status
+    mainStatusLabel->setText("Ready");
+
+    //show display page
+    mainStack->setCurrentIndex(0);
 
     //Parser
     jsxParser = new JsxParser(this);
@@ -90,6 +97,8 @@ void MainWindow::mapEvents(){
     connect(jsxParser,SIGNAL(parsingFinished()),this,SLOT(parsingFinished()));
     connect(jsxParser,SIGNAL(parsingFailed()),this,SLOT(parsingFailed()));
     connect(jsxParser,SIGNAL(progress(int)),progressBar,SLOT(setValue(int)));
+    connect(jsxParser,SIGNAL(progress(int)),mainProgressBar,SLOT(setValue(int)));
+
 
 
     // Actions
@@ -117,9 +126,6 @@ void MainWindow::mapEvents(){
 
 void MainWindow::actionOpen()
 {
-    this->setEnabled(false);
-    // The ui will be re-enabled when the parser sends an END signal
-
     fillTableTimer.stop();
 
     //get file
@@ -131,10 +137,6 @@ void MainWindow::actionOpen()
 
 void MainWindow::openJsxinc(QString fileName)
 {
-    if (fileName.isNull()){
-        this->setEnabled(true);
-        return;
-    }
 
     // Restart table
     tableFreeIndex = 0;    
@@ -144,11 +146,13 @@ void MainWindow::openJsxinc(QString fileName)
     QString displayFileName = filePath[filePath.count()-1];
     languageWidget->setFile(displayFileName);
 
-    //parse
+    //waiting mode
+    setWaiting(true,"Loading " + displayFileName + "...");
+    // The ui will be re-enabled when the parser sends an END signal
     mainStatusBar->showMessage("Loading...");
-    progressBar->setMaximum(100);
-    progressBar->show();
     statusLabel->setText(displayFileName);
+
+    //parse
     jsxParser->parseFile(&workingFile);
 }
 
@@ -173,11 +177,9 @@ void MainWindow::parsingFinished()
     //resize sections
     clearTableToTheEnd();
     displayTable->resizeColumnsToContents();
-    displayTable->setEnabled(true);
 
     mainStatusBar->clearMessage();
-    progressBar->hide();
-    this->setEnabled(true);
+    setWaiting(false);
     //restart filling the table with empty lines
     fillTableTimer.start();
 }
@@ -289,6 +291,34 @@ void MainWindow::clearTableToTheEnd(){
        displayTable->setRowHidden(index,true);
    }
 
+}
+
+void MainWindow::setWaiting(bool wait, QString status, int max)
+{
+    mainStatusLabel->setText(status);
+    mainProgressBar->setMaximum(max);
+    if (wait)
+    {
+        //show the progress bar page
+        mainStack->setCurrentIndex(1);
+        btn_actionAbout->setEnabled(false);
+        btn_actionOpen->setEnabled(false);
+        btn_actionSave->setEnabled(false);
+        btn_actionSaveAs->setEnabled(false);
+        languageWidget->setEnabled(false);
+        searchWidget->setEnabled(false);
+    }
+    else
+    {
+        //show the display page
+        mainStack->setCurrentIndex(0);
+        btn_actionAbout->setEnabled(true);
+        btn_actionOpen->setEnabled(true);
+        btn_actionSave->setEnabled(true);
+        btn_actionSaveAs->setEnabled(true);
+        languageWidget->setEnabled(true);
+        searchWidget->setEnabled(true);
+    }
 }
 
 bool MainWindow::checkLanguage()

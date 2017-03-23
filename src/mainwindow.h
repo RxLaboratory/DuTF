@@ -151,6 +151,15 @@ private slots:
      */
     void clearTableToTheEnd();
 
+    /**
+     * @brief Set the window in waiting mode, showing a progress bar and a label
+     * for use during long operations
+     * @param max		The progress bar maximum value
+     * @param status	The status to be displayed
+     * @param wait      Wether to activate waiting mode or deactivate it
+     */
+    void setWaiting(bool wait = true, QString status = "", int max = 100 );
+
 private:
 
 
