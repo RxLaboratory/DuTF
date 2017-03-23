@@ -68,7 +68,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mapEvents();
 
     //wait until table has 1000 lines
-    setWaiting(true,"Initializing Dutranslator...",1000);
+    setWaiting(true,"Initializing Dutranslator...",MAX_AUTO_ROW);
     //UI will be reenabled when the 1000th line is added
     // Timer
     fillTableTimer.setInterval(INC_TIMER);
