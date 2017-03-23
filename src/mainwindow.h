@@ -261,7 +261,8 @@ private:
 
     /**
      * @brief A progressbar
-     * Used to give feedback on processes
+     * Used to give feedback on background (only) processes
+     * long processes, like opening file, which need to disbale the UI should instead use setWaiting();
      */
     QProgressBar *progressBar;
 
