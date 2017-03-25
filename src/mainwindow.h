@@ -21,6 +21,7 @@
 #include <QThread>
 #include <QTimer>
 #include <QProgressBar>
+#include <QDesktopWidget>
 #include "aboutdialog.h"
 #include "languagewidget.h"
 #include "jsxparser.h"
@@ -194,6 +195,11 @@ private:
      * @param jsxinc	The text to parse
      */
     void parseJsxinc(QTextStream *jsxinc);
+
+    /**
+     * @brief Make the last adjustments after initializing the application
+     */
+    void endInit();
 
 
     // OBJECTS

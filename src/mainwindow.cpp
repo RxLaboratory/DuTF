@@ -16,8 +16,18 @@ MainWindow::MainWindow(QWidget *parent) :
     updateCSS();
 
     // UI
+
+    //Initialization appearance
+    //The window will be correctly displayed in endInit() after everything has been created
+    //small window
+    this->setMinimumSize(300,0);
+    QDesktopWidget *desktop = QApplication::desktop();
+    this->setGeometry(desktop->screenGeometry().width()/2-150,desktop->screenGeometry().height()/2-50,300,100);
+
         
     // toolbar
+    mainToolBar->hide();
+    //Will be shown in endInit() after everything has been created
     mainToolBar->setContextMenuPolicy(Qt::PreventContextMenu);
 
     // search widget
@@ -47,7 +57,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mainToolBar->installEventFilter(this);
 
     //status
-    statusLabel = new QLabel("Ready");
+    statusLabel = new QLabel("");
     mainStatusBar->addWidget(statusLabel,10);
     //small progress bar
     progressBar = new QProgressBar();
@@ -59,17 +69,17 @@ MainWindow::MainWindow(QWidget *parent) :
     //main progress bar
     mainProgressBar->setMinimum(0);
     mainProgressBar->setMaximum(0);
-    //main status
-    mainStatusLabel->setText("Ready");
 
     //Parser
     jsxParser = new JsxParser(this);
 
     mapEvents();
 
-    //wait until table has 1000 lines
+    //wait
+    //Will be updated in endInit() after everything has been created
     setWaiting(true,"Initializing Dutranslator...",MAX_AUTO_ROW);
-    //UI will be reenabled when the 1000th line is added
+    mainStatusBar->showMessage("Creating stuff...");
+
     // Timer
     fillTableTimer.setInterval(INC_TIMER);
     fillTableTimer.start();
@@ -218,8 +228,7 @@ void MainWindow::addTableRow(){
     {
         // This function can be used outside the timer
         // so we must check if it wasn't the timer
-        fillTableTimer.stop();
-        setWaiting(false);
+        endInit();
     }
 
     if (fillTableTimer.isActive())
@@ -230,6 +239,20 @@ void MainWindow::addTableRow(){
 
     //make the UI blink on Linux, needs to check if it still the case when the table is hidden
     displayTable->setRowHidden(displayTable->rowCount() -1,true);
+}
+
+void MainWindow::endInit()
+{
+    //stop filling the table
+    fillTableTimer.stop();
+    //update UI
+    QDesktopWidget *desktop = QApplication::desktop();
+    this->setGeometry(desktop->screenGeometry().width()/2-720,desktop->screenGeometry().height()/2-360,1440,720);
+    this->setMinimumSize(1200,0);
+    mainToolBar->show();
+    //end wainting
+    mainStatusBar->clearMessage();
+    setWaiting(false);
 }
 
 void MainWindow::addTableRowContent(QStringList content){
@@ -301,7 +324,7 @@ void MainWindow::clearTableToTheEnd(){
 
 void MainWindow::setWaiting(bool wait, QString status, int max)
 {
-    mainStatusLabel->setText(status);
+    mainProgressBar->setFormat(status + " | %p%");
     mainProgressBar->setMaximum(max);
     if (wait)
     {
