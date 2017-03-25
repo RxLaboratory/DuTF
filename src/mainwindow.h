@@ -67,22 +67,22 @@ private slots:
 
 
     /**
-     * @brief Create a dialog for openning a new file
+     * @brief Creates a dialog for openning a new file
      */
     void actionOpen();
 
     /**
-     * @brief Save the current file
+     * @brief Saves the current file
      */
     void actionSave();
 
     /**
-     * @brief Save the current file as something else
+     * @brief Saves the current file as something else
      */
     void actionSaveAs();
 
     /**
-     * @brief Open an about dialog
+     * @brief Opens an about dialog
      */
     void actionAbout();
 
@@ -91,13 +91,13 @@ private slots:
 
 
     /**
-     * @brief Search for a given string in the translation file
+     * @brief Searches for a given string in the translation file
      * @param s		The string to look for
      */
     void search(QString s);
 
     /**
-     * @brief Clear the current search
+     * @brief Clears the current search
      */
     void clearSearch();
 
@@ -106,35 +106,35 @@ private slots:
 
 
     /**
-     * @brief Add a new translation to the current translation file
+     * @brief Adds a new translation to the current translation file
      * @param translation	Translation to add
      */
     void newTranslation(QStringList translation);
 
     /**
-     * @brief Start a new language translation
+     * @brief Starts a new language translation
      * @param language		Langauge name and code
      */
     void newLanguage(QStringList language);
 
     /**
-     * @brief Mark the end of the  parsing
+     * @brief Marks the end of the  parsing
      */
     void parsingFinished();
 
     /**
-     * @brief Alert user that the parsing has failed
+     * @brief Alerts user that the parsing has failed
      */
     void parsingFailed();
 
     /**
-     * @brief Add an empty row in the table
+     * @brief Adds an empty row in the table
      * Stops when the MAX_AUTO_ROW is reached
      */
     void addTableRow();
 
     /**
-     * @brief Add content to the last row available
+     * @brief Adds content to the last row available
      * If no row is available, a new one is created
      *
      * @param content   A list of 4 strings
@@ -146,14 +146,14 @@ private slots:
     void addTableRowContent(QStringList content);
 
     /**
-     * @brief Clear the table content
+     * @brief Clears the table content
      * The clear goes from tableFreeIndex to the last row
      * This allows to modify the rows and only the clear the rows not in use
      */
     void clearTableToTheEnd();
 
     /**
-     * @brief Set the window in waiting mode, showing a progress bar and a label
+     * @brief Sets the window in waiting mode, showing a progress bar and a label
      * for use during long operations
      * @param max		The progress bar maximum value
      * @param status	The status to be displayed
@@ -168,36 +168,36 @@ private:
 
 
     /**
-     * @brief Update the windows stylesheet
+     * @brief Updates the windows stylesheet
      */
     void updateCSS();
 
     /**
-     * @brief Connect required signals and slots
+     * @brief Connects required signals and slots
      * Executed on construction only
      */
     void mapEvents();
 
     /**
-     * @brief Check if languages fields are completed
+     * @brief Checks if languages fields are completed
      * @return	True if fields are completed
      */
     bool checkLanguage();
 
     /**
-     * @brief Open a js translation file
+     * @brief Opens a js translation file
      * @param fileName	Js file name
      */
     void openJsxinc(QString fileName);
 
     /**
-     * @brief Parse a js translation text
+     * @brief Parses a js translation text
      * @param jsxinc	The text to parse
      */
     void parseJsxinc(QTextStream *jsxinc);
 
     /**
-     * @brief Make the last adjustments after initializing the application
+     * @brief Makes the last adjustments after initializing the application
      */
     void endInit();
 
@@ -236,20 +236,20 @@ private:
 
 #ifndef Q_OS_MAC
     /**
-     * @brief Maximize window button
+     * @brief Maximizes window button
      * Only on linux and windows
      */
     QPushButton *maximizeButton;
 
     /**
-     * @brief Minimize window button
+     * @brief Minimizes window button
      * Only on linux and windows
      */
     QPushButton *minimizeButton;
 #endif
 
     /**
-     * @brief Quit application button
+     * @brief Quits application button
      */
     QPushButton *quitButton;
 
