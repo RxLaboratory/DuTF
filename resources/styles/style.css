@@ -463,6 +463,11 @@ QHeaderView::section:vertical {
 	border-bottom: 2px solid #434343;
 }
 
+QTableWidget QPushButton {
+	border:none;
+	background-color:rgba(0,0,0,0);
+}
+
 /* TABS */
 
 QTabWidget { 

@@ -12,5 +12,7 @@
         <file alias="icons/search">../resources/icons/icones-86.png</file>
         <file alias="icons/clear">../resources/icons/close3.png</file>
         <file alias="icons/app">../resources/icons/dutr_mac.iconset/icon_512x512@2x.png</file>
+        <file alias="icons/add">../resources/icons/add.png</file>
+        <file alias="icons/trash">../resources/icons/trash.png</file>
     </qresource>
 </RCC>
