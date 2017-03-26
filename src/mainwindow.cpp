@@ -194,6 +194,7 @@ void MainWindow::parsingFinished()
     //resize sections
     clearTableToTheEnd();
     displayTable->resizeColumnsToContents();
+    adjustColumnSizes();
 
     mainStatusBar->clearMessage();
     setWaiting(false);
@@ -597,6 +598,30 @@ void MainWindow::actionPreferences(bool checked)
     }
 }
 
+void MainWindow::adjustColumnSizes()
+{
+    //get available space
+    int availableWidth = displayTable->width();
+    //get occupied space
+    //header
+    int occupiedWidth = displayTable->verticalHeader()->width();
+    //and each column
+    for (int column = 0;column < displayTable->columnCount();column++)
+    {
+        occupiedWidth += displayTable->columnWidth(column);
+        //don't forget margins
+        occupiedWidth += 3;
+    }
+
+    //use available space
+    int emptySpace = availableWidth - occupiedWidth;
+    if (emptySpace > 0)
+    {
+        displayTable->setColumnWidth(1,displayTable->columnWidth(1)+emptySpace/2);
+        displayTable->setColumnWidth(3,displayTable->columnWidth(3)+emptySpace/2);
+    }
+}
+
 #ifndef Q_OS_MAC
 void MainWindow::maximize()
 {
@@ -680,6 +705,11 @@ void MainWindow::dragLeaveEvent(QDragLeaveEvent *event)
     progressBar->hide();
     this->setEnabled(true);
     event->accept();
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    adjustColumnSizes();
 }
 
 //EVENT FILTER

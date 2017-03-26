@@ -241,6 +241,11 @@ private:
      */
     void endInit();
 
+    /**
+     * @brief Adjusts the column sizes to use all available space
+     */
+    void adjustColumnSizes();
+
 
     // OBJECTS
 
@@ -335,6 +340,7 @@ protected:
     void dragEnterEvent(QDragEnterEvent *event);
     void dragMoveEvent(QDragMoveEvent *event);
     void dragLeaveEvent(QDragLeaveEvent *event);
+    void resizeEvent(QResizeEvent *event);
 };
 
 #endif // MAINWINDOW_H
