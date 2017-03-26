@@ -468,6 +468,16 @@ QTableWidget QPushButton {
 	background-color:rgba(0,0,0,0);
 }
 
+QTableWidget QPlainTextEdit, QTableWidget QTextEdit, QTableWidget QSpinBox, QTableWidget QLineEdit {
+	border:none;
+	background-color:rgba(0,0,0,0);
+}
+
+QTableWidget QPlainTextEdit:hover, QTableWidget QPlainTextEdit:focus, QTableWidget QTextEdit:hover, QTableWidget QTextEdit:focus, QTableWidget QSpinBox:hover, QTableWidget QSpinBox:focus, QTableWidget QLineEdit:hover, QTableWidget QLineEdit:focus {
+	border: 2px solid #6d6d6d;
+	background-color:#6d6d6d;
+}
+
 /* TABS */
 
 QTabWidget { 
