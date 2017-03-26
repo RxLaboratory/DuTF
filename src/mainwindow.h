@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #define INC_TIMER 2  // Time span between each widget creation
-#define MAX_AUTO_ROW 750  // Maximum number of empty rows created in background
+#define MAX_AUTO_ROW 10  // Maximum number of empty rows created in background
 
 #include "ui_mainwindow.h"
 #include <QStyleFactory>
@@ -27,6 +27,7 @@
 #include "jsxparser.h"
 #include "searchwidget.h"
 #include "rowbuttonswidget.h"
+#include "preferenceswidget.h"
 
 namespace Ui {
     class MainWindow;
@@ -86,6 +87,11 @@ private slots:
      * @brief Opens an about dialog
      */
     void actionAbout();
+
+    /**
+     * @brief Shows the preferences panel
+     */
+    void actionPreferences(bool checked);
 
 
     // =======OTHER USER INTERACTIONS
@@ -182,6 +188,18 @@ private slots:
      * @brief Adds a row below the current row
      */
     void actionAddRow();
+
+    /**
+     * @brief Shows the main page (hide preferences, about, etc.)
+     */
+    void showMainPage();
+
+    /**
+     * @brief Sets the appearance of the toolbar
+     *
+     * @param appearance        0-Text under, 1-Text Beside, 2-Icon only, 3-Text Only
+     */
+    void setToolBarAppearance(int appearance);
 
 private:
 
@@ -303,6 +321,11 @@ private:
      * @brief The Parser
      */
     JsxParser *jsxParser;
+
+    /**
+     * @brief The Preferences panel
+     */
+    PreferencesWidget *preferences;
 
 protected:
 

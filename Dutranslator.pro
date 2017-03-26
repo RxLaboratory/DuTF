@@ -13,7 +13,8 @@ SOURCES += main.cpp\
     jsxparser.cpp \
     searchwidget.cpp \
     utils.cpp \
-    src/rowbuttonswidget.cpp
+    src/rowbuttonswidget.cpp \
+    src/preferenceswidget.cpp
 
 HEADERS  += mainwindow.h \
     languagewidget.h \
@@ -21,13 +22,15 @@ HEADERS  += mainwindow.h \
     jsxparser.h \
     searchwidget.h \
     utils.h \
-    src/rowbuttonswidget.h
+    src/rowbuttonswidget.h \
+    src/preferenceswidget.h
 
 FORMS    += mainwindow.ui \
     languagewidget.ui \
     aboutdialog.ui \
     searchwidget.ui \
-    src/rowbuttonswidget.ui
+    src/rowbuttonswidget.ui \
+    src/preferenceswidget.ui
 
 RESOURCES += resources.qrc
 

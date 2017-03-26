@@ -38,6 +38,10 @@ MainWindow::MainWindow(QWidget *parent) :
     languageWidget = new LanguageWidget(this);
     mainToolBar->addWidget(languageWidget);
 
+    // preferences
+    preferences = new PreferencesWidget(this);
+    preferencesLayout->addWidget(preferences);
+
     // window buttons
 
 #ifndef Q_OS_MAC
@@ -109,17 +113,20 @@ void MainWindow::mapEvents(){
     connect(jsxParser,SIGNAL(progress(int)),progressBar,SLOT(setValue(int)));
     connect(jsxParser,SIGNAL(progress(int)),mainProgressBar,SLOT(setValue(int)));
 
-
-
     // Actions
     connect(this->btn_actionSaveAs, SIGNAL(triggered(bool)), this, SLOT(actionSaveAs()));
     connect(this->btn_actionSave, SIGNAL(triggered(bool)), this, SLOT(actionSave()));
     connect(this->btn_actionOpen, SIGNAL(triggered(bool)), this, SLOT(actionOpen()));
     connect(this->btn_actionAbout, SIGNAL(triggered(bool)), this, SLOT(actionAbout()));
+    connect(this->btn_actionPreferences, SIGNAL(triggered(bool)), this, SLOT(actionPreferences(bool)));
 
     // Search
     connect(searchWidget,SIGNAL(search(QString)),this,SLOT(search(QString)));
     connect(searchWidget,SIGNAL(clear()),this,SLOT(clearSearch()));
+
+    // Preferences
+    connect(preferences,SIGNAL(hidePreferences()),this,SLOT(showMainPage()));
+    connect(preferences,SIGNAL(changeToolBarAppearance(int)),this,SLOT(setToolBarAppearance(int)));
 
     // Window management
 #ifndef Q_OS_MAC
@@ -400,6 +407,7 @@ void MainWindow::setWaiting(bool wait, QString status, int max)
         btn_actionOpen->setEnabled(false);
         btn_actionSave->setEnabled(false);
         btn_actionSaveAs->setEnabled(false);
+        btn_actionPreferences->setEnabled(false);
         languageWidget->setEnabled(false);
         searchWidget->setEnabled(false);
     }
@@ -411,8 +419,35 @@ void MainWindow::setWaiting(bool wait, QString status, int max)
         btn_actionOpen->setEnabled(true);
         btn_actionSave->setEnabled(true);
         btn_actionSaveAs->setEnabled(true);
+        btn_actionPreferences->setEnabled(true);
         languageWidget->setEnabled(true);
         searchWidget->setEnabled(true);
+    }
+}
+
+void MainWindow::showMainPage()
+{
+    btn_actionPreferences->setChecked(false);
+    mainStack->setCurrentIndex(0);
+}
+
+void MainWindow::setToolBarAppearance(int appearance)
+{
+    if (appearance == 0)
+    {
+        this->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    }
+    else if (appearance == 1)
+    {
+        this->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    }
+    else if (appearance == 2)
+    {
+        this->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    }
+    else if (appearance == 3)
+    {
+        this->setToolButtonStyle(Qt::ToolButtonTextOnly);
     }
 }
 
@@ -548,6 +583,20 @@ void MainWindow::actionAbout()
     AboutDialog().exec();
 }
 
+void MainWindow::actionPreferences(bool checked)
+{
+    if (checked)
+    {
+        //show the preferences page
+        mainStack->setCurrentIndex(2);
+    }
+    else
+    {
+        //show the main page
+        mainStack->setCurrentIndex(0);
+    }
+}
+
 #ifndef Q_OS_MAC
 void MainWindow::maximize()
 {
@@ -678,3 +727,4 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
       return QObject::eventFilter(obj, event);
   }
 }
+

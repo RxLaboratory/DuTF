@@ -14,5 +14,8 @@
         <file alias="icons/app">../resources/icons/dutr_mac.iconset/icon_512x512@2x.png</file>
         <file alias="icons/add">../resources/icons/add.png</file>
         <file alias="icons/trash">../resources/icons/trash.png</file>
+        <file alias="icons/cogs">../resources/icons/cogs.png</file>
+        <file alias="icons/left">../resources/icons/left.png</file>
+        <file alias="icons/refresh">../resources/icons/refresh.png</file>
     </qresource>
 </RCC>
