@@ -203,26 +203,51 @@ void MainWindow::parsingFailed(){
 
 }
 
-void MainWindow::addTableRow(){
-    
+void MainWindow::addTableRow(int index){
+
+    bool userRow = false;
+
+    if(index >= 0 && index < displayTable->rowCount()){
+        index++;
+        displayTable->insertRow(index);
+        userRow = true;
+    }else{
+        displayTable->setRowCount(displayTable->rowCount()+1);
+        index = displayTable->rowCount() - 1;
+    }
+
     QTextEdit *originalItem = new QTextEdit();
     originalItem->setReadOnly(true);
-    originalItem->setEnabled(false);
+    originalItem->setEnabled(userRow);
 
     QSpinBox *contextItem = new QSpinBox();
-    contextItem->setEnabled(false);
+    contextItem->setEnabled(userRow);
 
     QTextEdit *translatedItem = new QTextEdit();
-    translatedItem->setEnabled(false);
+    translatedItem->setEnabled(userRow);
 
     QLineEdit *commentItem = new QLineEdit();
-    commentItem->setEnabled(false);
+    commentItem->setEnabled(userRow);
 
-    displayTable->setRowCount(displayTable->rowCount()+1);
-    displayTable->setCellWidget(displayTable->rowCount()-1,0,originalItem);
-    displayTable->setCellWidget(displayTable->rowCount()-1,1,contextItem);
-    displayTable->setCellWidget(displayTable->rowCount()-1,2,translatedItem);
-    displayTable->setCellWidget(displayTable->rowCount()-1,3,commentItem);
+    // Actions
+    QWidget * actions = new QWidget();
+    QLayout * actionsLayout = new QHBoxLayout();
+    actions->setLayout(actionsLayout);
+
+    QPushButton * actionAdd = new QPushButton("+");
+    QPushButton * actionRemove = new QPushButton("X");
+
+    connect(actionRemove, SIGNAL(clicked(bool)), this, SLOT(actionRemoveRow()));
+    connect(actionAdd, SIGNAL(clicked(bool)), this, SLOT(actionAddRow()));
+
+    actionsLayout->addWidget(actionAdd);
+    actionsLayout->addWidget(actionRemove);
+
+    displayTable->setCellWidget(index,0,actions);
+    displayTable->setCellWidget(index,1,originalItem);
+    displayTable->setCellWidget(index,2,contextItem);
+    displayTable->setCellWidget(index,3,translatedItem);
+    displayTable->setCellWidget(index,4,commentItem);
 
     if(displayTable->rowCount() >= MAX_AUTO_ROW && fillTableTimer.isActive())
     {
@@ -237,8 +262,51 @@ void MainWindow::addTableRow(){
         mainProgressBar->setValue(displayTable->rowCount());
     }
 
-    //make the UI blink on Linux, needs to check if it still the case when the table is hidden
-    displayTable->setRowHidden(displayTable->rowCount() -1,true);
+    if(!userRow){
+        //make the UI blink on Linux, needs to check if it still the case when the table is hidden
+        // Hide only if the row was added by the timer
+
+        displayTable->setRowHidden(displayTable->rowCount() -1,true);
+
+    }
+
+}
+
+void MainWindow::actionRemoveRow(){
+
+    QPushButton* button = qobject_cast<QPushButton*>(sender());
+    QObject * parent = button->parent();
+    int deleteRow = 0;
+    for(deleteRow = 0; deleteRow < displayTable->rowCount(); ++deleteRow){
+      if(displayTable->cellWidget(deleteRow, 0) == parent){
+          displayTable->selectRow(deleteRow); // To avoid automatic scroll
+          displayTable->removeRow(deleteRow);
+          return;
+      }
+    }
+
+}
+
+void MainWindow::actionAddRow(){
+
+    QPushButton* button = qobject_cast<QPushButton*>(sender());
+    QObject * parent = button->parent();
+    int currentRow = 0;
+    bool found = false;
+    for(currentRow = 0; currentRow < displayTable->rowCount(); ++currentRow){
+      if(displayTable->cellWidget(currentRow, 0) == parent){
+          displayTable->selectRow(currentRow); // To avoid automatic scroll
+          found = true;
+          break;
+      }
+    }
+
+    if(found){
+
+        addTableRow(currentRow);
+        //displayTable->resizeRowsToContents(); does a terrible job
+    }
+
 }
 
 void MainWindow::endInit()
@@ -261,22 +329,22 @@ void MainWindow::addTableRowContent(QStringList content){
 
     
     QTextEdit * originalItem = dynamic_cast<QTextEdit *>(displayTable
-            ->cellWidget(tableFreeIndex, 0));
+            ->cellWidget(tableFreeIndex, 1));
     originalItem->setPlainText(utils::unEscape(content[0]));
     originalItem->setEnabled(true);
 
     QTextEdit * translatedItem = dynamic_cast<QTextEdit *>(displayTable
-            ->cellWidget(tableFreeIndex, 2));
+            ->cellWidget(tableFreeIndex, 3));
     translatedItem->setPlainText(utils::unEscape(content[2]));
     translatedItem->setEnabled(true);
 
     QLineEdit * commentItem = dynamic_cast<QLineEdit *>(displayTable
-            ->cellWidget(tableFreeIndex, 3));
+            ->cellWidget(tableFreeIndex, 4));
     commentItem->setText(utils::unEscape(content[3]));
     commentItem->setEnabled(true);
 
     QSpinBox * contextItem = dynamic_cast<QSpinBox *>(displayTable
-            ->cellWidget(tableFreeIndex, 1));
+            ->cellWidget(tableFreeIndex, 2));
     contextItem->setValue(content[1].toInt());
     contextItem->setEnabled(true);
     
@@ -297,22 +365,22 @@ void MainWindow::clearTableToTheEnd(){
    int index;
    for(index = tableFreeIndex; index < displayTable->rowCount(); index++){
        originalItem = dynamic_cast<QTextEdit *>(displayTable
-               ->cellWidget(index, 0));
+               ->cellWidget(index, 1));
        originalItem->setPlainText("");
        originalItem->setEnabled(false);
 
        translatedItem = dynamic_cast<QTextEdit *>(displayTable
-               ->cellWidget(index, 2));
+               ->cellWidget(index, 3));
        translatedItem->setPlainText("");
        translatedItem->setEnabled(false);
 
        commentItem = dynamic_cast<QLineEdit *>(displayTable
-               ->cellWidget(index, 3));
+               ->cellWidget(index, 4));
        commentItem->setText("");
        commentItem->setEnabled(false);
 
        contextItem = dynamic_cast<QSpinBox *>(displayTable
-               ->cellWidget(index, 1));
+               ->cellWidget(index, 2));
        contextItem->setValue(0);
        contextItem->setEnabled(false);
 
@@ -387,17 +455,17 @@ void MainWindow::search(QString s)
         //TODO highlight found strings
         if (original || (!original && !translated && !comment))
         {
-            QTextEdit *originalEdit = (QTextEdit*)displayTable->cellWidget(row,0);
+            QTextEdit *originalEdit = (QTextEdit*)displayTable->cellWidget(row,1);
             if (originalEdit->toPlainText().indexOf(s,0,caseSensitive) >= 0) found = true;
         }
         if (translated || (!original && !translated && !comment))
         {
-            QTextEdit *translatedEdit = (QTextEdit*)displayTable->cellWidget(row,2);
+            QTextEdit *translatedEdit = (QTextEdit*)displayTable->cellWidget(row,3);
             if (translatedEdit->toPlainText().indexOf(s,0,caseSensitive) >= 0) found = true;
         }
         if (comment || (!original && !translated && !comment))
         {
-            QLineEdit *commentEdit = (QLineEdit*)displayTable->cellWidget(row,3);
+            QLineEdit *commentEdit = (QLineEdit*)displayTable->cellWidget(row,4);
             if (commentEdit->text().indexOf(s,0,caseSensitive) >= 0) found = true;
         }
         displayTable->setRowHidden(row,!found);
@@ -439,10 +507,10 @@ void MainWindow::actionSave()
     //populate
     for (int row = 0; row < displayTable->rowCount() ; row++)
     {
-        QTextEdit *originalEdit = (QTextEdit*)displayTable->cellWidget(row,0);
-        QSpinBox *contextBox = (QSpinBox*)displayTable->cellWidget(row,1);
-        QTextEdit *translatedEdit = (QTextEdit*)displayTable->cellWidget(row,2);
-        QLineEdit *commentEdit = (QLineEdit*)displayTable->cellWidget(row,3);
+        QTextEdit *originalEdit = (QTextEdit*)displayTable->cellWidget(row,1);
+        QSpinBox *contextBox = (QSpinBox*)displayTable->cellWidget(row,2);
+        QTextEdit *translatedEdit = (QTextEdit*)displayTable->cellWidget(row,3);
+        QLineEdit *commentEdit = (QLineEdit*)displayTable->cellWidget(row,4);
         QString original = originalEdit->toPlainText();
         original = utils::escape(original);
         QString translated = translatedEdit->toPlainText();
