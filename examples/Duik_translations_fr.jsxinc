@@ -1,0 +1,30 @@
+Dutranslator.languages.push(['fr','Français']);
+var DutranslatorArray = [];
+DutranslatorArray.push(["INSTALLATION",1,"TEST"]);
+DutranslatorArray.push(["Duik needs to be allowed to write files to display its buttons, and to access the network to check for updates.",0,"Duik doit pouvoir écrire des fichiers pour afficher ses boutons, et avoir accès au réseau pour chercher des mises à jours."]);
+DutranslatorArray.push(["Please, check the box called 'Allow Scripts to write files...' in the general preferences of After Effects.",0,"Veuillez sélectionner la case 'Autoriser les scripts à écrire des fichiers...' dans les préférences générales d'After Effects."]);
+DutranslatorArray.push(["Open General Preferences",0,"Ouvrir les préférences."]); //test commentaire
+DutranslatorArray.push(["A new version of Duik is available,\ngo to http://rainboxprod.coop to download it",0,"Une nouvelle version de Duik est disponible,\nrendez-vous sur http://rainboxprod.coop pour la télécharger"]); //autre test
+DutranslatorArray.push(["Duik current version: ",0,"Version actuelle de Duik : "]);
+DutranslatorArray.push(["UPDATE AVAILABLE -\n\nA new version of Duik is available!\nVersion: ",0,"MISE A JOUR DISPONIBLE - \n\nUne nouvelle version de Duik est disponible : \n\nVersion : "]);
+DutranslatorArray.push(["\n\nGo to http://rainboxprod.coop to download it.",0,"\n\nRendez-vous sur http://rainboxprod.coop pour la télécharger."]);
+DutranslatorArray.push(["Launch Duik",0,"Lancer Duik"]);
+DutranslatorArray.push(["INSTALLATION COMPLETE",0,"INSTALLATION COMPLETE"]);
+DutranslatorArray.push(["After Effects must be restarted\n\nto complete the installation of Duik\n\nMay the god(s?) of animation be with you!\n\n",0,"After Effects doit être redémarré\n\npour terminer l'installation de Duik.\n\nQue les Dieux de l'animation soient avec vous !\n\n"]);
+DutranslatorArray.push(["It seems Duik can not automatically install the pseudo effects it needs.\n\nThe easiest way to fix this is by restarting After Effects with administrator privileges,\n\nor you can manually install the pseudo effects needed by Duik: click on the 'Next' button below.",0,"Il semble que Duik ne peut pas automatiquement installer les pseudo-effets dont il a besoin.\n\nLa manière la plus facile de régler ce problème est de redémarrer After Effects en tant qu'administrateur,\n\nou bien vous pouvez installer manuellement les effets dont Duik a besoin : cliquez sur le bouton \"suivant\" ci-dessous."]);
+DutranslatorArray.push(["Open the file 'presetEffects.xml':\nRight click on\nApplications/Adobe After Effects/Adobe After Effects.app,\nSelect 'Show package contents', go to\nContents/Resources/PresetEffects.xml.",0,"Ouvrez le fichier 'presetEffects.xml':\nClic droit sur \nApplications/Adobe After Effects/Adobe After Effects.app,\nSélectionnez 'Afficher le contenu du paquet', allez à \nContents/Resources/PresetEffects.xml."]);
+DutranslatorArray.push(["Open the file 'presetEffects.xml' :\nC:\\Program Files\\Adobe\\Adobe After Effects\\Support Files\\PresetEffects.xml.",0,"Ouvrez le fichier 'presetEffects.xml' :\nC:\\Program Files\\Adobe\\Adobe After Effects\\Support Files\\PresetEffects.xml."]);
+DutranslatorArray.push(["Copy the content of the box below,\nhit Cmd+A\nto select all the text,\nthen Cmd+C to copy it.",0,"Copiez le contenu de la boîte ci-dessous,\ntapez Cmd+A\npour sélectionner tout le texte,\npuis Cmd+C pour le copier."]);
+DutranslatorArray.push(["Copy the content of the box below,\nhit Ctrl+A\nto select all the text,\nthen Ctrl+C to copy it.",0,"Copiez le contenu de la boîte ci-dessous,\ntapez Ctrl+A\npour sélectionner tout le texte,\npuis Ctrl+C pour le copier."]);
+DutranslatorArray.push(["Paste this text in the file 'presetEffects.xml'\njust BEFORE the last line: '</effects>'.",0,"Collez ce texte dans le fichier 'presetEffects.xml'\njuste AVANT la dernière ligne : '</effects>'."]);
+DutranslatorArray.push(["Previous",0,"Précédent"]);
+DutranslatorArray.push(["Next",0,"Suivant"]);
+DutranslatorArray.push(["Finish installation now!",0,"Terminer l'installation maintenant !"]);
+DutranslatorArray.push(["ERROR",0,"ERREUR"]);
+DutranslatorArray.push(["Oops!\nSomething is wrong, Duik can not find pseudo effects.\n\nGo to http://www.duduf.net to get help.",0,"Oups !\nQuelque chose ne fonctionne pas, Duik ne trouve pas ses pseudo-effets.\n\nAllez sur http://forum.duduf.com pour obtenir de l'ade."]);
+DutranslatorArray.push(["Duik - Loading icons",0,"Duik - Chargement des icônes"]);
+DutranslatorArray.push(["Error writing file: ",0,"Erreur à l'écriture du fichier : "]);
+DutranslatorArray.push(["Duik - Loading functions",0,"Duik - Chargement des fonctions"]);
+DutranslatorArray.push(["shoulder blade",0,"omoplate"]);
+Dutranslator.localizedStrings.push(DutranslatorArray);
+delete DutranslatorArray;
