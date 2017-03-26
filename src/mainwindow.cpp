@@ -386,7 +386,6 @@ void MainWindow::clearTableToTheEnd(){
        // Make the ui blink (not on windows ; test on Mac)
        displayTable->setRowHidden(index,true);
    }
-
 }
 
 void MainWindow::setWaiting(bool wait, QString status, int max)
@@ -447,7 +446,7 @@ void MainWindow::search(QString s)
     Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive;
     if (searchWidget->caseSensitive()) caseSensitive = Qt::CaseSensitive;
 
-    for (int row = 0 ; row < displayTable->rowCount() ; row++)
+    for (int row = 0 ; row < tableFreeIndex ; row++)
     {
         progressBar->setValue(row);
         bool found = false;
@@ -480,7 +479,7 @@ void MainWindow::clearSearch()
     progressBar->setMaximum(displayTable->rowCount()-1);
     progressBar->show();
 
-    for (int row = 0 ; row < displayTable->rowCount() ; row++)
+    for (int row = 0 ; row < tableFreeIndex ; row++)
     {
         progressBar->setValue(row);
 

@@ -159,7 +159,7 @@ private slots:
     /**
      * @brief Clears the table content
      * The clear goes from tableFreeIndex to the last row
-     * This allows to modify the rows and only the clear the rows not in use
+     * This allows to modify the rows and to clear only the rows not in use
      */
     void clearTableToTheEnd();
 
