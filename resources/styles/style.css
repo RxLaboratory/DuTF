@@ -199,6 +199,13 @@ QToolBar {
 	padding: 3px;
 }
 
+QToolBar::separator {
+	background: #535353;
+	width:3px;
+	height:3px;
+	border-radius: 8px;
+}
+
 QToolButton {
 	color: #e3e3e3;
 	border: none;
