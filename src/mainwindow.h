@@ -130,8 +130,11 @@ private slots:
     /**
      * @brief Adds an empty row in the table
      * Stops when the MAX_AUTO_ROW is reached
+     *
+     * @param index   The row will be added bellow the row with the given index
+     * If index is not in the correct range, the row is added at the end
      */
-    void addTableRow();
+    void addTableRow(int index = -1);
 
     /**
      * @brief Adds content to the last row available
@@ -160,6 +163,18 @@ private slots:
      * @param wait      Wether to activate waiting mode or deactivate it
      */
     void setWaiting(bool wait = true, QString status = "", int max = 100 );
+
+    /**
+     * @brief Delete the current row
+     *
+     * the sender object is used to detect what is the row to delete
+     */
+    void actionRemoveRow();
+
+    /**
+     * @brief Add a row bellow the current row
+     */
+    void actionAddRow();
 
 private:
 
