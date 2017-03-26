@@ -26,6 +26,7 @@
 #include "languagewidget.h"
 #include "jsxparser.h"
 #include "searchwidget.h"
+#include "rowbuttonswidget.h"
 
 namespace Ui {
     class MainWindow;
@@ -137,6 +138,13 @@ private slots:
     void addTableRow(int index = -1);
 
     /**
+     * @brief Removes a row
+     *
+     * @param index     The index of the row to remove
+     */
+    void removeTableRow(int index);
+
+    /**
      * @brief Adds content to the last row available
      * If no row is available, a new one is created
      *
@@ -165,14 +173,13 @@ private slots:
     void setWaiting(bool wait = true, QString status = "", int max = 100 );
 
     /**
-     * @brief Delete the current row
+     * @brief Asks for the user confirmation to remove a row
      *
-     * the sender object is used to detect what is the row to delete
      */
     void actionRemoveRow();
 
     /**
-     * @brief Add a row bellow the current row
+     * @brief Adds a row below the current row
      */
     void actionAddRow();
 

@@ -230,20 +230,11 @@ void MainWindow::addTableRow(int index){
     commentItem->setEnabled(userRow);
 
     // Actions
-    QWidget * actions = new QWidget();
-    QLayout * actionsLayout = new QHBoxLayout();
-    actions->setLayout(actionsLayout);
+    RowButtonsWidget *rowButtons = new RowButtonsWidget();
+    connect(rowButtons, SIGNAL(removeRow()), this, SLOT(actionRemoveRow()));
+    connect(rowButtons, SIGNAL(addRow()), this, SLOT(actionAddRow()));
 
-    QPushButton * actionAdd = new QPushButton("+");
-    QPushButton * actionRemove = new QPushButton("X");
-
-    connect(actionRemove, SIGNAL(clicked(bool)), this, SLOT(actionRemoveRow()));
-    connect(actionAdd, SIGNAL(clicked(bool)), this, SLOT(actionAddRow()));
-
-    actionsLayout->addWidget(actionAdd);
-    actionsLayout->addWidget(actionRemove);
-
-    displayTable->setCellWidget(index,0,actions);
+    displayTable->setCellWidget(index,0,rowButtons);
     displayTable->setCellWidget(index,1,originalItem);
     displayTable->setCellWidget(index,2,contextItem);
     displayTable->setCellWidget(index,3,translatedItem);
@@ -262,51 +253,59 @@ void MainWindow::addTableRow(int index){
         mainProgressBar->setValue(displayTable->rowCount());
     }
 
-    if(!userRow){
+    if(!userRow)
+    {
         //make the UI blink on Linux, needs to check if it still the case when the table is hidden
         // Hide only if the row was added by the timer
 
         displayTable->setRowHidden(displayTable->rowCount() -1,true);
-
     }
-
 }
 
-void MainWindow::actionRemoveRow(){
-
-    QPushButton* button = qobject_cast<QPushButton*>(sender());
-    QObject * parent = button->parent();
-    int deleteRow = 0;
-    for(deleteRow = 0; deleteRow < displayTable->rowCount(); ++deleteRow){
-      if(displayTable->cellWidget(deleteRow, 0) == parent){
-          displayTable->selectRow(deleteRow); // To avoid automatic scroll
-          displayTable->removeRow(deleteRow);
-          return;
-      }
-    }
-
+void MainWindow::removeTableRow(int index)
+{
+          displayTable->selectRow(index); // To avoid automatic scroll
+          displayTable->removeRow(index);
 }
 
-void MainWindow::actionAddRow(){
+void MainWindow::actionRemoveRow()
+{
+        QWidget* button = qobject_cast<QWidget*>(sender());
+        int deleteRow = 0;
+        for(deleteRow = 0; deleteRow < displayTable->rowCount(); deleteRow++)
+        {
+            if(displayTable->cellWidget(deleteRow, 0) == button)
+            {
+                QMessageBox mb(QMessageBox::Question,"Remove Translation","Are you sure you want to remove the row " + QString::number(deleteRow+1) + "?",QMessageBox::Yes | QMessageBox::No,this,Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
+                mb.exec();
+                if (mb.result() == QMessageBox::Yes)
+                {
+                  removeTableRow(deleteRow);
+                  return;
+                }
+            }
+        }
+}
 
-    QPushButton* button = qobject_cast<QPushButton*>(sender());
-    QObject * parent = button->parent();
+void MainWindow::actionAddRow()
+{
+    //get the sender widget, to find the current row
+    QWidget* button = qobject_cast<QWidget*>(sender());
     int currentRow = 0;
     bool found = false;
     for(currentRow = 0; currentRow < displayTable->rowCount(); ++currentRow){
-      if(displayTable->cellWidget(currentRow, 0) == parent){
+      if(displayTable->cellWidget(currentRow, 0) == button){
           displayTable->selectRow(currentRow); // To avoid automatic scroll
           found = true;
           break;
       }
     }
 
-    if(found){
-
+    if(found)
+    {
         addTableRow(currentRow);
         //displayTable->resizeRowsToContents(); does a terrible job
     }
-
 }
 
 void MainWindow::endInit()

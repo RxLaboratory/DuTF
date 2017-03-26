@@ -12,19 +12,22 @@ SOURCES += main.cpp\
     aboutdialog.cpp \
     jsxparser.cpp \
     searchwidget.cpp \
-    utils.cpp
+    utils.cpp \
+    src/rowbuttonswidget.cpp
 
 HEADERS  += mainwindow.h \
     languagewidget.h \
     aboutdialog.h \
     jsxparser.h \
     searchwidget.h \
-    utils.h
+    utils.h \
+    src/rowbuttonswidget.h
 
 FORMS    += mainwindow.ui \
     languagewidget.ui \
     aboutdialog.ui \
-    searchwidget.ui
+    searchwidget.ui \
+    src/rowbuttonswidget.ui
 
 RESOURCES += resources.qrc
 
