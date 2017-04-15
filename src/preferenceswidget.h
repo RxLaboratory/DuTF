@@ -3,6 +3,9 @@
 
 #include "ui_preferenceswidget.h"
 #include <QFileDialog>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
 
 class PreferencesWidget : public QWidget, private Ui::PreferencesWidget
 {
@@ -42,6 +45,7 @@ private slots:
 
     /**
      * @brief enables the updateCSSButton if set to custom CSS
+     * and emits changeCSS(QString) according to the choice of the user
      *
      */
     void on_styleBox_currentIndexChanged(int index);
@@ -51,7 +55,18 @@ private slots:
      *
      */
     void on_toolBarStyleBox_currentIndexChanged(int index);
+
+    /**
+     * @brief emits changeCSS(QString) to tell the mainwindow to update CSS
+     *
+     */
     void on_updateCSSButton_clicked();
+
+private:
+    /**
+     * @brief database access to the preferences file (SQLite)
+     */
+    QSqlDatabase db;
 };
 
 #endif // PREFERENCESWIDGET_H

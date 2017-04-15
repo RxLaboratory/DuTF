@@ -17,5 +17,6 @@
         <file alias="icons/cogs">../resources/icons/cogs.png</file>
         <file alias="icons/left">../resources/icons/left.png</file>
         <file alias="icons/refresh">../resources/icons/refresh.png</file>
+        <file alias="misc/prefs">../resources/misc/prefs.s3db</file>
     </qresource>
 </RCC>
