@@ -1,5 +1,4 @@
 #include "preferenceswidget.h"
-#include <QtDebug>
 
 PreferencesWidget::PreferencesWidget(QWidget *parent) :
     QWidget(parent)
