@@ -201,16 +201,17 @@ private slots:
      */
     void setToolBarAppearance(int appearance);
 
+    /**
+     * @brief Updates the windows stylesheet
+     *
+     * @param cssFileName   The file name of the CSS to load
+     */
+    void updateCSS(QString cssFileName);
+
 private:
 
 
     // METHODS
-
-
-    /**
-     * @brief Updates the windows stylesheet
-     */
-    void updateCSS();
 
     /**
      * @brief Connects required signals and slots

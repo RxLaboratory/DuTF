@@ -2,6 +2,7 @@
 #define PREFERENCESWIDGET_H
 
 #include "ui_preferenceswidget.h"
+#include <QFileDialog>
 
 class PreferencesWidget : public QWidget, private Ui::PreferencesWidget
 {
@@ -24,6 +25,14 @@ signals:
      */
     void changeToolBarAppearance(int);
 
+    /**
+     * @brief Tells the main window to change CSS
+     *
+     * @param CSS filename
+     *
+     */
+    void changeCSS(QString);
+
 private slots:
     /**
      * @brief emits the hidePreferences() signal
@@ -42,6 +51,7 @@ private slots:
      *
      */
     void on_toolBarStyleBox_currentIndexChanged(int index);
+    void on_updateCSSButton_clicked();
 };
 
 #endif // PREFERENCESWIDGET_H

@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setupUi(this);
 
     // load default stylesheet
-    updateCSS();
+    updateCSS(":/styles/default");
 
     // UI
 
@@ -95,12 +95,18 @@ MainWindow::~MainWindow(){
     delete jsxParser;
 }
 
-void MainWindow::updateCSS()
+void MainWindow::updateCSS(QString cssFileName)
 {
-    QFile cssFile(":/styles/default");
-    cssFile.open(QFile::ReadOnly);
-    QString css = QString(cssFile.readAll());
-    cssFile.close();
+    QString css = "";
+
+    QFile cssFile(cssFileName);
+    if (cssFile.exists())
+    {
+        cssFile.open(QFile::ReadOnly);
+        css = QString(cssFile.readAll());
+        cssFile.close();
+    }
+
     qApp->setStyleSheet(css);
 }
 
@@ -127,6 +133,7 @@ void MainWindow::mapEvents(){
     // Preferences
     connect(preferences,SIGNAL(hidePreferences()),this,SLOT(showMainPage()));
     connect(preferences,SIGNAL(changeToolBarAppearance(int)),this,SLOT(setToolBarAppearance(int)));
+    connect(preferences,SIGNAL(changeCSS(QString)),this,SLOT(updateCSS(QString)));
 
     // Window management
 #ifndef Q_OS_MAC
