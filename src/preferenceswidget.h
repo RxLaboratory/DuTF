@@ -13,6 +13,18 @@ class PreferencesWidget : public QWidget, private Ui::PreferencesWidget
 
 public:
     explicit PreferencesWidget(QWidget *parent = 0);
+
+    /**
+     * @brief Returns the CSS File Name
+     */
+    QString getCSS();
+
+    /**
+     * @brief Returns the toolBar style
+     * 0- text under, 1- text beside, 2- icon only, 3- text only
+     */
+    int getToolBarStyle();
+
 signals:
     /**
      * @brief Tells the main window to hide preferences

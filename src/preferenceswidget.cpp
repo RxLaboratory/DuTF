@@ -47,8 +47,6 @@ PreferencesWidget::PreferencesWidget(QWidget *parent) :
     }
 
     toolBarStyleBox->setCurrentIndex(toolBar);
-
-    //TODO update UI after loading (need a call from MainWindow)
 }
 
 void PreferencesWidget::on_backButton_clicked()
@@ -71,7 +69,6 @@ void PreferencesWidget::on_styleBox_currentIndexChanged(int index)
         styleBox->setToolTip("Current system style");
         //update prefs database
         QSqlQuery q("UPDATE preferences SET css = '' WHERE user = 'default' ;");
-        qDebug() << q.lastError();
     }
     else if (index == 2)
     {
@@ -94,10 +91,19 @@ void PreferencesWidget::on_toolBarStyleBox_currentIndexChanged(int index)
     emit changeToolBarAppearance(index);
     //update prefs database
     QSqlQuery q("UPDATE preferences SET toolBar = " + QString::number(index) + " WHERE user = 'default' ;");
-    qDebug() << q.lastError();
 }
 
 void PreferencesWidget::on_updateCSSButton_clicked()
 {
     emit changeCSS(styleBox->currentData().toString());
+}
+
+QString PreferencesWidget::getCSS()
+{
+    return styleBox->currentData().toString();
+}
+
+int PreferencesWidget::getToolBarStyle()
+{
+    return toolBarStyleBox->currentIndex();
 }

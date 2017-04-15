@@ -12,9 +12,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     setupUi(this);
 
-    // load default stylesheet
-    updateCSS(":/styles/default");
-
     // UI
 
     //Initialization appearance
@@ -77,6 +74,10 @@ MainWindow::MainWindow(QWidget *parent) :
     //Parser
     jsxParser = new JsxParser(this);
 
+    //set style
+    updateCSS(preferences->getCSS());
+    setToolBarAppearance(preferences->getToolBarStyle());
+
     mapEvents();
 
     //wait
@@ -97,6 +98,9 @@ MainWindow::~MainWindow(){
 
 void MainWindow::updateCSS(QString cssFileName)
 {
+    setWaiting(true,"Loading StyleSheet",0);
+    mainStatusBar->showMessage("Loading CSS: " + cssFileName);
+    repaint();
     QString css = "";
 
     QFile cssFile(cssFileName);
@@ -108,6 +112,9 @@ void MainWindow::updateCSS(QString cssFileName)
     }
 
     qApp->setStyleSheet(css);
+    setWaiting(false);
+    btn_actionPreferences->setChecked(false);
+    mainStatusBar->clearMessage();
 }
 
 void MainWindow::mapEvents(){
