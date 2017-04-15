@@ -539,7 +539,7 @@ void MainWindow::actionSave()
     out << "var DutranslatorArray = [];" << endl;
 
     //populate
-    for (int row = 0; row < displayTable->rowCount() ; row++)
+    for (int row = 0; row < tableFreeIndex ; row++)
     {
         QTextEdit *originalEdit = (QTextEdit*)displayTable->cellWidget(row,1);
         QSpinBox *contextBox = (QSpinBox*)displayTable->cellWidget(row,2);
