@@ -148,7 +148,8 @@ void MainWindow::actionOpen()
     //get file
     QString fileName = QFileDialog::getOpenFileName(this,"Open a translation file","","JavaScript (*.jsx *.jsxinc *.js);;Text files (*.txt);;All files (*.*)");
 
-    openJsxinc(fileName);
+    QFile checkFile(fileName);
+    if (checkFile.exists()) openJsxinc(fileName);
 
 }
 
