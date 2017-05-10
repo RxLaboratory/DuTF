@@ -12,7 +12,7 @@ blabla licence
 
 
 //gets the JSON Parser
-#include jsonParser.jsxinc
+#include json2.jsxinc
 
 /*
 Here's how to use it:
@@ -74,22 +74,31 @@ Dutranslator.getAvailable = function (folder, prefix, suffix)
     
     Dutranslator.languages.push(['en','English']);
     
-    file = new File($.fileName);
-    folder = new Folder(file.path + "/" + folder);
+    var file = new File($.fileName);
+    var folder = new Folder(file.path + "/" + folder);
     
 	// Generate a prefix if not defined
     if(typeof(prefix)==='undefined' ||  prefix=== "")
     {
         prefix = file.name.substring(0,thisScriptFile.name.lastIndexOf('.')) + "_";
-     }
- 
+    }
  
 	// Get the list of translations 
 	languageFiles = folder.getFiles(prefix + '*' + suffix);
-    alert(languageFiles);
 	for (var i = 0 ; i < languageFiles.length ; i++)
 	{
-		// Parse each translations
+        file = new File(languageFiles[i]);
+        file.open("r"); // open file with read access
+        var data = "";
+        while (!file.eof) 
+        {
+            // read each line of text
+            data+= file.readln();
+        }
+        file.close();
+        var jsonData = JSON.parse(data);  // Cette ligne fait tout planté..
+        
+        /*alert(jsonData);*/
 	}
     
 }
