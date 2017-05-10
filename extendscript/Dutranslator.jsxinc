@@ -66,9 +66,32 @@ Dutranslator.localizedStrings = [];
 /**
  * Parse the translations file which are in the same directory.
  */
-Dutranslator.getAvailable = function ()
+Dutranslator.getAvailable = function (folder, prefix, suffix)
 {
-
+    if(typeof(folder)==='undefined' || folder=== "") folder= ".";
+    
+    if(typeof(suffix)==='undefined' || suffix=== "") suffix= ".json";
+    
+    Dutranslator.languages.push(['en','English']);
+    
+    file = new File($.fileName);
+    folder = new Folder(file.path + "/" + folder);
+    
+	// Generate a prefix if not defined
+    if(typeof(prefix)==='undefined' ||  prefix=== "")
+    {
+        prefix = file.name.substring(0,thisScriptFile.name.lastIndexOf('.')) + "_";
+     }
+ 
+ 
+	// Get the list of translations 
+	languageFiles = folder.getFiles(prefix + '*' + suffix);
+    alert(languageFiles);
+	for (var i = 0 ; i < languageFiles.length ; i++)
+	{
+		// Parse each translations
+	}
+    
 }
 
 /**
@@ -76,7 +99,14 @@ Dutranslator.getAvailable = function ()
  * @param {string} languageId - The id of the language to set
  */
 Dutranslator.setLanguage = function (languageId) {
-
+	for (var i = 0 ; i < Dutranslator.languages.length ; i++)
+	{
+		if (Dutranslator.languages[i][0] == languageId)
+		{
+			Dutranslator.current = languageId;
+			return;
+		}
+	}
 }
 
 /**
@@ -92,5 +122,63 @@ Dutranslator.setLanguage = function (languageId) {
  * @return {string} The translated text or s if nothing is set or available
  */
 function tr(s, context, args) {
+	// Default args
+	if(typeof(context)==='undefined' || context === parseInt(context, 10)) context = -1;
+	if(typeof(args)==='undefined') args = [];
+	if(typeof(args) === 'string' || args instanceof String) args = [args];
+		
+	var languageNumber = -1;
+	
+	// Get the current language index
+	for (var i = 0 ; i < Dutranslator.languages.length ; i++)
+	{
+		if (Dutranslator.languages[i][0] == Dutranslator.current)
+		{
+			languageNumber =i;
+			break;
+		}
+	}
+	
+	var res = s;
+	// If a language is set, search for the translation
+	if (languageNumber > -1){
+		var stringNumber = -1;
+		
+		// Get the translation
+		for (var i = 0 ; i < Dutranslator.localizedStrings[languageNumber].length ; i++)
+		{
+			if (Dutranslator.localizedStrings[languageNumber][i][0] == s)
+			{
+				// Check context
+				if (context > -1) { 
+					if (Dutranslator.localizedStrings[languageNumber][i][1] == context) {
+						stringNumber =i;
+						break;
+					}
+				}
+				else {
+					stringNumber =i;
+					break;
+				}
+			}
+		}
 
+		// If a translation is found, set it to res
+		if (stringNumber > -1) res = Dutranslator.localizedStrings[languageNumber][stringNumber][2];
+		if (res == "") res = s; 
+	}
+
+	
+	
+	// Args process
+	while(res.indexOf("{#}") !== -1){ // While there is stuff to format
+		if(args.length < 1){ // If no more args, replace with ?
+			res = res.replace("{#}", "?"); // Will replace the first occurence
+		}else{
+			var arg = args.shift(); // Take the first arg and remove it
+			res = res.replace("{#}", arg);
+		}
+	}
+		
+	return res;
 }
