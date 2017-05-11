@@ -87,7 +87,7 @@ Dutranslator.settings.folder = ".";
  * The prefix in the translation filenames
  * @memberof Settings
  */
-Dutranslator.settings.prefix = "";
+Dutranslator.settings.prefix = File($.fileName).name.substring(0,File($.fileName).name.lastIndexOf('.')) + "_";
 
 /**
  * The suffix (including extension) in the translation filenames
@@ -109,17 +109,10 @@ Dutranslator.getAvailable = function ()
 	//Add original language
     Dutranslator.languages.push(Dutranslator.settings.originalLanguageId);
     
-    var file = new File($.fileName);
-    var folder = new Folder(file.path + "/" + folder);
-    
-	// Generate a prefix if not defined
-    if(typeof(prefix)==='undefined' ||  prefix=== "")
-    {
-        prefix = file.name.substring(0,thisScriptFile.name.lastIndexOf('.')) + "_";
-    }
- 
+    var folder = new Folder(Dutranslator.settings.folder);
+     
 	// Get the list of translations 
-	languageFiles = folder.getFiles(prefix + '*' + suffix);
+	languageFiles = folder.getFiles(Dutranslator.settings.prefix + '*' + Dutranslator.settings.suffix);
 	for (var i = 0 ; i < languageFiles.length ; i++)
 	{  
 
