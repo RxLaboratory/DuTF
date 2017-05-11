@@ -72,7 +72,7 @@ Dutranslator.getAvailable = function (folder, prefix, suffix)
     
     if(typeof(suffix)==='undefined' || suffix=== "") suffix= ".json";
     
-    Dutranslator.languages.push(['en','English']);
+    //Dutranslator.languages.push(['en','English']);
     
     var file = new File($.fileName);
     var folder = new Folder(file.path + "/" + folder);
@@ -86,7 +86,7 @@ Dutranslator.getAvailable = function (folder, prefix, suffix)
 	// Get the list of translations 
 	languageFiles = folder.getFiles(prefix + '*' + suffix);
 	for (var i = 0 ; i < languageFiles.length ; i++)
-	{
+	{  
         file = new File(languageFiles[i]);
         file.open("r"); // open file with read access
         var data = "";
@@ -98,9 +98,8 @@ Dutranslator.getAvailable = function (folder, prefix, suffix)
         file.close();
         var jsonData = JSON.parse(data);  // Cette ligne fait tout planté..
         
-        /*alert(jsonData);*/
+        Dutranslator.languages.push(jsonData.duik);
 	}
-    
 }
 
 /**
