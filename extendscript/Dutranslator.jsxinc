@@ -106,11 +106,8 @@ Dutranslator.settings.originalLanguageId = "en";
  */
 Dutranslator.getAvailable = function ()
 {
-    if(typeof(folder)==='undefined' || folder=== "") folder= ".";
-    
-    if(typeof(suffix)==='undefined' || suffix=== "") suffix= ".json";
-    
-    //Dutranslator.languages.push(['en','English']);
+	//Add original language
+    Dutranslator.languages.push(Dutranslator.settings.originalLanguageId);
     
     var file = new File($.fileName);
     var folder = new Folder(file.path + "/" + folder);
@@ -125,13 +122,17 @@ Dutranslator.getAvailable = function ()
 	languageFiles = folder.getFiles(prefix + '*' + suffix);
 	for (var i = 0 ; i < languageFiles.length ; i++)
 	{  
-        file = new File(languageFiles[i]);
+
+		// TODO Do not parse, only get the id in the filename and push it to Dutranslator.languages
+
+
+        /*file = new File(languageFiles[i]);
         file.open("r"); // open file with read access
         var data = file.read();
         file.close();
         var jsonData = JSON.parse(data);  // Cette ligne fait tout planté..
         
-        Dutranslator.languages.push(jsonData.duik);
+        Dutranslator.languages.push(jsonData.duik);*/
 	}
 }
 
@@ -142,6 +143,7 @@ Dutranslator.getAvailable = function ()
 Dutranslator.setLanguage = function (languageId) {
 	
 	// TODO Parse the translation file corresponding to the id
+	
 	for (var i = 0 ; i < Dutranslator.languages.length ; i++)
 	{
 		if (Dutranslator.languages[i][0] == languageId)
@@ -169,6 +171,9 @@ function tr(s, context, args) {
 	if(typeof(context)==='undefined' || context === parseInt(context, 10)) context = -1;
 	if(typeof(args)==='undefined') args = [];
 	if(typeof(args) === 'string' || args instanceof String) args = [args];
+	
+	// TODO return s (after replacing arguments) if Dutranslator.current == Dutranslator.settings.originalLanguageId
+	// TODO re-implement using the new json translation files instead of the array from jsxinc files
 		
 	var languageNumber = -1;
 	
