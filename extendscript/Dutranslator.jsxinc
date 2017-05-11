@@ -32,11 +32,15 @@ JSON.parse = function (text, reviver)
 
 */
 
-/** Duik Translator */
+/**
+ * The Javascript translator part of the Dutranslator Framework
+ * @class Dutranslator
+ */
 var Dutranslator = {};
 
 /**
  * The current language id (fr, en, ..)
+ * @memberof Dutranslator
  */
 Dutranslator.current = '';
 
@@ -49,6 +53,7 @@ Dutranslator.current = '';
  * be added right after in Dutranslator.localizedStrings to
  * be sure that everything related to a language is available at
  * the same index
+ * @memberof Dutranslator
  */
 Dutranslator.languages = [];
 
@@ -60,13 +65,46 @@ Dutranslator.languages = [];
  *
  * The translations should be available at the same index
  * as the language index in Dutranslator.languages
+ * @memberof Dutranslator
  */
 Dutranslator.localizedStrings = [];
 
 /**
- * Parse the translations file which are in the same directory.
+ * Some settings for the translator
+ * @class Settings
+ * @memberof Dutranslator
  */
-Dutranslator.getAvailable = function (folder, prefix, suffix)
+Dutranslator.settings = {}
+
+/**
+ * The folder containing the translation files
+ * @memberof Settings
+ * 
+ */
+Dutranslator.settings.folder = ".";
+
+/**
+ * The prefix in the translation filenames
+ * @memberof Settings
+ */
+Dutranslator.settings.prefix = "";
+
+/**
+ * The suffix (including extension) in the translation filenames
+ * @memberof Settings
+ */
+Dutranslator.settings.suffix = "*.json";
+
+/**
+ * The original languageId
+ * @memberof Settings
+ */
+Dutranslator.settings.originalLanguageId = "en";
+
+/**
+ * Parse the translation files.
+ */
+Dutranslator.getAvailable = function ()
 {
     if(typeof(folder)==='undefined' || folder=== "") folder= ".";
     
@@ -102,6 +140,8 @@ Dutranslator.getAvailable = function (folder, prefix, suffix)
  * @param {string} languageId - The id of the language to set
  */
 Dutranslator.setLanguage = function (languageId) {
+	
+	// TODO Parse the translation file corresponding to the id
 	for (var i = 0 ; i < Dutranslator.languages.length ; i++)
 	{
 		if (Dutranslator.languages[i][0] == languageId)
