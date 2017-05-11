@@ -89,12 +89,7 @@ Dutranslator.getAvailable = function (folder, prefix, suffix)
 	{  
         file = new File(languageFiles[i]);
         file.open("r"); // open file with read access
-        var data = "";
-        while (!file.eof) 
-        {
-            // read each line of text
-            data+= file.readln();
-        }
+        var data = file.read();
         file.close();
         var jsonData = JSON.parse(data);  // Cette ligne fait tout planté..
         
