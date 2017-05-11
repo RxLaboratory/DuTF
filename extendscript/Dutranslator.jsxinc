@@ -81,7 +81,7 @@ Dutranslator.settings = {}
  * @memberof Settings
  * 
  */
-Dutranslator.settings.folder = ".";
+Dutranslator.settings.folder = File($.fileName).path + "/";
 
 /**
  * The prefix in the translation filenames

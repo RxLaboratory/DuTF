@@ -17,6 +17,6 @@ function check(value, required, message){
 
 
 
-alert(Dutranslator.settings.prefix);
+alert(Dutranslator.settings.folder);
 
 alert("Tests end.");
