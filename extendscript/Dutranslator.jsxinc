@@ -77,23 +77,26 @@ Dutranslator.localizedStrings = [];
 Dutranslator.settings = {}
 
 /**
- * The folder containing the translation files
+ * {string} The folder containing the translation files
+ * Default: this translator path
  * @memberof Settings
  * 
  */
 Dutranslator.settings.folder = File($.fileName).path + "/";
 
 /**
- * The prefix in the translation filenames
+ * {string} The prefix in the translation filenames
+ * Default: this translator filename + "_"
  * @memberof Settings
  */
 Dutranslator.settings.prefix = File($.fileName).name.substring(0,File($.fileName).name.lastIndexOf('.')) + "_";
 
 /**
- * The suffix (including extension) in the translation filenames
+ * {string} The suffix (including file extension) in the translation filenames
+ * Default: ".json"
  * @memberof Settings
  */
-Dutranslator.settings.suffix = "*.json";
+Dutranslator.settings.suffix = ".json";
 
 /**
  * The original languageId
