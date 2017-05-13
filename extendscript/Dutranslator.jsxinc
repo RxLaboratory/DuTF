@@ -58,13 +58,10 @@ Dutranslator.current = '';
 Dutranslator.languages = [];
 
 /**
- * The translated strings 
+ * The translated strings  of the current language
  * 
- * An array which contain for each language, multiples array containing
- * the original text and the translated text
+ * An array of compounds containing the source, the translation and the context
  *
- * The translations should be available at the same index
- * as the language index in Dutranslator.languages
  * @memberof Dutranslator
  */
 Dutranslator.localizedStrings = [];
@@ -99,6 +96,13 @@ Dutranslator.settings.prefix = File($.fileName).name.substring(0,File($.fileName
 Dutranslator.settings.suffix = ".json";
 
 /**
+ * {string} The application name (root of the json translations)
+ * Default: "duik"
+ * @memberof Settings
+ */
+Dutranslator.settings.name = "duik";
+
+/**
  * The original languageId
  * @memberof Settings
  */
@@ -118,17 +122,11 @@ Dutranslator.getAvailable = function ()
 	languageFiles = folder.getFiles(Dutranslator.settings.prefix + '*' + Dutranslator.settings.suffix);
 	for (var i = 0 ; i < languageFiles.length ; i++)
 	{  
-
-		// TODO Do not parse, only get the id in the filename and push it to Dutranslator.languages
-
-
-        /*file = new File(languageFiles[i]);
-        file.open("r"); // open file with read access
-        var data = file.read();
-        file.close();
-        var jsonData = JSON.parse(data);  // Cette ligne fait tout planté..
-        
-        Dutranslator.languages.push(jsonData.duik);*/
+          var fileName = languageFiles[i].name;
+          
+          Dutranslator.languages.push(fileName
+            .replace(Dutranslator.settings.prefix, "")
+            .replace(Dutranslator.settings.suffix, ""));         
 	}
 }
 
@@ -142,10 +140,28 @@ Dutranslator.setLanguage = function (languageId) {
 	
 	for (var i = 0 ; i < Dutranslator.languages.length ; i++)
 	{
-		if (Dutranslator.languages[i][0] == languageId)
+		if (Dutranslator.languages[i] == languageId)
 		{
 			Dutranslator.current = languageId;
-			return;
+            
+              if(languageId == Dutranslator.settings.originalLanguageId) return; 
+
+            // Parse process
+            
+            var fPath = Dutranslator.settings.folder + Dutranslator.settings.prefix + languageId + Dutranslator.settings.suffix;
+            var file = new File(fPath);
+            
+            if(!file.open("r")) return; // Unable to open the file
+            
+            var data = file.read();
+            file.close();
+            var jsonData = JSON.parse(data);            
+
+            var translations = jsonData[Dutranslator.settings.name]["translations"];           
+            Dutranslator.localizedStrings = translations;
+            
+            return;
+            
 		}
 	}
 }
@@ -168,7 +184,6 @@ function tr(s, context, args) {
 	if(typeof(args)==='undefined') args = [];
 	if(typeof(args) === 'string' || args instanceof String) args = [args];
 	
-	// TODO return s (after replacing arguments) if Dutranslator.current == Dutranslator.settings.originalLanguageId
 	// TODO re-implement using the new json translation files instead of the array from jsxinc files
 		
 	var languageNumber = -1;
@@ -176,7 +191,7 @@ function tr(s, context, args) {
 	// Get the current language index
 	for (var i = 0 ; i < Dutranslator.languages.length ; i++)
 	{
-		if (Dutranslator.languages[i][0] == Dutranslator.current)
+		if (Dutranslator.languages[i] == Dutranslator.current)
 		{
 			languageNumber =i;
 			break;
@@ -185,17 +200,18 @@ function tr(s, context, args) {
 	
 	var res = s;
 	// If a language is set, search for the translation
-	if (languageNumber > -1){
+	if (languageNumber > -1 &&  Dutranslator.current != Dutranslator.settings.originalLanguageId){
 		var stringNumber = -1;
 		
 		// Get the translation
-		for (var i = 0 ; i < Dutranslator.localizedStrings[languageNumber].length ; i++)
+		for (var i = 0 ; i < Dutranslator.localizedStrings.length ; i++)
 		{
-			if (Dutranslator.localizedStrings[languageNumber][i][0] == s)
-			{
+             var tr = Dutranslator.localizedStrings[i];
+             if(tr["source"] == s)
+             {			
 				// Check context
 				if (context > -1) { 
-					if (Dutranslator.localizedStrings[languageNumber][i][1] == context) {
+					if (tr["contextId"] == context) {
 						stringNumber =i;
 						break;
 					}
@@ -208,7 +224,7 @@ function tr(s, context, args) {
 		}
 
 		// If a translation is found, set it to res
-		if (stringNumber > -1) res = Dutranslator.localizedStrings[languageNumber][stringNumber][2];
+		if (stringNumber > -1) res = Dutranslator.localizedStrings[stringNumber]["translation"];
 		if (res == "") res = s; 
 	}
 
