@@ -1,4 +1,5 @@
 #include "preferenceswidget.h"
+#include <QtDebug>
 
 PreferencesWidget::PreferencesWidget(QWidget *parent) :
     QWidget(parent)
@@ -13,16 +14,30 @@ PreferencesWidget::PreferencesWidget(QWidget *parent) :
     db = QSqlDatabase::addDatabase("QSQLITE");
 
     //check if the file already exists, if not, extract it from resources
-    QFile dbFile("prefs.s3db");
+    QString prefsPath = "";
+#ifdef Q_OS_MAC
+    prefsPath = QDir::homePath() + "/Dutranslator/prefs.s3db";
+#else
+    prefsPath = "prefs.s3db";
+#endif
+
+    QFile dbFile(prefsPath);
+
     if (!dbFile.exists())
     {
         QFile dbResource(":/misc/prefs");
-        dbResource.copy("prefs.s3db");
-        QFile::setPermissions("prefs.s3db",QFileDevice::ReadUser | QFileDevice::WriteUser | QFileDevice::ReadGroup | QFileDevice::WriteGroup | QFileDevice::ReadOther | QFileDevice::WriteOther);
+        //on mac, we can not write inside the app, so create folder at home
+#ifdef Q_OS_MAC
+        QDir home = QDir::home();
+        home.mkdir("Dutranslator");
+#endif
+        //copy the default file from the resources
+        dbResource.copy(prefsPath);
+        QFile::setPermissions(prefsPath,QFileDevice::ReadUser | QFileDevice::WriteUser | QFileDevice::ReadGroup | QFileDevice::WriteGroup | QFileDevice::ReadOther | QFileDevice::WriteOther);
     }
 
     //open database
-    db.setDatabaseName("prefs.s3db");
+    db.setDatabaseName(prefsPath);
     db.open();
 
     //get preferences
