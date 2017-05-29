@@ -49,9 +49,9 @@
     <item>
      <widget class="QStackedWidget" name="mainStack">
       <property name="currentIndex">
-       <number>2</number>
+       <number>3</number>
       </property>
-      <widget class="QWidget" name="page">
+      <widget class="QWidget" name="tablePage">
        <layout class="QVBoxLayout" name="verticalLayout">
         <property name="spacing">
          <number>0</number>
@@ -129,7 +129,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="page_2">
+      <widget class="QWidget" name="progressBarPAge">
        <layout class="QGridLayout" name="gridLayout">
         <item row="1" column="0">
          <widget class="QProgressBar" name="mainProgressBar">
@@ -175,7 +175,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="page_3">
+      <widget class="QWidget" name="settingsPage">
        <layout class="QVBoxLayout" name="preferencesLayout">
         <property name="spacing">
          <number>0</number>
@@ -194,6 +194,7 @@
         </property>
        </layout>
       </widget>
+      <widget class="QWidget" name="toolsPage"/>
      </widget>
     </item>
    </layout>
@@ -208,6 +209,7 @@
    <addaction name="btn_actionOpen"/>
    <addaction name="btn_actionSave"/>
    <addaction name="btn_actionSaveAs"/>
+   <addaction name="btn_actionTools"/>
    <addaction name="btn_actionPreferences"/>
    <addaction name="btn_actionAbout"/>
   </widget>
@@ -279,6 +281,24 @@
    </property>
    <property name="text">
     <string>Settings</string>
+   </property>
+  </action>
+  <action name="btn_actionTools">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/tools</normaloff>:/icons/tools</iconset>
+   </property>
+   <property name="text">
+    <string>Tools</string>
+   </property>
+   <property name="toolTip">
+    <string>Tools</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
    </property>
   </action>
  </widget>

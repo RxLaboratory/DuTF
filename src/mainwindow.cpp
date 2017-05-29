@@ -132,6 +132,7 @@ void MainWindow::mapEvents(){
     connect(this->btn_actionOpen, SIGNAL(triggered(bool)), this, SLOT(actionOpen()));
     connect(this->btn_actionAbout, SIGNAL(triggered(bool)), this, SLOT(actionAbout()));
     connect(this->btn_actionPreferences, SIGNAL(triggered(bool)), this, SLOT(actionPreferences(bool)));
+    connect(this->btn_actionTools, SIGNAL(triggered(bool)), this, SLOT(actionTools(bool)));
 
     // Search
     connect(searchWidget,SIGNAL(search(QString)),this,SLOT(search(QString)));
@@ -603,8 +604,24 @@ void MainWindow::actionPreferences(bool checked)
 {
     if (checked)
     {
+        btn_actionTools->setChecked(false);
         //show the preferences page
         mainStack->setCurrentIndex(2);
+    }
+    else
+    {
+        //show the main page
+        mainStack->setCurrentIndex(0);
+    }
+}
+
+void MainWindow::actionTools(bool checked)
+{
+    if (checked)
+    {
+        btn_actionPreferences->setChecked(false);
+        //show the tools page
+        mainStack->setCurrentIndex(3);
     }
     else
     {

@@ -93,6 +93,11 @@ private slots:
      */
     void actionPreferences(bool checked);
 
+    /**
+     * @brief Shows the tools panel
+     */
+    void actionTools(bool checked);
+
 
     // =======OTHER USER INTERACTIONS
 

@@ -18,5 +18,6 @@
         <file alias="icons/left">../resources/icons/left.png</file>
         <file alias="icons/refresh">../resources/icons/refresh.png</file>
         <file alias="misc/prefs">../resources/misc/prefs.s3db</file>
+        <file alias="icons/tools">../resources/icons/tool.png</file>
     </qresource>
 </RCC>
