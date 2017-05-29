@@ -280,6 +280,7 @@
    <addaction name="btn_actionOpen"/>
    <addaction name="btn_actionSave"/>
    <addaction name="btn_actionSaveAs"/>
+   <addaction name="btn_actionExport"/>
    <addaction name="btn_actionTools"/>
    <addaction name="btn_actionPreferences"/>
    <addaction name="btn_actionAbout"/>
@@ -370,6 +371,24 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+T</string>
+   </property>
+  </action>
+  <action name="btn_actionExport">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/export</normaloff>:/icons/export</iconset>
+   </property>
+   <property name="text">
+    <string>Export</string>
+   </property>
+   <property name="toolTip">
+    <string>Export...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
    </property>
   </action>
  </widget>
