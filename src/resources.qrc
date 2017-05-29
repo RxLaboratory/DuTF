@@ -19,5 +19,6 @@
         <file alias="icons/refresh">../resources/icons/refresh.png</file>
         <file alias="misc/prefs">../resources/misc/prefs.s3db</file>
         <file alias="icons/tools">../resources/icons/tool.png</file>
+        <file alias="export/Dutranslator.jsxinc">../resources/misc/Dutranslator.jsxinc</file>
     </qresource>
 </RCC>

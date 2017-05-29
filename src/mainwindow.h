@@ -113,6 +113,11 @@ private slots:
      */
     void clearSearch();
 
+    /**
+     * @brief Asks for a location then saves a translator according to the selection in btn_selectGenerateTranslator (QComboBox)
+     */
+    void btn_generateTranslator_clicked();
+
 
     // =======OTHER
 

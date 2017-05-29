@@ -138,6 +138,9 @@ void MainWindow::mapEvents(){
     connect(searchWidget,SIGNAL(search(QString)),this,SLOT(search(QString)));
     connect(searchWidget,SIGNAL(clear()),this,SLOT(clearSearch()));
 
+    // Tools
+    connect(btn_generateTranslator,SIGNAL(clicked()),this,SLOT(btn_generateTranslator_clicked()));
+
     // Preferences
     connect(preferences,SIGNAL(hidePreferences()),this,SLOT(showMainPage()));
     connect(preferences,SIGNAL(changeToolBarAppearance(int)),this,SLOT(setToolBarAppearance(int)));
@@ -630,6 +633,16 @@ void MainWindow::actionTools(bool checked)
     }
 }
 
+void MainWindow::btn_generateTranslator_clicked()
+{
+    //get file
+    QString fileName = QFileDialog::getSaveFileName(this,"Save translation file as",workingFile.fileName().left(workingFile.fileName().lastIndexOf(".")),"JavaScript (*.jsxinc *.jsx *.js);;All files (*.*)");
+    if (fileName.isNull()) return;
+
+    QFile translatorFile(":/export/Dutranslator.jsxinc");
+    translatorFile.copy(fileName);
+}
+
 void MainWindow::adjustColumnSizes()
 {
     //get available space
@@ -789,4 +802,6 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
       return QObject::eventFilter(obj, event);
   }
 }
+
+
 
