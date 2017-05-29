@@ -1,17 +1,46 @@
-﻿/*
+/*
+	Dutranslator
 
+	Copyright (c) 2017 Nicolas Dufresne, Rainbox Productions
 
-Duik
+  Internationalization Framework for all kinds of scripts and applications.
+  This is the Adobe ExtendScript library to translate scripts at runtime.
+  https://rainboxprod.coop
 
-copyright
+	__Contributors:__
 
-blabla credits
+		Nicolas Dufresne - Lead developer
+		Kevin Masson - Developer
 
-blabla licence
+	__Translations:__
+
+	__Thanks to:__
+
+	__Dutranslator makes use of:__
+
+		• json2
+		See http://www.JSON.org/js.html
+		Public Domain
+
+	This file is part of Dutranslator.
+
+		Dutranslator is free software: you can redistribute it and/or modify
+		it under the terms of the GNU General Public License as published by
+		the Free Software Foundation, either version 3 of the License, or
+		(at your option) any later version.
+
+		Dutranslator is distributed in the hope that it will be useful,
+		but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+		GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License
+		along with Dutranslator. If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 
-//gets the JSON Parser
+// gets the JSON Parser
 #include json2.jsxinc
 
 /*
@@ -24,7 +53,7 @@ JSON.stringify(value, replacer, space)
 // that can replace values, or an array of strings that will select the keys.
 // A default replacer method can be provided. Use of the space parameter can
 // produce text that is more easily readable.
-	
+
 JSON.parse = function (text, reviver)
 
 // The parse method takes a text and an optional reviver function, and returns
@@ -44,9 +73,9 @@ var Dutranslator = {};
  */
 Dutranslator.current = '';
 
-/** 
- * The list of availables languages 
- * 
+/**
+ * The list of availables languages
+ *
  * Will be filled when executing Dutranslator.getAvailable
  *
  * When adding a language to this list, the translations should
@@ -59,7 +88,7 @@ Dutranslator.languages = [];
 
 /**
  * The translated strings  of the current language
- * 
+ *
  * An array of compounds containing the source, the translation and the context
  *
  * @memberof Dutranslator
@@ -77,7 +106,7 @@ Dutranslator.settings = {}
  * {string} The folder containing the translation files
  * Default: this translator path
  * @memberof Settings
- * 
+ *
  */
 Dutranslator.settings.folder = File($.fileName).path + "/";
 
@@ -115,18 +144,18 @@ Dutranslator.getAvailable = function ()
 {
 	//Add original language
     Dutranslator.languages.push(Dutranslator.settings.originalLanguageId);
-    
+
     var folder = new Folder(Dutranslator.settings.folder);
-     
-	// Get the list of translations 
+
+	// Get the list of translations
 	languageFiles = folder.getFiles(Dutranslator.settings.prefix + '*' + Dutranslator.settings.suffix);
 	for (var i = 0 ; i < languageFiles.length ; i++)
-	{  
+	{
           var fileName = languageFiles[i].name;
-          
+
           Dutranslator.languages.push(fileName
             .replace(Dutranslator.settings.prefix, "")
-            .replace(Dutranslator.settings.suffix, ""));         
+            .replace(Dutranslator.settings.suffix, ""));
 	}
 }
 
@@ -135,33 +164,33 @@ Dutranslator.getAvailable = function ()
  * @param {string} languageId - The id of the language to set
  */
 Dutranslator.setLanguage = function (languageId) {
-	
+
 	// TODO Parse the translation file corresponding to the id
-	
+
 	for (var i = 0 ; i < Dutranslator.languages.length ; i++)
 	{
 		if (Dutranslator.languages[i] == languageId)
 		{
 			Dutranslator.current = languageId;
-            
-              if(languageId == Dutranslator.settings.originalLanguageId) return; 
+
+              if(languageId == Dutranslator.settings.originalLanguageId) return;
 
             // Parse process
-            
+
             var fPath = Dutranslator.settings.folder + Dutranslator.settings.prefix + languageId + Dutranslator.settings.suffix;
             var file = new File(fPath);
-            
+
             if(!file.open("r")) return; // Unable to open the file
-            
+
             var data = file.read();
             file.close();
-            var jsonData = JSON.parse(data);            
+            var jsonData = JSON.parse(data);
 
-            var translations = jsonData[Dutranslator.settings.name]["translations"];           
+            var translations = jsonData[Dutranslator.settings.name]["translations"];
             Dutranslator.localizedStrings = translations;
-            
+
             return;
-            
+
 		}
 	}
 }
@@ -183,11 +212,11 @@ function tr(s, context, args) {
 	if(typeof(context)==='undefined' || context === parseInt(context, 10)) context = -1;
 	if(typeof(args)==='undefined') args = [];
 	if(typeof(args) === 'string' || args instanceof String) args = [args];
-	
+
 	// TODO re-implement using the new json translation files instead of the array from jsxinc files
-		
+
 	var languageNumber = -1;
-	
+
 	// Get the current language index
 	for (var i = 0 ; i < Dutranslator.languages.length ; i++)
 	{
@@ -197,20 +226,20 @@ function tr(s, context, args) {
 			break;
 		}
 	}
-	
+
 	var res = s;
 	// If a language is set, search for the translation
 	if (languageNumber > -1 &&  Dutranslator.current != Dutranslator.settings.originalLanguageId){
 		var stringNumber = -1;
-		
+
 		// Get the translation
 		for (var i = 0 ; i < Dutranslator.localizedStrings.length ; i++)
 		{
              var tr = Dutranslator.localizedStrings[i];
              if(tr["source"] == s)
-             {			
+             {
 				// Check context
-				if (context > -1) { 
+				if (context > -1) {
 					if (tr["contextId"] == context) {
 						stringNumber =i;
 						break;
@@ -225,11 +254,11 @@ function tr(s, context, args) {
 
 		// If a translation is found, set it to res
 		if (stringNumber > -1) res = Dutranslator.localizedStrings[stringNumber]["translation"];
-		if (res == "") res = s; 
+		if (res == "") res = s;
 	}
 
-	
-	
+
+
 	// Args process
 	while(res.indexOf("{#}") !== -1){ // While there is stuff to format
 		if(args.length < 1){ // If no more args, replace with ?
@@ -239,6 +268,6 @@ function tr(s, context, args) {
 			res = res.replace("{#}", arg);
 		}
 	}
-		
+
 	return res;
 }
