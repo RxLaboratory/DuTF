@@ -23,3 +23,16 @@ Just open the `Dutranslator.pro` file from Qt Creator and follow the steps.
 3. run `make`, this will compile the code;
 4. run `./Dutranslator` to launch the project;
 5. use `make clean` to remove all build-related files.
+
+## Translation
+
+### Contribute to the translations
+
+1. Open `ts` files in the languages folder with Qt Linguist and edit the translations.
+2. run `lrelease Dutranslator.pro`, or in Qt Creator, with the project opened, run Tools > Extern > lrelease
+
+### Update translations
+
+Needed when the interface is modified or when there is new text in the source code.
+
+1. run `lupdate -verbose Dutranslator.pro`
