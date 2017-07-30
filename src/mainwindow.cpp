@@ -72,7 +72,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mainProgressBar->setMaximum(0);
 
     //Parser
-    jsxParser = new JsxParser(this);
+    jsonParser = new JsonParser(this);
 
     //set style
     updateCSS(preferences->getCSS());
@@ -91,9 +91,9 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 MainWindow::~MainWindow(){
-    jsxParser->quit();
-    jsxParser->wait();
-    delete jsxParser;
+    jsonParser->quit();
+    jsonParser->wait();
+    delete jsonParser;
 }
 
 void MainWindow::updateCSS(QString cssFileName)
@@ -119,12 +119,12 @@ void MainWindow::updateCSS(QString cssFileName)
 
 void MainWindow::mapEvents(){
     // Parser
-    connect(jsxParser,SIGNAL(languageFound(QStringList)),this,SLOT(newLanguage(QStringList)));
-    connect(jsxParser,SIGNAL(newTranslation(QStringList)),this,SLOT(newTranslation(QStringList)));
-    connect(jsxParser,SIGNAL(parsingFinished()),this,SLOT(parsingFinished()));
-    connect(jsxParser,SIGNAL(parsingFailed()),this,SLOT(parsingFailed()));
-    connect(jsxParser,SIGNAL(progress(int)),progressBar,SLOT(setValue(int)));
-    connect(jsxParser,SIGNAL(progress(int)),mainProgressBar,SLOT(setValue(int)));
+    connect(jsonParser,SIGNAL(languageFound(QStringList)),this,SLOT(newLanguage(QStringList)));
+    connect(jsonParser,SIGNAL(newTranslation(QStringList)),this,SLOT(newTranslation(QStringList)));
+    connect(jsonParser,SIGNAL(parsingFinished()),this,SLOT(parsingFinished()));
+    connect(jsonParser,SIGNAL(parsingFailed()),this,SLOT(parsingFailed()));
+    connect(jsonParser,SIGNAL(progress(int)),progressBar,SLOT(setValue(int)));
+    connect(jsonParser,SIGNAL(progress(int)),mainProgressBar,SLOT(setValue(int)));
 
     // Actions
     connect(this->btn_actionSaveAs, SIGNAL(triggered(bool)), this, SLOT(actionSaveAs()));
@@ -164,7 +164,7 @@ void MainWindow::actionOpen()
     fillTableTimer.stop();
 
     //get file
-    QString fileName = QFileDialog::getOpenFileName(this,"Open a translation file","","JavaScript (*.jsx *.jsxinc *.js);;Text files (*.txt);;All files (*.*)");
+    QString fileName = QFileDialog::getOpenFileName(this,"Open a translation file","","JSON (*.json);;Text files (*.txt);;All files (*.*)");
 
     QFile checkFile(fileName);
     if (checkFile.exists()) openJsxinc(fileName);
@@ -189,7 +189,7 @@ void MainWindow::openJsxinc(QString fileName)
     statusLabel->setText(displayFileName);
 
     //parse
-    jsxParser->parseFile(&workingFile);
+    jsonParser->parseFile(&workingFile);
 }
 
 void MainWindow::newTranslation(QStringList translation)
@@ -589,7 +589,7 @@ void MainWindow::actionSaveAs()
 {
     if (!checkLanguage()) return;
     //get file
-    QString fileName = QFileDialog::getSaveFileName(this,"Save translation file as",workingFile.fileName().left(workingFile.fileName().lastIndexOf(".")),"JavaScript (*.jsxinc *.jsx *.js);;Text files (*.txt);;All files (*.*)");
+    QString fileName = QFileDialog::getSaveFileName(this,"Save translation file as",workingFile.fileName().left(workingFile.fileName().lastIndexOf(".")),"JSON (*.json);;Text files (*.txt);;All files (*.*)");
     if (fileName.isNull()) return;
 
     workingFile.setFileName(fileName);
@@ -636,7 +636,7 @@ void MainWindow::actionTools(bool checked)
 void MainWindow::btn_generateTranslator_clicked()
 {
     //get file
-    QString fileName = QFileDialog::getSaveFileName(this,"Save translation file as",workingFile.fileName().left(workingFile.fileName().lastIndexOf(".")),"JavaScript (*.jsxinc *.jsx *.js);;All files (*.*)");
+    QString fileName = QFileDialog::getSaveFileName(this,"Save translator file as",workingFile.fileName().left(workingFile.fileName().lastIndexOf(".")),"JavaScript (*.jsxinc *.jsx *.js);;All files (*.*)");
     if (fileName.isNull()) return;
 
     QFile translatorFile(":/export/Dutranslator.jsxinc");
@@ -723,7 +723,7 @@ void MainWindow::dropEvent(QDropEvent *event)
             progressBar->setMaximum(100);
             progressBar->show();
             //parse
-            jsxParser->parseText(&text);
+            jsonParser->parseText(&text);
         }
     }
 

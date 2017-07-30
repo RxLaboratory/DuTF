@@ -24,7 +24,7 @@
 #include <QDesktopWidget>
 #include "aboutdialog.h"
 #include "languagewidget.h"
-#include "jsxparser.h"
+#include "jsonParser.h"
 #include "searchwidget.h"
 #include "rowbuttonswidget.h"
 #include "preferenceswidget.h"
@@ -336,7 +336,7 @@ private:
     /**
      * @brief The Parser
      */
-    JsxParser *jsxParser;
+    JsonParser *jsonParser;
 
     /**
      * @brief The Preferences panel
