@@ -7,6 +7,7 @@
 #include <QTextStream>
 #include <QTextCodec>
 #include <QRegularExpression>
+#include <QJsonDocument>
 
 class JsonParser : public QThread
 {
@@ -58,7 +59,7 @@ private:
      */
     int mode;
 
-    void parseContent(QTextStream *jsxinc);
+    void parseDocument(QJsonDocument);
 };
 
 #endif // JSONPARSER_H
