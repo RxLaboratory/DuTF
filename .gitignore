@@ -1,3 +1,7 @@
+# SQlite
+
+*.s3db
+
 # C++ objects and libs
 
 *.slo
