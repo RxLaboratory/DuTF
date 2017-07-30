@@ -267,8 +267,6 @@
      </widget>
     </item>
    </layout>
-   <zorder>mainStack</zorder>
-   <zorder>verticalSpacer_3</zorder>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -277,16 +275,12 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="btn_actionOpen"/>
-   <addaction name="btn_actionSave"/>
-   <addaction name="btn_actionSaveAs"/>
-   <addaction name="btn_actionExport"/>
    <addaction name="btn_actionTools"/>
    <addaction name="btn_actionPreferences"/>
    <addaction name="btn_actionAbout"/>
   </widget>
   <widget class="QStatusBar" name="mainStatusBar"/>
-  <action name="btn_actionOpen">
+  <action name="menu_open">
    <property name="icon">
     <iconset resource="resources.qrc">
      <normaloff>:/icons/open</normaloff>:/icons/open</iconset>
@@ -296,9 +290,6 @@
    </property>
    <property name="toolTip">
     <string>Open an existing translation file</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+O</string>
    </property>
   </action>
   <action name="btn_actionSave">
@@ -388,7 +379,49 @@
     <string>Export...</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+E</string>
+    <string>Ctrl+Alt+Shift+S</string>
+   </property>
+  </action>
+  <action name="btn_actionOpen">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/open</normaloff>:/icons/open</iconset>
+   </property>
+   <property name="text">
+    <string>Open</string>
+   </property>
+   <property name="toolTip">
+    <string>Open an existing translation file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="menu_save">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/save</normaloff>:/icons/save</iconset>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="toolTip">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="btn_actionMerge">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/merge</normaloff>:/icons/merge</iconset>
+   </property>
+   <property name="text">
+    <string>Merge</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+M</string>
    </property>
   </action>
  </widget>

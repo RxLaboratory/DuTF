@@ -32,18 +32,20 @@ MainWindow::MainWindow(QWidget *parent) :
     //Will be shown in endInit() after everything has been created
     mainToolBar->setContextMenuPolicy(Qt::PreventContextMenu);
 
-    // Test QMenu in a toolbar
-    QMenu * menu = new QMenu(tr("Open/Merge"));
-    menu->setIcon(QIcon(":/icons/open"));
+    // Save Menu
+    QMenu * saveMenu = new QMenu(this);
+    saveMenu->addAction(btn_actionSave);
+    saveMenu->addAction(btn_actionSaveAs);
+    saveMenu->addAction(btn_actionExport);
+    menu_save->setMenu(saveMenu);
+    mainToolBar->insertAction(btn_actionTools,menu_save);
 
-    QAction * open = new QAction(tr("Open"), this);
-    open->setIcon(QIcon(":/icons/open"));
-    open->setShortcut(QKeySequence::Open);
-    open->setStatusTip(tr("Open an existing translation file"));
-
-    menu->addAction(open);
-    menu->setContextMenuPolicy(Qt::ActionsContextMenu);
-    mainToolBar->addWidget(menu);
+    // Open Menu
+    QMenu * openMenu = new QMenu(this);
+    openMenu->addAction(btn_actionOpen);
+    openMenu->addAction(btn_actionMerge);
+    menu_open->setMenu(openMenu);
+    mainToolBar->insertAction(menu_save,menu_open);
 
     // search widget
     searchWidget = new SearchWidget(this);
@@ -147,7 +149,9 @@ void MainWindow::mapEvents(){
     // Actions
     connect(this->btn_actionSaveAs, SIGNAL(triggered(bool)), this, SLOT(actionSaveAs()));
     connect(this->btn_actionSave, SIGNAL(triggered(bool)), this, SLOT(actionSave()));
+    connect(this->menu_save, SIGNAL(triggered(bool)), this, SLOT(actionSave()));
     connect(this->btn_actionOpen, SIGNAL(triggered(bool)), this, SLOT(actionOpen()));
+    connect(this->menu_open, SIGNAL(triggered(bool)), this, SLOT(actionOpen()));
     connect(this->btn_actionAbout, SIGNAL(triggered(bool)), this, SLOT(actionAbout()));
     connect(this->btn_actionPreferences, SIGNAL(triggered(bool)), this, SLOT(actionPreferences(bool)));
     connect(this->btn_actionTools, SIGNAL(triggered(bool)), this, SLOT(actionTools(bool)));
