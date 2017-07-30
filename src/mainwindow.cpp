@@ -1,5 +1,10 @@
 #include "mainwindow.h"
 #include "utils.h"
+#include <QMenu>
+#include <QIcon>
+#include <QAction>
+#include <QKeySequence>
+
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
@@ -26,6 +31,19 @@ MainWindow::MainWindow(QWidget *parent) :
     mainToolBar->hide();
     //Will be shown in endInit() after everything has been created
     mainToolBar->setContextMenuPolicy(Qt::PreventContextMenu);
+
+    // Test QMenu in a toolbar
+    QMenu * menu = new QMenu(tr("Open/Merge"));
+    menu->setIcon(QIcon(":/icons/open"));
+
+    QAction * open = new QAction(tr("Open"), this);
+    open->setIcon(QIcon(":/icons/open"));
+    open->setShortcut(QKeySequence::Open);
+    open->setStatusTip(tr("Open an existing translation file"));
+
+    menu->addAction(open);
+    menu->setContextMenuPolicy(Qt::ActionsContextMenu);
+    mainToolBar->addWidget(menu);
 
     // search widget
     searchWidget = new SearchWidget(this);

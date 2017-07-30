@@ -206,7 +206,7 @@ QToolBar::separator {
 	border-radius: 8px;
 }
 
-QToolButton {
+QToolButton, QToolBar QMenu{
 	color: #e3e3e3;
 	border: none;
 	border-radius: 8px;
@@ -245,11 +245,11 @@ QCheckBox::indicator:checked:hover {
 	background-color: #434343;
 }
 
-QToolButton:!enabled {
+QToolButton:!enabled, QToolBar QMenu:!enabled{
 	color: #434343;
 }
 
-QToolButton:checked {
+QToolButton:checked, QToolBar QMenu:checked{
 	background-color: #434343;
 }
 
@@ -262,16 +262,16 @@ SearchWidget QPushButton {
 	background-color: #6d6d6d;
 }
 
-QToolButton:pressed:hover,  QToolBar QPushButton:pressed:hover {
+QToolButton:pressed:hover,  QToolBar QPushButton:pressed:hover, QToolBar QMenu:pressed:hover {
 	background-color: #434343;
 }
 
-QToolButton:hover,  QToolBar QPushButton:hover {
+QToolButton:hover,  QToolBar QPushButton:hover, QToolBar QMenu:hover{
 	background-color: #e3e3e3;
 	color: #434343;
 }
 
-QToolButton:checked:hover, QToolBar QPushButton:checked:hover {
+QToolButton:checked:hover, QToolBar QPushButton:checked:hover, QToolBar QMenu:checked:hover{
 	background-color: #434343;
 	color: #6d6d6d;
 }
