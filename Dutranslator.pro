@@ -12,6 +12,7 @@ SOURCES += main.cpp\
     languagewidget.cpp \
     aboutdialog.cpp \
     jsxparser.cpp \
+    jsonParser.cpp \
     searchwidget.cpp \
     utils.cpp \
     src/rowbuttonswidget.cpp \
@@ -20,6 +21,7 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     languagewidget.h \
     aboutdialog.h \
+    jsonParser.h \
     jsxparser.h \
     searchwidget.h \
     utils.h \
