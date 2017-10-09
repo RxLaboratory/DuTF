@@ -102,7 +102,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //wait
     //Will be updated in endInit() after everything has been created
-    setWaiting(true,"Initializing Dutranslator...",MAX_AUTO_ROW);
+    setWaiting(true,tr("Initializing Dutranslator..."),MAX_AUTO_ROW);
     mainStatusBar->showMessage("Creating stuff...");
 
     // Timer
