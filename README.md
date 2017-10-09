@@ -7,6 +7,26 @@ Translation framework for Adobe ExtendScript/JavaScript UI
 
 /examples/ Contains example and test translations
 
+## Contribute to the translations
+
+All translation files are available under `resources/languagues`.
+If your language is not present, just copy another `.ts` file and rename it.
+
+#### Current state
+
+| Name                    | File             | State        |
+|-------------------------|------------------|--------------|
+| French                  | `app_fr.ts`      | 100% ✅      |
+| Spannish                | `app_es.ts`      | 0%           |
+
+#### How to
+
+1. Open your langauge `.ts` file with Qt Linguist.
+2. Translate!
+3. Save it and commit it.
+
+We will then take care of releasing it. You can update it and release it with Qt Creator if you know how to do it.
+
 ## Compile the source code
 
 ### From QT Creator
@@ -24,15 +44,3 @@ Just open the `Dutranslator.pro` file from Qt Creator and follow the steps.
 4. run `./Dutranslator` to launch the project;
 5. use `make clean` to remove all build-related files.
 
-## Translation
-
-### Contribute to the translations
-
-1. Open `ts` files in the languages folder with Qt Linguist and edit the translations.
-2. run `lrelease Dutranslator.pro`, or in Qt Creator, with the project opened, run Tools > Extern > lrelease
-
-### Update translations
-
-Needed when the interface is modified or when there is new text in the source code.
-
-1. run `lupdate -verbose Dutranslator.pro`
