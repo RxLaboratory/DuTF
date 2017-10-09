@@ -248,7 +248,27 @@
         <translation>Texte seulement</translation>
     </message>
     <message>
-        <location filename="../../src/preferenceswidget.ui" line="172"/>
+        <location filename="../../src/preferenceswidget.ui" line="170"/>
+        <source>Language</source>
+        <translation>Langue</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferenceswidget.ui" line="178"/>
+        <source>Default (english)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../src/preferenceswidget.ui" line="183"/>
+        <source>Français</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../src/preferenceswidget.ui" line="188"/>
+        <source>Español</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../src/preferenceswidget.ui" line="198"/>
         <source>Back</source>
         <translation>Retour</translation>
     </message>
