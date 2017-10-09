@@ -17,7 +17,7 @@ If your language is not present, just copy another `.ts` file and rename it.
 | Name                    | File             | State        |
 |-------------------------|------------------|--------------|
 | French                  | `app_fr.ts`      | 100% ✅      |
-| Spannish                | `app_es.ts`      | 0%           |
+| Spanish                | `app_es.ts`      | 0%           |
 
 #### How to
 
