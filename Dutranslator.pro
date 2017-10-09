@@ -37,7 +37,8 @@ FORMS    += mainwindow.ui \
 
 RESOURCES += resources.qrc
 
-TRANSLATIONS += resources/languages/app_fr.ts
+TRANSLATIONS += resources/languages/app_fr.ts \
+    resources/languages/app_es.ts
 
 #WIN ICON
 RC_ICONS = ./resources/icons/dutr_win.ico
