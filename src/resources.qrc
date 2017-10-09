@@ -22,5 +22,6 @@
         <file alias="export/Dutranslator.jsxinc">../resources/misc/Dutranslator.jsxinc</file>
         <file alias="icons/export">../resources/icons/export.png</file>
         <file alias="icons/merge">../resources/icons/merge.png</file>
+        <file alias="lang/fr">../languages/app_fr.qm</file>
     </qresource>
 </RCC>
