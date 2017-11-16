@@ -74,6 +74,8 @@ private slots:
      */
     void on_updateCSSButton_clicked();
 
+    void on_languageBox_currentIndexChanged(int index);
+
 private:
     /**
      * @brief database access to the preferences file (SQLite)

@@ -9,6 +9,8 @@
 #include <QtDebug>
 #endif
 
+MainWindow* MainWindow::instance_ = nullptr;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     Ui::MainWindow(),
@@ -17,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     setupUi(this);
 
+    MainWindow::instance_ = this;
     // UI
 
     //Initialization appearance
@@ -118,8 +121,8 @@ MainWindow::~MainWindow(){
 
 void MainWindow::updateCSS(QString cssFileName)
 {
-    setWaiting(true,"Loading StyleSheet",0);
-    mainStatusBar->showMessage("Loading CSS: " + cssFileName);
+    setWaiting(true,tr("Loading StyleSheet"),0);
+    mainStatusBar->showMessage(tr("Loading CSS: ") + cssFileName);
     repaint();
     QString css = "";
 
@@ -135,6 +138,11 @@ void MainWindow::updateCSS(QString cssFileName)
     setWaiting(false);
     btn_actionPreferences->setChecked(false);
     mainStatusBar->clearMessage();
+}
+
+MainWindow & MainWindow::instance()
+{
+    return *(MainWindow::instance_);
 }
 
 void MainWindow::mapEvents(){

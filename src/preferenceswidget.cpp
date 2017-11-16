@@ -1,5 +1,8 @@
 #include "preferenceswidget.h"
 #include <QtDebug>
+#include <QApplication>
+#include <QTranslator>
+#include "mainwindow.h"
 
 PreferencesWidget::PreferencesWidget(QWidget *parent) :
     QWidget(parent)
@@ -121,3 +124,29 @@ int PreferencesWidget::getToolBarStyle()
 {
     return toolBarStyleBox->currentIndex();
 }
+
+void PreferencesWidget::on_languageBox_currentIndexChanged(int index)
+{
+
+    QTranslator tr;
+
+    switch (index) {
+    case 0:
+        break;
+    case 1:
+        tr.load(":/lang/fr");
+        break;
+    case 2:
+        tr.load(":/lang/es");
+        break;
+    case 3:
+        tr.load(":/lang/zh");
+        break;
+    default:
+        break;
+    }
+
+    QApplication::instance()->installTranslator(&tr);
+    retranslateUi(&(MainWindow::instance()));
+}
+

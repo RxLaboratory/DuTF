@@ -13,10 +13,13 @@ int main(int argc, char *argv[])
 
     // Check user local language
     QString locale = QLocale::system().name();
-    if (locale == "fr_FR")
-    {
+    if(locale.startsWith("fr"))
         tr.load(":/lang/fr");
-    }
+    else if(locale.startsWith("es"))
+        tr.load(":/lang/es");
+    else if(locale.startsWith("zh"))
+        tr.load(":/lang/zh");
+
 
     a.installTranslator(&tr);
 

@@ -23,5 +23,7 @@
         <file alias="icons/export">../resources/icons/export.png</file>
         <file alias="icons/merge">../resources/icons/merge.png</file>
         <file alias="lang/fr">../resources/languages/app_fr.qm</file>
+        <file alias="lang/es">../resources/languages/app_es.qm</file>
+        <file alias="lang/zh">../resources/languages/app_zh_cn.qm</file>
     </qresource>
 </RCC>

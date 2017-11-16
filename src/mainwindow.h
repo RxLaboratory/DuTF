@@ -40,6 +40,8 @@ class MainWindow : public QMainWindow, private Ui::MainWindow
 {
     Q_OBJECT
 
+    static MainWindow* instance_;
+
 public:
 
     /**
@@ -52,6 +54,12 @@ public:
      * @brief Destructor
      */
     ~MainWindow();
+
+    /**
+     * @brief Returns an instance of the main window currently being used
+     * @return
+     */
+    static MainWindow & instance();
 
 private slots:
 
