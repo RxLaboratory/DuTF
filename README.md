@@ -7,7 +7,7 @@ Translation framework for Adobe ExtendScript/JavaScript UI
 
 /examples/ Contains example and test translations
 
-## Contribute to the translations
+## Contribute to the translations of Dustranlator
 
 All translation files are available under `resources/languagues`.
 
