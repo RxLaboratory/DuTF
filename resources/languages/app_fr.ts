@@ -268,7 +268,12 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../src/preferenceswidget.ui" line="198"/>
+        <location filename="../../src/preferenceswidget.ui" line="193"/>
+        <source>简体中文</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/preferenceswidget.ui" line="203"/>
         <source>Back</source>
         <translation>Retour</translation>
     </message>

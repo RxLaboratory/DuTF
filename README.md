@@ -10,28 +10,44 @@ Translation framework for Adobe ExtendScript/JavaScript UI
 ## Contribute to the translations
 
 All translation files are available under `resources/languagues`.
-If your language is not present, just copy another `.ts` file and rename it.
 
-#### Current state
+#### Available translations
 
-| Name                    | File             | State        |
-|-------------------------|------------------|--------------|
-| French                  | `app_fr.ts`      | 100% ✅      |
-| Spanish                | `app_es.ts`      | 0%           |
+| Name                    | File             |
+|-------------------------|------------------|
+| French                  | `app_fr.ts`      |
+| Spanish                 | `app_es.ts`      |
+| Chinese                 | `app_zh_cn.ts`   |
 
-#### How to
+##### Updating/Creating translations file
 
-1. Open your langauge `.ts` file with Qt Linguist.
-2. Translate!
-3. Save it and commit it.
+1. Add your language file at the end of the `Dutranslator.pro` file.
+2. Update the file from QtCreator. Open the project and do `Tools > Extra > Linguist > lupdate`.
+2. Or from the terminal do `lupdate Dutranslator.pro`.
 
-We will then take care of releasing it. You can update it and release it with Qt Creator if you know how to do it.
+Note: We will take care of adding your language in the interface if it's a new one.
+
+##### Translate
+
+- Open the ts file of your language with QtLinguis.
+- If the file is recent, go in `Edit > Translation File Settings` and change the values according to your language.
+- Translate.
+- Save.
+- Commit now or do a release if  you can.
+
+##### Release
+
+Once you have updated your translation file and translated it, you can release it. Like so, we could use the last version in the application.
+
+1. Open the project with QtCreator and do `Tools > Extra > Linguist > lrelease`.
+1. Or from the terminal, run `lrelease Dutranslator.pro`.
+2. Commit and send a pull request.
 
 ## Compile the source code
 
 ### From QT Creator
 
-Just open the `Dutranslator.pro` file from Qt Creator and follow the steps.
+Just open the `Dutranslator.pro` file with Qt Creator and follow the steps.
 
 ### From the terminal :v:
 

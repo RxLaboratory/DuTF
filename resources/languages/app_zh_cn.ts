@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="fr_FR">
+<TS version="2.1" language="es_ES">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -273,7 +273,7 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../src/preferenceswidget.ui" line="198"/>
+        <location filename="../../src/preferenceswidget.ui" line="203"/>
         <source>Back</source>
         <translation>返回</translation>
     </message>
