@@ -74,6 +74,10 @@ private slots:
      */
     void on_updateCSSButton_clicked();
 
+    /**
+     * @brief Handle change of the language
+     * @param index
+     */
     void on_languageBox_currentIndexChanged(int index);
 
 private:
@@ -81,6 +85,11 @@ private:
      * @brief database access to the preferences file (SQLite)
      */
     QSqlDatabase db;
+
+    /**
+     * @brief Current index in the language combo
+     */
+    int currentLanguage_;
 };
 
 #endif // PREFERENCESWIDGET_H

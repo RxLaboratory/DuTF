@@ -13,6 +13,8 @@ PreferencesWidget::PreferencesWidget(QWidget *parent) :
     styleBox->setItemData(0,":/styles/default");
     styleBox->setItemData(1,"");
 
+    currentLanguage_ = -1;
+
     //SQLite database
     db = QSqlDatabase::addDatabase("QSQLITE");
 
@@ -128,6 +130,8 @@ int PreferencesWidget::getToolBarStyle()
 void PreferencesWidget::on_languageBox_currentIndexChanged(int index)
 {
 
+    if(index == currentLanguage_) return;
+    currentLanguage_ = index;
     QTranslator tr;
 
     switch (index) {
