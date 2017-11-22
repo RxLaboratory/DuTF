@@ -148,6 +148,7 @@ MainWindow & MainWindow::instance()
 void MainWindow::mapEvents(){
     // Parser
     connect(jsonParser,SIGNAL(languageFound(QStringList)),this,SLOT(newLanguage(QStringList)));
+    connect(jsonParser,SIGNAL(applicationFound(QString)),this,SLOT(newApplication(QString)));
     connect(jsonParser,SIGNAL(newTranslation(QStringList)),this,SLOT(newTranslation(QStringList)));
     connect(jsonParser,SIGNAL(parsingFinished()),this,SLOT(parsingFinished()));
     connect(jsonParser,SIGNAL(parsingFailed()),this,SLOT(parsingFailed()));
@@ -238,6 +239,11 @@ void MainWindow::newLanguage(QStringList language)
     languageWidget->setCode(language[0]);
 }
 
+void MainWindow::newApplication(QString app)
+{
+    languageWidget->setApp(app);
+}
+
 void MainWindow::parsingFinished()
 {
     //resize sections
@@ -277,14 +283,17 @@ void MainWindow::addTableRow(int index){
     originalItem->setReadOnly(true);
     originalItem->setEnabled(userRow);
 
-    QSpinBox *contextItem = new QSpinBox();
-    contextItem->setEnabled(userRow);
-
     QTextEdit *translatedItem = new QTextEdit();
     translatedItem->setEnabled(userRow);
 
+    QLineEdit *contextItem = new QLineEdit();
+    contextItem->setEnabled(userRow);
+
     QLineEdit *commentItem = new QLineEdit();
     commentItem->setEnabled(userRow);
+
+    QSpinBox *contextIdItem = new QSpinBox();
+    contextIdItem->setEnabled(userRow);
 
     // Actions
     RowButtonsWidget *rowButtons = new RowButtonsWidget();
@@ -293,9 +302,10 @@ void MainWindow::addTableRow(int index){
 
     displayTable->setCellWidget(index,0,rowButtons);
     displayTable->setCellWidget(index,1,originalItem);
-    displayTable->setCellWidget(index,2,contextItem);
-    displayTable->setCellWidget(index,3,translatedItem);
+    displayTable->setCellWidget(index,2,translatedItem);
+    displayTable->setCellWidget(index,3,contextItem);
     displayTable->setCellWidget(index,4,commentItem);
+    displayTable->setCellWidget(index,5,contextIdItem);
 
     if(displayTable->rowCount() >= MAX_AUTO_ROW && fillTableTimer.isActive())
     {
@@ -383,6 +393,8 @@ void MainWindow::addTableRowContent(QStringList content){
 
     if(tableFreeIndex > displayTable->rowCount() -1) addTableRow();
 
+    qDebug() << content << "\n";
+
     
     QTextEdit * originalItem = dynamic_cast<QTextEdit *>(displayTable
             ->cellWidget(tableFreeIndex, 1));
@@ -390,19 +402,25 @@ void MainWindow::addTableRowContent(QStringList content){
     originalItem->setEnabled(true);
 
     QTextEdit * translatedItem = dynamic_cast<QTextEdit *>(displayTable
-            ->cellWidget(tableFreeIndex, 3));
-    translatedItem->setPlainText(utils::unEscape(content[2]));
+            ->cellWidget(tableFreeIndex, 2));
+    translatedItem->setPlainText(utils::unEscape(content[1]));
     translatedItem->setEnabled(true);
+
+    QLineEdit * contextItem = dynamic_cast<QLineEdit *>(displayTable
+            ->cellWidget(tableFreeIndex, 3));
+    contextItem->setText(utils::unEscape(content[2]));
+    contextItem->setEnabled(true);
 
     QLineEdit * commentItem = dynamic_cast<QLineEdit *>(displayTable
             ->cellWidget(tableFreeIndex, 4));
     commentItem->setText(utils::unEscape(content[3]));
     commentItem->setEnabled(true);
 
-    QSpinBox * contextItem = dynamic_cast<QSpinBox *>(displayTable
-            ->cellWidget(tableFreeIndex, 2));
-    contextItem->setValue(content[1].toInt());
-    contextItem->setEnabled(true);
+
+    QSpinBox * contextIdItem = dynamic_cast<QSpinBox *>(displayTable
+            ->cellWidget(tableFreeIndex, 5));
+    contextIdItem->setValue(content[4].toInt());
+    contextIdItem->setEnabled(true);
     
     displayTable->setRowHidden(tableFreeIndex,false);
 
@@ -415,8 +433,8 @@ void MainWindow::addTableRowContent(QStringList content){
 void MainWindow::clearTableToTheEnd(){
 
    QTextEdit * originalItem, * translatedItem;
-   QLineEdit * commentItem;
-   QSpinBox * contextItem;
+   QLineEdit * commentItem, * contextItem;
+   QSpinBox * contextIdItem;
 
    int index;
    for(index = tableFreeIndex; index < displayTable->rowCount(); index++){
@@ -426,19 +444,24 @@ void MainWindow::clearTableToTheEnd(){
        originalItem->setEnabled(false);
 
        translatedItem = dynamic_cast<QTextEdit *>(displayTable
-               ->cellWidget(index, 3));
+               ->cellWidget(index, 2));
        translatedItem->setPlainText("");
        translatedItem->setEnabled(false);
+
+       contextItem = dynamic_cast<QLineEdit *>(displayTable
+               ->cellWidget(index, 3));
+       contextItem->setText("");
+       contextItem->setEnabled(false);
 
        commentItem = dynamic_cast<QLineEdit *>(displayTable
                ->cellWidget(index, 4));
        commentItem->setText("");
        commentItem->setEnabled(false);
 
-       contextItem = dynamic_cast<QSpinBox *>(displayTable
-               ->cellWidget(index, 2));
-       contextItem->setValue(0);
-       contextItem->setEnabled(false);
+       contextIdItem = dynamic_cast<QSpinBox *>(displayTable
+               ->cellWidget(index, 5));
+       contextIdItem->setValue(0);
+       contextIdItem->setEnabled(false);
 
        // Make the ui blink (not on windows ; test on Mac)
        displayTable->setRowHidden(index,true);
@@ -579,38 +602,35 @@ void MainWindow::actionSave()
 {
     if (!checkLanguage()) return;
 
+    // Test Writing
+
     workingFile.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream out(&workingFile);
-    out.setCodec(QTextCodec::codecForName("UTF-8"));
 
     //add new array
-    out << "Dutranslator.languages.push(['" + languageWidget->getCode() + "','" +  languageWidget->getLanguage() + "']);" << endl;
-    out << "var DutranslatorArray = [];" << endl;
+    //out << "Dutranslator.languages.push(['" + languageWidget->getCode() + "','" +  languageWidget->getLanguage() + "']);" << endl;
+    //out << "var DutranslatorArray = [];" << endl;
 
     //populate
     for (int row = 0; row < tableFreeIndex ; row++)
     {
+        // Access widgets
         QTextEdit *originalEdit = (QTextEdit*)displayTable->cellWidget(row,1);
         QSpinBox *contextBox = (QSpinBox*)displayTable->cellWidget(row,2);
         QTextEdit *translatedEdit = (QTextEdit*)displayTable->cellWidget(row,3);
         QLineEdit *commentEdit = (QLineEdit*)displayTable->cellWidget(row,4);
+
+        // Access values
         QString original = originalEdit->toPlainText();
         original = utils::escape(original);
         QString translated = translatedEdit->toPlainText();
         translated = utils::escape(translated);
         QString context = QString::number(contextBox->value());
         QString comment = commentEdit->text();
-        out << "DutranslatorArray.push([\"" << original << "\"," << context << ",\"" << translated << "\"]);";
-        if (comment != "")
-        {
-            out << " //" << comment;
-        }
-        out << endl;
     }
 
     //add array and free memory
-    out << "Dutranslator.localizedStrings.push(DutranslatorArray);" << endl;
-    out << "delete DutranslatorArray;";
+    //out << "Dutranslator.localizedStrings.push(DutranslatorArray);" << endl;
+    //out << "delete DutranslatorArray;";
 
     workingFile.close();
 }

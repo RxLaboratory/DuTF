@@ -56,6 +56,25 @@
     </widget>
    </item>
    <item>
+    <widget class="QLineEdit" name="appEdit">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>100</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="placeholderText">
+      <string>Application name</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QLineEdit" name="codeEdit">
      <property name="minimumSize">
       <size>

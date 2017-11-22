@@ -51,9 +51,11 @@ void JsonParser::parseDocument(QJsonDocument doc)
 {
     QJsonObject json = doc.object();
 
+
     QStringList softs = json.keys();
     QString app = softs[0];
     QJsonObject appTr = json[app].toObject();
+    emit applicationFound(app);
 
     // Look for the language
 
@@ -72,11 +74,12 @@ void JsonParser::parseDocument(QJsonDocument doc)
     for(i = 0; i < transList.size(); i++){
         trans = transList.takeAt(i).toObject();
         QString original = trans["source"].toString();
-        QString context = QString::number(trans["contextId"].toInt());
+        QString contextId = QString::number(trans["contextId"].toInt());
+        QString context = trans["context"].toString();
         QString translated = trans["translation"].toString();
         QString comment = trans["comment"].toString();
         QStringList translation;
-        translation << original << context << translated << comment;
+        translation << original << translated << context << comment << contextId;
         emit newTranslation(translation);
     }
 

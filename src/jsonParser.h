@@ -18,6 +18,7 @@ public:
 signals:
     void newTranslation(QStringList);
     void languageFound(QStringList);
+    void applicationFound(QString);
 
     /**
      * @brief Signal emited when the parsing is over

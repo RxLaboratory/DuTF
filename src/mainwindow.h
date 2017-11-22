@@ -143,6 +143,12 @@ private slots:
     void newLanguage(QStringList language);
 
     /**
+     * @brief Slot to run when a new application is being translated
+     * @param app
+     */
+    void newApplication(QString app);
+
+    /**
      * @brief Marks the end of the  parsing
      */
     void parsingFinished();

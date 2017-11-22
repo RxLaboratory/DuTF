@@ -49,7 +49,7 @@
     <item>
      <widget class="QStackedWidget" name="mainStack">
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tablePage">
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -95,7 +95,7 @@
            <bool>true</bool>
           </property>
           <property name="columnCount">
-           <number>5</number>
+           <number>6</number>
           </property>
           <attribute name="verticalHeaderDefaultSectionSize">
            <number>50</number>
@@ -112,17 +112,22 @@
           </column>
           <column>
            <property name="text">
-            <string>Context</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
             <string>Translated</string>
            </property>
           </column>
           <column>
            <property name="text">
+            <string>Context</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
             <string>Comment</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>ContextId</string>
            </property>
           </column>
          </widget>
