@@ -4,10 +4,13 @@
 #include <QLocale>
 #include <iostream>
 #include <QString>
+#include "translation.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    qRegisterMetaType<Translation>();
 
     QTranslator tr;
 

@@ -16,7 +16,8 @@ SOURCES += main.cpp\
     searchwidget.cpp \
     utils.cpp \
     src/rowbuttonswidget.cpp \
-    src/preferenceswidget.cpp
+    src/preferenceswidget.cpp \
+    src/translation.cpp
 
 HEADERS  += mainwindow.h \
     languagewidget.h \
@@ -26,7 +27,8 @@ HEADERS  += mainwindow.h \
     searchwidget.h \
     utils.h \
     src/rowbuttonswidget.h \
-    src/preferenceswidget.h
+    src/preferenceswidget.h \
+    src/translation.h
 
 FORMS    += mainwindow.ui \
     languagewidget.ui \

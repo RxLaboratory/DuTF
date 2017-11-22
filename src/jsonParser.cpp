@@ -70,17 +70,16 @@ void JsonParser::parseDocument(QJsonDocument doc)
 
     int i = 0;
     QJsonArray transList = appTr["translations"].toArray();
-    QJsonObject trans;
     for(i = 0; i < transList.size(); i++){
-        trans = transList.takeAt(i).toObject();
-        QString original = trans["source"].toString();
-        QString contextId = QString::number(trans["contextId"].toInt());
-        QString context = trans["context"].toString();
-        QString translated = trans["translation"].toString();
-        QString comment = trans["comment"].toString();
-        QStringList translation;
-        translation << original << translated << context << comment << contextId;
-        emit newTranslation(translation);
+        QJsonObject trans = transList.takeAt(i).toObject();
+
+        Translation newTr;
+        newTr.source = trans["source"].toString();
+        newTr.translated = trans["translation"].toString();
+        newTr.context = trans["context"].toString();
+        newTr.comment = trans["comment"].toString();
+        newTr.contextId = trans["contextId"].toInt();
+        emit newTranslation(newTr);
     }
 
 

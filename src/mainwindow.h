@@ -28,6 +28,7 @@
 #include "searchwidget.h"
 #include "rowbuttonswidget.h"
 #include "preferenceswidget.h"
+#include "translation.h"
 
 namespace Ui {
     class MainWindow;
@@ -134,7 +135,7 @@ private slots:
      * @brief Adds a new translation to the current translation file
      * @param translation	Translation to add
      */
-    void newTranslation(QStringList translation);
+    void newTranslation(Translation pTr);
 
     /**
      * @brief Starts a new language translation
@@ -178,13 +179,9 @@ private slots:
      * @brief Adds content to the last row available
      * If no row is available, a new one is created
      *
-     * @param content   A list of 4 strings
-     * original: [0]
-     * context: [1]
-     * translated: [2]
-     * comment: [3]
+     * @param Translation       The translation to add
      */
-    void addTableRowContent(QStringList content);
+    void addTableRowContent(Translation);
 
     /**
      * @brief Clears the table content

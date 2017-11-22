@@ -8,6 +8,7 @@
 #include <QTextCodec>
 #include <QRegularExpression>
 #include <QJsonDocument>
+#include "translation.h"
 
 class JsonParser : public QThread
 {
@@ -16,7 +17,7 @@ public:
     explicit JsonParser(QObject *parent = 0);
 
 signals:
-    void newTranslation(QStringList);
+    void newTranslation(Translation);
     void languageFound(QStringList);
     void applicationFound(QString);
 

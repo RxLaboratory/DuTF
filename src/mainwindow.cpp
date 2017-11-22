@@ -149,7 +149,7 @@ void MainWindow::mapEvents(){
     // Parser
     connect(jsonParser,SIGNAL(languageFound(QStringList)),this,SLOT(newLanguage(QStringList)));
     connect(jsonParser,SIGNAL(applicationFound(QString)),this,SLOT(newApplication(QString)));
-    connect(jsonParser,SIGNAL(newTranslation(QStringList)),this,SLOT(newTranslation(QStringList)));
+    connect(jsonParser,SIGNAL(newTranslation(Translation)),this,SLOT(newTranslation(Translation)));
     connect(jsonParser,SIGNAL(parsingFinished()),this,SLOT(parsingFinished()));
     connect(jsonParser,SIGNAL(parsingFailed()),this,SLOT(parsingFailed()));
     connect(jsonParser,SIGNAL(progress(int)),progressBar,SLOT(setValue(int)));
@@ -223,14 +223,9 @@ void MainWindow::openJsxinc(QString fileName)
     jsonParser->parseFile(&workingFile);
 }
 
-void MainWindow::newTranslation(QStringList translation)
+void MainWindow::newTranslation(Translation pTr)
 {   
-    // original: translation[0]
-    // context: translation[1]
-    // translated: translation[2]
-    // comment: translation[3]
-    //
-    addTableRowContent(translation);
+    addTableRowContent(pTr);
 }
 
 void MainWindow::newLanguage(QStringList language)
@@ -389,37 +384,34 @@ void MainWindow::endInit()
     setWaiting(false);
 }
 
-void MainWindow::addTableRowContent(QStringList content){
+void MainWindow::addTableRowContent(Translation pTr){
 
     if(tableFreeIndex > displayTable->rowCount() -1) addTableRow();
 
-    qDebug() << content << "\n";
-
-    
     QTextEdit * originalItem = dynamic_cast<QTextEdit *>(displayTable
             ->cellWidget(tableFreeIndex, 1));
-    originalItem->setPlainText(utils::unEscape(content[0]));
+    originalItem->setPlainText(utils::unEscape(pTr.source));
     originalItem->setEnabled(true);
 
     QTextEdit * translatedItem = dynamic_cast<QTextEdit *>(displayTable
             ->cellWidget(tableFreeIndex, 2));
-    translatedItem->setPlainText(utils::unEscape(content[1]));
+    translatedItem->setPlainText(utils::unEscape(pTr.translated));
     translatedItem->setEnabled(true);
 
     QLineEdit * contextItem = dynamic_cast<QLineEdit *>(displayTable
             ->cellWidget(tableFreeIndex, 3));
-    contextItem->setText(utils::unEscape(content[2]));
+    contextItem->setText(utils::unEscape(pTr.context));
     contextItem->setEnabled(true);
 
     QLineEdit * commentItem = dynamic_cast<QLineEdit *>(displayTable
             ->cellWidget(tableFreeIndex, 4));
-    commentItem->setText(utils::unEscape(content[3]));
+    commentItem->setText(utils::unEscape(pTr.comment));
     commentItem->setEnabled(true);
 
 
     QSpinBox * contextIdItem = dynamic_cast<QSpinBox *>(displayTable
             ->cellWidget(tableFreeIndex, 5));
-    contextIdItem->setValue(content[4].toInt());
+    contextIdItem->setValue(pTr.contextId);
     contextIdItem->setEnabled(true);
     
     displayTable->setRowHidden(tableFreeIndex,false);
