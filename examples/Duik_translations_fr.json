@@ -1,4 +1,4 @@
-{
+﻿{
     "duik": [
         {
             "languageId": "fr",
@@ -40,7 +40,35 @@
                     "context": "",
                     "contextId": 0,
                     "source": "Launch Duik",
-                    "translation": "Lancer Duik"
+                    "translation": "Lancer Duik Default"
+                },
+                {
+                    "comment": "",
+                    "context": "",
+                    "contextId": 1,
+                    "source": "Launch Duik",
+                    "translation": "Lancer Duik Contexte 1"
+                },
+                {
+                    "comment": "",
+                    "context": "Animation",
+                    "contextId": 1,
+                    "source": "Launch Duik",
+                    "translation": "Lancer Duik Contexte 1, animation"
+                },
+                {
+                    "comment": "",
+                    "context": "Home",
+                    "contextId": 5,
+                    "source": "Launch Duik",
+                    "translation": "Lancer Duik, Contexte 5, home"
+                },
+                {
+                    "comment": "",
+                    "context": "Animation",
+                    "contextId": 6,
+                    "source": "Launch Duik",
+                    "translation": "Lancer Duik, contexte 6, Animation"
                 },
                 {
                     "comment": "",
