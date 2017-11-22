@@ -1,4 +1,4 @@
-/*
+﻿/*
 	Dutranslator
 
 	Copyright (c) 2017 Nicolas Dufresne, Rainbox Productions
@@ -150,7 +150,7 @@ Dutranslator.settings.name = "duik";
 Dutranslator.settings.originalLanguageId = "en";
 
 /**
- * Parse the translation files.
+ * Load the list of available languages
  */
 Dutranslator.getAvailable = function ()
 {
@@ -174,10 +174,12 @@ Dutranslator.getAvailable = function ()
 /**
  * Set the current language
  * @param {string} languageId - The id of the language to set
+ * @return success code
+ * 0    Everything went ok
+ * 1    The file linked to the given id can't be opened
+ * 2    The json content doesn't match a translation file
  */
 Dutranslator.setLanguage = function (languageId) {
-
-	// TODO Parse the translation file corresponding to the id
 
 	for (var i = 0 ; i < Dutranslator.languages.length ; i++)
 	{
@@ -185,23 +187,27 @@ Dutranslator.setLanguage = function (languageId) {
 		{
 			Dutranslator.current = languageId;
 
-              if(languageId == Dutranslator.settings.originalLanguageId) return;
+              if(languageId == Dutranslator.settings.originalLanguageId) return 0;  // Default language, no translation
 
             // Parse process
 
             var fPath = Dutranslator.settings.folder + Dutranslator.settings.prefix + languageId + Dutranslator.settings.suffix;
             var file = new File(fPath);
-
-            if(!file.open("r")) return; // Unable to open the file
+            
+            if(!file.open("r")) return 1; // Unable to open the file
 
             var data = file.read();
             file.close();
             var jsonData = JSON.parse(data);
-
-            var translations = jsonData[Dutranslator.settings.name]["translations"];
+            
+            if(!jsonData[Dutranslator.settings.name] || 
+                jsonData[Dutranslator.settings.name].length != 2 ||
+                !jsonData[Dutranslator.settings.name][1]["translations"]) return 2; // Wrong json format
+            
+            var translations = jsonData[Dutranslator.settings.name][1]["translations"];                    
             Dutranslator.localizedStrings = translations;
-
-            return;
+            
+            return 0;
 
 		}
 	}
@@ -225,8 +231,6 @@ function tr(s, context, args) {
 	if(typeof(args)==='undefined') args = [];
 	if(typeof(args) === 'string' || args instanceof String) args = [args];
 
-	// TODO re-implement using the new json translation files instead of the array from jsxinc files
-
 	var languageNumber = -1;
 
 	// Get the current language index
@@ -242,7 +246,7 @@ function tr(s, context, args) {
 	var res = s;
 	// If a language is set, search for the translation
 	if (languageNumber > -1 &&  Dutranslator.current != Dutranslator.settings.originalLanguageId){
-		var stringNumber = -1;
+		var stringNumber = -1;      
 
 		// Get the translation
 		for (var i = 0 ; i < Dutranslator.localizedStrings.length ; i++)
@@ -263,7 +267,7 @@ function tr(s, context, args) {
 				}
 			}
 		}
-
+    
 		// If a translation is found, set it to res
 		if (stringNumber > -1) res = Dutranslator.localizedStrings[stringNumber]["translation"];
 		if (res == "") res = s;
