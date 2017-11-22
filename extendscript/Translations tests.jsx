@@ -30,7 +30,7 @@ if(Dutranslator.setPrettyLanguage("Français") == 0)
 var names = Dutranslator.getPrettyNames();
 output += "Available languages: \n" + names + "\n";
 
-/*
+
 for(var i = 0; i < names.length; i++)
 {
     output += "Setting lang to " + names[i] + "\n";
@@ -42,6 +42,6 @@ for(var i = 0; i < names.length; i++)
     else output += "Translation in " + names[i] + " of Launch Duik is \n   " + tr("Launch Duik") + "\n";       
     output += "--------\n";
 }
-*/
+
 output += "\n\nTest ends.";
 alert(output);
