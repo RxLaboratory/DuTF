@@ -224,6 +224,7 @@ Dutranslator.getAvailable = function ()
           };
           
 	}
+
 }
 
 /**
@@ -260,6 +261,9 @@ Dutranslator.getPrettyNames = function()
     {
         res[res.length] = Dutranslator.languages[langId]["name"];
     }
+
+    // Order the list by name
+    res.sort ();
     return res;    
 }
 
