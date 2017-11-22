@@ -4,6 +4,8 @@
 #include <QIcon>
 #include <QAction>
 #include <QKeySequence>
+#include <QJsonDocument>
+#include <QJsonArray>
 
 #ifdef QT_DEBUG
 #include <QtDebug>
@@ -594,35 +596,54 @@ void MainWindow::actionSave()
 {
     if (!checkLanguage()) return;
 
-    // Test Writing
-
     workingFile.open(QIODevice::WriteOnly | QIODevice::Text);
 
-    //add new array
-    //out << "Dutranslator.languages.push(['" + languageWidget->getCode() + "','" +  languageWidget->getLanguage() + "']);" << endl;
-    //out << "var DutranslatorArray = [];" << endl;
+    QJsonArray transList;
 
     //populate
     for (int row = 0; row < tableFreeIndex ; row++)
     {
         // Access widgets
         QTextEdit *originalEdit = (QTextEdit*)displayTable->cellWidget(row,1);
-        QSpinBox *contextBox = (QSpinBox*)displayTable->cellWidget(row,2);
-        QTextEdit *translatedEdit = (QTextEdit*)displayTable->cellWidget(row,3);
+        QTextEdit *translatedEdit = (QTextEdit*)displayTable->cellWidget(row,2);
+        QLineEdit *contextEdit = (QLineEdit*)displayTable->cellWidget(row,3);
         QLineEdit *commentEdit = (QLineEdit*)displayTable->cellWidget(row,4);
+        QSpinBox *contextIdBox = (QSpinBox*)displayTable->cellWidget(row,5);
 
         // Access values
-        QString original = originalEdit->toPlainText();
-        original = utils::escape(original);
-        QString translated = translatedEdit->toPlainText();
-        translated = utils::escape(translated);
-        QString context = QString::number(contextBox->value());
-        QString comment = commentEdit->text();
+        QString original = utils::escape(originalEdit->toPlainText());
+        QString translated = utils::escape(translatedEdit->toPlainText());
+        QString context = utils::escape(contextEdit->text());
+        QString comment = utils::escape(commentEdit->text());
+        int contextId = contextIdBox->value();
+
+        Translation obj {original, translated, context, comment, contextId};
+        QJsonObject jRow = obj.toJson();
+        transList.append(jRow);
     }
 
-    //add array and free memory
-    //out << "Dutranslator.localizedStrings.push(DutranslatorArray);" << endl;
-    //out << "delete DutranslatorArray;";
+    QJsonObject jDetails
+    {
+        {"version", "1.0"},
+        {"languageId", languageWidget->getCode()},
+        {"languageName", languageWidget->getLanguage()}
+    };
+
+    QJsonObject jTranslations
+    {
+        {"translations", transList}
+    };
+
+    QJsonArray jContent { jDetails, jTranslations };
+
+    QJsonObject jObj
+    {
+        {languageWidget->getApp(), jContent}
+    };
+
+    QJsonDocument jDoc(jObj);
+
+    workingFile.write(jDoc.toJson());
 
     workingFile.close();
 }
@@ -634,6 +655,7 @@ void MainWindow::actionSaveAs()
     QString fileName = QFileDialog::getSaveFileName(this,"Save translation file as",workingFile.fileName().left(workingFile.fileName().lastIndexOf(".")),"JSON (*.json);;Text files (*.txt);;All files (*.*)");
     if (fileName.isNull()) return;
 
+    if(!fileName.endsWith(".json")) fileName += ".json";
     workingFile.setFileName(fileName);
     QStringList filePath = fileName.split("/");
     languageWidget->setFile(filePath[filePath.count()-1]);
