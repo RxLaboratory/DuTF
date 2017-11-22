@@ -167,7 +167,11 @@ Dutranslator.getAvailable = function ()
 {
     Dutranslator.languages = {};
 	//Add original language
-    Dutranslator.languages[Dutranslator.settings.originalLanguageId] = Dutranslator.settings.originalLanguageName;
+    Dutranslator.languages[Dutranslator.settings.originalLanguageId] = {
+        "name": Dutranslator.settings.originalLanguageName,
+        "file": undefined
+    };
+        
 
     var folder = new Folder(Dutranslator.settings.folder);
 
@@ -175,12 +179,41 @@ Dutranslator.getAvailable = function ()
 	languageFiles = folder.getFiles(Dutranslator.settings.prefix + '*' + Dutranslator.settings.suffix);
 	for (var i = 0 ; i < languageFiles.length ; i++)
 	{
-          var fileName = languageFiles[i].name;
+          var fileName = languageFiles[i].name;                   
+          var langId = langName = "";
           
           // Determine the language name and the language id by reading the file
           // Values are stored at the top so it should be fase
-          //var file = new File(fileName);
-          var langId = langName = "";
+          var file = new File(folder + "/" + fileName);
+          if(!file.open("r")) return 1; // Unable to open the file
+         
+          // Line by line reading
+          while(langName == "" || langId == "")
+          {
+              var line = file.readln();
+              var indexName = line.lastIndexOf("languageName");
+              var indexId = line.lastIndexOf("languageId");
+              
+              var index;
+              if(indexName != -1 && langName == "") index = indexName;
+              else if(indexId != -1 && langId == "") index = indexId;
+              else continue;                                          
+              // ..... "lang" : "value"
+              line = line.substring(index, line.length);
+              // .lang" : "value"
+              line = line.substring(line.indexOf("\"") + 1, line.length);
+              // : "value"
+              line = line.substring(line.indexOf("\"") + 1, line.length);
+              // value"
+              line = line.substring(0, line.indexOf("\""));
+              // value
+               if(indexName != -1 && langName == "") langName = line ;
+              else if(indexId != -1 && langId == "") langId = line ;
+              else continue;              
+          }
+      
+          file.close();
+          
           
           if(langId == "") langId = fileName.replace(Dutranslator.settings.prefix, "").replace(Dutranslator.settings.suffix, "");
           if(langName == "") langName = langId;
@@ -191,6 +224,43 @@ Dutranslator.getAvailable = function ()
           };
           
 	}
+}
+
+/**
+  * Returns the pretty name of a given language
+  * @param {string} langId - The id of the request language
+ */
+Dutranslator.getPrettyName = function(langId)
+{
+    if(!Dutranslator.languages[langId]) return 1;
+    return Dutranslator.languages[langId]["name"];   
+}
+
+/**
+  * Returns the language id of a given language name
+  * @param {string} prettyName - The pretty name of the request language
+ */
+Dutranslator.getLanguageId= function(prettyName)
+{
+    for(var langId in Dutranslator.languages)
+    {
+        if(Dutranslator.languages[langId]["name"] == prettyName) return langId;
+    }        
+    return 1;    
+}
+
+/**
+  * Returns a list containing pretty names of all languages
+  * @param {string} langId - The id of the request language
+ */
+Dutranslator.getPrettyNames = function()
+{
+    var res = [];
+    for(var langId in Dutranslator.languages)
+    {
+        res[res.length] = Dutranslator.languages[langId]["name"];
+    }
+    return res;    
 }
 
 /**
@@ -220,7 +290,7 @@ Dutranslator.setLanguage = function (languageId) {
 
             var data = file.read();
             file.close();
-            var jsonData = JSON.parse(data);
+            var jsonData = JSON.parse(data);            
             
             if(!jsonData[Dutranslator.settings.name] || 
                 jsonData[Dutranslator.settings.name].length != 2 ||
@@ -235,6 +305,22 @@ Dutranslator.setLanguage = function (languageId) {
 	}
 }
 
+/**
+ * Set the current language with a given pretty name
+ * @param {string} languageName - The pretty name of the language to set
+ * @return success code
+ * 0    Everything went ok
+ * -1   Can't find any language with the given pretty name
+ * >0  Call to setLanguage(languageId) failed
+ */
+Dutranslator.setPrettyLanguage = function (languageName) {
+    
+    var langId = Dutranslator.getLanguageId(languageName);
+    if(langId == 1) return -1;
+    
+    return Dutranslator.setLanguage(langId);
+}    
+    
 /**
  * Translate a given string based on the current seted language
  *
