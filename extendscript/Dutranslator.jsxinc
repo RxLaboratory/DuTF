@@ -86,17 +86,15 @@ var Dutranslator = {};
 Dutranslator.current = '';
 
 /**
- * The list of availables languages
+ * A map containing available languages.
+ * There is a language name and a file name for each language id.
+ * languages["fr_FR"] ["name"] is "Francais" for example.
  *
- * Will be filled when executing Dutranslator.getAvailable
+ * Will be filled when executing Dutranslator.getAvailable().
  *
- * When adding a language to this list, the translations should
- * be added right after in Dutranslator.localizedStrings to
- * be sure that everything related to a language is available at
- * the same index
  * @memberof Dutranslator
  */
-Dutranslator.languages = [];
+Dutranslator.languages = {};
 
 /**
  * The translated strings  of the current language
@@ -150,12 +148,26 @@ Dutranslator.settings.name = "duik";
 Dutranslator.settings.originalLanguageId = "en";
 
 /**
+ * The original language name
+ * @memberof Settings
+ */
+Dutranslator.settings.originalLanguageName = "English";
+
+/**
  * Load the list of available languages
+ *
+ * If the language id and or the language name can't be found in the file, the file name will be used 
+ * to determine the language id and the name will be set as the id.
+ *
+ * @return A success code
+ * 0    Success
+ * 1    One of the file haven't been correctly opened
  */
 Dutranslator.getAvailable = function ()
 {
+    Dutranslator.languages = {};
 	//Add original language
-    Dutranslator.languages.push(Dutranslator.settings.originalLanguageId);
+    Dutranslator.languages[Dutranslator.settings.originalLanguageId] = Dutranslator.settings.originalLanguageName;
 
     var folder = new Folder(Dutranslator.settings.folder);
 
@@ -164,10 +176,20 @@ Dutranslator.getAvailable = function ()
 	for (var i = 0 ; i < languageFiles.length ; i++)
 	{
           var fileName = languageFiles[i].name;
+          
+          // Determine the language name and the language id by reading the file
+          // Values are stored at the top so it should be fase
+          //var file = new File(fileName);
+          var langId = langName = "";
+          
+          if(langId == "") langId = fileName.replace(Dutranslator.settings.prefix, "").replace(Dutranslator.settings.suffix, "");
+          if(langName == "") langName = langId;
 
-          Dutranslator.languages.push(fileName
-            .replace(Dutranslator.settings.prefix, "")
-            .replace(Dutranslator.settings.suffix, ""));
+          Dutranslator.languages[langId] = {
+              "name": langName,
+              "file":  Dutranslator.settings.folder + "/" + fileName
+          };
+          
 	}
 }
 
@@ -181,9 +203,9 @@ Dutranslator.getAvailable = function ()
  */
 Dutranslator.setLanguage = function (languageId) {
 
-	for (var i = 0 ; i < Dutranslator.languages.length ; i++)
+	for (var langId in Dutranslator.languages)
 	{
-		if (Dutranslator.languages[i] == languageId)
+		if (langId == languageId)
 		{
 			Dutranslator.current = languageId;
 
@@ -191,7 +213,7 @@ Dutranslator.setLanguage = function (languageId) {
 
             // Parse process
 
-            var fPath = Dutranslator.settings.folder + Dutranslator.settings.prefix + languageId + Dutranslator.settings.suffix;
+            var fPath = Dutranslator.languages[langId]["file"];
             var file = new File(fPath);
             
             if(!file.open("r")) return 1; // Unable to open the file
@@ -233,19 +255,9 @@ function tr(s, context, args) {
 
 	var languageNumber = -1;
 
-	// Get the current language index
-	for (var i = 0 ; i < Dutranslator.languages.length ; i++)
-	{
-		if (Dutranslator.languages[i] == Dutranslator.current)
-		{
-			languageNumber =i;
-			break;
-		}
-	}
-
 	var res = s;
 	// If a language is set, search for the translation
-	if (languageNumber > -1 &&  Dutranslator.current != Dutranslator.settings.originalLanguageId){
+	if (Dutranslator.current != Dutranslator.settings.originalLanguageId){
 		var stringNumber = -1;      
 
 		// Get the translation

@@ -12,11 +12,13 @@ Dutranslator.getAvailable();
 
 
 var output = "";
-output = "Available languages: " + Dutranslator.languages + "\n\n";
+output = "Available languages: \n";
+for(var langId in Dutranslator.languages){   
+    output += langId + " " + Dutranslator.languages[langId]["name"] + " " + Dutranslator.languages[langId]["file"]  + "\n";
+}
+output += "\n\n";
 
-for(var i = 0; i < Dutranslator.languages.length; i++){
-    
-    var langId = Dutranslator.languages[i];
+for(var langId in Dutranslator.languages){   
     output += "Setting lang to " + langId + "\n";
     var status = Dutranslator.setLanguage(langId);
     if(status != 0) output += "Setting the lang to " + langId + " went wrong, error code: " + status + "\n";
