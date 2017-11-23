@@ -2,13 +2,6 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
-#include <QtDebug>
-
-JsonParser::JsonParser(QObject *parent) :
-    QThread(parent)
-{
-
-}
 
 void JsonParser::run(){
     if(mode == 1){
@@ -32,6 +25,7 @@ void JsonParser::run(){
         mode = 0;
     }
 }
+
 
 void JsonParser::parseFile(QFile *file)
 {

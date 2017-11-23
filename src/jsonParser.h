@@ -9,29 +9,16 @@
 #include <QRegularExpression>
 #include <QJsonDocument>
 #include "translation.h"
+#include "parser.h"
 
-class JsonParser : public QThread
+class JsonParser : public Parser
 {
     Q_OBJECT
-public:
-    explicit JsonParser(QObject *parent = 0);
 
 signals:
     void newTranslation(Translation);
     void languageFound(QStringList);
     void applicationFound(QString);
-
-    /**
-     * @brief Signal emited when the parsing is over
-     */
-    void parsingFinished();
-
-    /**
-     * @brief Signal emited when the parsing has failed
-     */
-    void parsingFailed();
-
-    void progress(int);
 
 public slots:
     void parseFile(QFile *file);
@@ -39,8 +26,8 @@ public slots:
 
 protected:
 
-    // Reimplemented from QThread
     void run();
+
 private:
 
     /**
