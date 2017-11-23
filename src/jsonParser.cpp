@@ -2,47 +2,30 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QFile>
 
-void JsonParser::run(){
-    if(mode == 1){
-        //open file
-        currentFile->open(QIODevice::ReadOnly);
-        QByteArray rawData = currentFile->readAll();
-        //close file
-        currentFile->close();
-
-        //parse file
-        parseDocument(QJsonDocument::fromJson(rawData));
-
-
-    }else if(mode == 2){
-        parseDocument(QJsonDocument::fromJson(currentText->toUtf8()));
+void JsonParser::parseFile(QString path)
+{
+    QFile file(path);
+    if(!file.open(QIODevice::ReadOnly))
+    {
+        emit parsingFailed();
+        return;
     }
+    QByteArray rawData = file.readAll();
+    file.close();
 
-    if(mode){
-        currentFile = 0;
-        currentText = 0;
-        mode = 0;
-    }
+    parseDocument(rawData);
 }
 
-
-void JsonParser::parseFile(QFile *file)
+void JsonParser::parseText(QString pText)
 {
-    currentFile = file;
-    mode = 1;
-    start();
+    parseDocument(pText.toUtf8());
 }
 
-void JsonParser::parseText(QString *json)
+void JsonParser::parseDocument(QByteArray raw)
 {
-    currentText = json;
-    mode = 2;
-    start();
-}
-
-void JsonParser::parseDocument(QJsonDocument doc)
-{
+    QJsonDocument doc = QJsonDocument::fromJson(raw);
     QJsonObject json = doc.object();
 
 
@@ -78,7 +61,6 @@ void JsonParser::parseDocument(QJsonDocument doc)
         newTr.contextId = trans["contextId"].toInt();
         emit newTranslation(newTr);
     }
-
 
     emit parsingFinished();
 }

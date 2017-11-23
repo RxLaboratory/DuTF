@@ -3,6 +3,18 @@
 
 #include <QThread>
 #include <QObject>
+#include <QFile>
+
+/**
+ * @brief The ParseMode enum
+ */
+enum ParsingMode{
+    ParseFile,
+    ParseString,
+    ParseStream,
+    ParseUndefined
+};
+
 
 /**
  * @brief A Parser of any kind
@@ -41,7 +53,47 @@ public slots:
     /**
      * @brief Start the parsing process
      */
-    virtual void run() = 0;
+    void run();
+
+    /**
+     * @brief Prepare the thread to parse a file
+     * @param QString    The path to the file to parse
+     */
+    void preParseFile(QString);
+
+    /**
+     * @brief Prepare the thread to parse a file
+     */
+    void preParseText(QString);
+
+
+protected:
+
+    /**
+     * @brief Actual parsinc process, different for each parser
+     * @param   The mode of parsing
+     * @param   The value to be used for parsing
+     */
+    virtual void parse(ParsingMode);
+
+    virtual void parseFile(QString) = 0;
+
+    virtual void parseText(QString) = 0;
+
+    /**
+     * @brief The current mode of the parser
+     */
+    ParsingMode mode_ = ParseUndefined;
+
+    /**
+     * @brief The value that will be parse if that's a file
+     */
+    QString parseVal_path_;
+
+    /**
+     * @brief The value that will be parse if that's a string
+     */
+    QString parseVal_string_;
 
 };
 

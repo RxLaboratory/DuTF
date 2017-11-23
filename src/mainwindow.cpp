@@ -247,7 +247,7 @@ void MainWindow::openJsxinc(QString fileName)
     statusLabel->setText(prettyName);
 
     //parse
-    jsonParser.parseFile(&workingFile);
+    jsonParser.preParseFile(fileName);
 }
 
 void MainWindow::newTranslation(Translation pTr)
@@ -825,7 +825,7 @@ void MainWindow::dropEvent(QDropEvent *event)
             progressBar->setMaximum(100);
             progressBar->show();
             //parse
-            jsonParser.parseText(&text);
+            jsonParser.preParseText(text);
         }
     }
 
