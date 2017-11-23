@@ -16,4 +16,11 @@ namespace utils{
      */
     QString escape(QString s);
 
+    /**
+     * @brief Extract the basename of a file path
+     * @param s         The file path
+     * @return          The file name only
+     */
+    QString basename(QString s);
+
 }

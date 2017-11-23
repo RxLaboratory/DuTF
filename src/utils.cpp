@@ -1,5 +1,7 @@
 #include "utils.h"
 
+#include <QStringList>
+
 namespace utils{
     QString unEscape(QString s)
     {
@@ -14,4 +16,11 @@ namespace utils{
         s = s.replace("\"","\\\"");
         return s;
     }
+
+    QString basename(QString s)
+    {
+        QStringList pieces = s.split("/");
+        return pieces.back();
+    }
+
 }

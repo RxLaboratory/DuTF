@@ -219,6 +219,18 @@ void MainWindow::actionImport()
 
     tableFreeIndex = 0;
     languageWidget->clear();
+    workingFile.setFileName("");
+
+    file.fileName();
+    //waiting mode
+    QString prettyName = utils::basename(fileName);
+    setWaiting(true,tr("Loading file %1...").arg("%1f", prettyName));
+    // The ui will be re-enabled when the parser sends an END signal
+    mainStatusBar->showMessage("Loading...");
+    statusLabel->setText(prettyName);
+
+    //parse
+    //jsonParser->parseFile(&workingFile);
 }
 
 void MainWindow::openJsxinc(QString fileName)
@@ -228,15 +240,14 @@ void MainWindow::openJsxinc(QString fileName)
     tableFreeIndex = 0;    
 
     workingFile.setFileName(fileName);
-    QStringList filePath = fileName.split("/");
-    QString displayFileName = filePath[filePath.count()-1];
-    languageWidget->setFile(displayFileName);
+    QString prettyName = utils::basename(fileName);
+    languageWidget->setFile(prettyName);
 
     //waiting mode
-    setWaiting(true,"Loading " + displayFileName + "...");
+    setWaiting(true,"Loading " + prettyName + "...");
     // The ui will be re-enabled when the parser sends an END signal
     mainStatusBar->showMessage("Loading...");
-    statusLabel->setText(displayFileName);
+    statusLabel->setText(prettyName);
 
     //parse
     jsonParser->parseFile(&workingFile);
