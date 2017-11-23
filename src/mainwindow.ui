@@ -429,6 +429,21 @@
     <string>Ctrl+M</string>
    </property>
   </action>
+  <action name="btn_actionImport">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/open</normaloff>:/icons/open</iconset>
+   </property>
+   <property name="text">
+    <string>Import</string>
+   </property>
+   <property name="toolTip">
+    <string>Import strings from a source code</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>

@@ -48,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Open Menu
     QMenu * openMenu = new QMenu(this);
     openMenu->addAction(btn_actionOpen);
+    openMenu->addAction(btn_actionImport);
     openMenu->addAction(btn_actionMerge);
     menu_open->setMenu(openMenu);
     mainToolBar->insertAction(menu_save,menu_open);
@@ -201,6 +202,24 @@ void MainWindow::actionOpen()
 
     QFile checkFile(fileName);
     if (checkFile.exists()) openJsxinc(fileName);
+
+}
+
+void MainWindow::actionImport()
+{
+    fillTableTimer.stop();
+
+    //get file
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Import strings from a source file"),
+                                                    "",
+                                                    "All files (*.*)");
+
+    QFile file(fileName);
+
+    tableFreeIndex = 0;
+    languageWidget->setFile("");
+    languageWidget->setCode("");
 
 }
 
@@ -533,6 +552,13 @@ bool MainWindow::checkLanguage()
         mb.exec();
         return false;
     }
+    if (languageWidget->getApp() == "")
+    {
+        QMessageBox mb(QMessageBox::Information,tr("Wront application name"),
+                       tr("You must specify an application name"),QMessageBox::Ok,this,Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
+        mb.exec();
+        return false;
+    }
     return true;
 }
 
@@ -595,6 +621,12 @@ void MainWindow::clearSearch()
 void MainWindow::actionSave()
 {
     if (!checkLanguage()) return;
+
+    if(workingFile.fileName() == "")
+    {
+        actionSaveAs();
+    }
+
 
     workingFile.open(QIODevice::WriteOnly | QIODevice::Text);
 

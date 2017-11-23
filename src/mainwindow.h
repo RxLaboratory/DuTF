@@ -83,6 +83,11 @@ private slots:
     void actionOpen();
 
     /**
+     * @brief Import strings from a file
+     */
+    void actionImport();
+
+    /**
      * @brief Saves the current file
      */
     void actionSave();
