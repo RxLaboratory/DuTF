@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>LanguageWidget</class>
  <widget class="QWidget" name="LanguageWidget">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>400</width>
-    <height>23</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -33,12 +25,6 @@
     <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>176</width>
-       <height>20</height>
-      </size>
      </property>
     </spacer>
    </item>

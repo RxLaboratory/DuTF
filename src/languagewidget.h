@@ -13,6 +13,7 @@ public:
     void setCode(QString c);
     void setApp(QString a);
     void setFile(QString f);
+    void clear();
     QString getLanguage();
     QString getCode();
     QString getApp();

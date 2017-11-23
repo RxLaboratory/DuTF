@@ -26,6 +26,14 @@ void LanguageWidget::setFile(QString f)
     fileLabel->setText(f);
 }
 
+void LanguageWidget::clear()
+{
+    fileLabel->clear();
+    appEdit->clear();
+    codeEdit->clear();
+    languageEdit->clear();
+}
+
 QString LanguageWidget::getLanguage()
 {
     return languageEdit->text();

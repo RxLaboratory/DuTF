@@ -218,9 +218,7 @@ void MainWindow::actionImport()
     QFile file(fileName);
 
     tableFreeIndex = 0;
-    languageWidget->setFile("");
-    languageWidget->setCode("");
-
+    languageWidget->clear();
 }
 
 void MainWindow::openJsxinc(QString fileName)
