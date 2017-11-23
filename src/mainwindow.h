@@ -352,7 +352,7 @@ private:
     /**
      * @brief The Parser
      */
-    JsonParser *jsonParser;
+    JsonParser jsonParser;
 
     /**
      * @brief The Preferences panel

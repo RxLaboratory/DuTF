@@ -97,8 +97,6 @@ MainWindow::MainWindow(QWidget *parent) :
     mainProgressBar->setMinimum(0);
     mainProgressBar->setMaximum(0);
 
-    //Parser
-    jsonParser = new JsonParser(this);
 
     //set style
     updateCSS(preferences->getCSS());
@@ -117,9 +115,8 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 MainWindow::~MainWindow(){
-    jsonParser->quit();
-    jsonParser->wait();
-    delete jsonParser;
+    jsonParser.quit();
+    jsonParser.wait();
 }
 
 void MainWindow::updateCSS(QString cssFileName)
@@ -150,13 +147,13 @@ MainWindow & MainWindow::instance()
 
 void MainWindow::mapEvents(){
     // Parser
-    connect(jsonParser,SIGNAL(languageFound(QStringList)),this,SLOT(newLanguage(QStringList)));
-    connect(jsonParser,SIGNAL(applicationFound(QString)),this,SLOT(newApplication(QString)));
-    connect(jsonParser,SIGNAL(newTranslation(Translation)),this,SLOT(newTranslation(Translation)));
-    connect(jsonParser,SIGNAL(parsingFinished()),this,SLOT(parsingFinished()));
-    connect(jsonParser,SIGNAL(parsingFailed()),this,SLOT(parsingFailed()));
-    connect(jsonParser,SIGNAL(progress(int)),progressBar,SLOT(setValue(int)));
-    connect(jsonParser,SIGNAL(progress(int)),mainProgressBar,SLOT(setValue(int)));
+    connect(&jsonParser,SIGNAL(languageFound(QStringList)),this,SLOT(newLanguage(QStringList)));
+    connect(&jsonParser,SIGNAL(applicationFound(QString)),this,SLOT(newApplication(QString)));
+    connect(&jsonParser,SIGNAL(newTranslation(Translation)),this,SLOT(newTranslation(Translation)));
+    connect(&jsonParser,SIGNAL(parsingFinished()),this,SLOT(parsingFinished()));
+    connect(&jsonParser,SIGNAL(parsingFailed()),this,SLOT(parsingFailed()));
+    connect(&jsonParser,SIGNAL(progress(int)),progressBar,SLOT(setValue(int)));
+    connect(&jsonParser,SIGNAL(progress(int)),mainProgressBar,SLOT(setValue(int)));
 
     // Actions
     connect(this->btn_actionSaveAs, SIGNAL(triggered(bool)), this, SLOT(actionSaveAs()));
@@ -250,7 +247,7 @@ void MainWindow::openJsxinc(QString fileName)
     statusLabel->setText(prettyName);
 
     //parse
-    jsonParser->parseFile(&workingFile);
+    jsonParser.parseFile(&workingFile);
 }
 
 void MainWindow::newTranslation(Translation pTr)
@@ -828,7 +825,7 @@ void MainWindow::dropEvent(QDropEvent *event)
             progressBar->setMaximum(100);
             progressBar->show();
             //parse
-            jsonParser->parseText(&text);
+            jsonParser.parseText(&text);
         }
     }
 
