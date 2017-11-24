@@ -5,27 +5,46 @@
 #include <QCoreApplication>
 #include <QJsonObject>
 
-typedef struct Translation
+/**
+ * @brief A translation
+ */
+class Translation
 {
+
+public:
+
+    /**
+     * @brief Original text
+     */
     QString source;
+
+    /**
+     * @brief Translated text
+     */
     QString translated;
+
+    /**
+     * @brief Context of the translation
+     */
     QString context;
+
+    /**
+     * @brief Commment associated to the translation
+     */
     QString comment;
+
+    /**
+     * @brief A context using an id
+     */
     int contextId;
 
-    QJsonObject toJson()
-    {
-        return QJsonObject
-        {
-            {"source", source},
-            {"translation", translated},
-            {"context", context},
-            {"comment", comment},
-            {"contextId", contextId}
-        };
-    }
+    /**
+     * @brief Create a json object with this translation
+     * @return
+     */
+    QJsonObject toJson();
 
-} Translation;
+};
 
 Q_DECLARE_METATYPE(Translation)
 
