@@ -220,7 +220,7 @@ void MainWindow::actionImport()
 
     file.fileName();
     //waiting mode
-    QString prettyName = utils::basename(fileName);
+    QString prettyName = utils::fileName(fileName);
     setWaiting(true,tr("Loading file %1...").arg("%1f", prettyName));
     // The ui will be re-enabled when the parser sends an END signal
     mainStatusBar->showMessage("Loading...");
@@ -237,7 +237,7 @@ void MainWindow::openJsxinc(QString fileName)
     tableFreeIndex = 0;    
 
     workingFile.setFileName(fileName);
-    QString prettyName = utils::basename(fileName);
+    QString prettyName = utils::fileName(fileName);
     languageWidget->setFile(prettyName);
 
     //waiting mode

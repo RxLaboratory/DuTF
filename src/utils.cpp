@@ -1,6 +1,7 @@
 #include "utils.h"
 
 #include <QStringList>
+#include <QFileInfo>
 
 namespace utils{
     QString unEscape(QString s)
@@ -17,10 +18,10 @@ namespace utils{
         return s;
     }
 
-    QString basename(QString s)
+    QString fileName(const QString & s)
     {
-        QStringList pieces = s.split("/");
-        return pieces.back();
+        QFileInfo info(s);
+        return info.fileName();
     }
 
 }
