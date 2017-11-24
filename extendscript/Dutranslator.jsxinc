@@ -188,7 +188,7 @@ Dutranslator.getAvailable = function ()
           if(!file.open("r")) return 1; // Unable to open the file
          
           // Line by line reading
-          while(langName == "" || langId == "")
+          while(langName == "" || langId == "" && !file.eof )
           {
               var line = file.readln();
               var indexName = line.lastIndexOf("languageName");
