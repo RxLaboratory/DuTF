@@ -155,11 +155,16 @@ void MainWindow::mapEvents(){
     connect(&jsonParser,SIGNAL(progress(int)),progressBar,SLOT(setValue(int)));
     connect(&jsonParser,SIGNAL(progress(int)),mainProgressBar,SLOT(setValue(int)));
 
+    connect(&stringParser,SIGNAL(parsingFinished()),this,SLOT(parsingFinished()));
+    connect(&stringParser,SIGNAL(parsingFailed()),this,SLOT(parsingFailed()));
+    connect(&stringParser,SIGNAL(newTranslation(Translation)),this,SLOT(newTranslation(Translation)));
+
     // Actions
     connect(this->btn_actionSaveAs, SIGNAL(triggered(bool)), this, SLOT(actionSaveAs()));
     connect(this->btn_actionSave, SIGNAL(triggered(bool)), this, SLOT(actionSave()));
     connect(this->menu_save, SIGNAL(triggered(bool)), this, SLOT(actionSave()));
     connect(this->btn_actionOpen, SIGNAL(triggered(bool)), this, SLOT(actionOpen()));
+    connect(this->btn_actionImport, SIGNAL(triggered(bool)), this, SLOT(actionImport()));
     connect(this->menu_open, SIGNAL(triggered(bool)), this, SLOT(actionOpen()));
     connect(this->btn_actionAbout, SIGNAL(triggered(bool)), this, SLOT(actionAbout()));
     connect(this->btn_actionPreferences, SIGNAL(triggered(bool)), this, SLOT(actionPreferences(bool)));
@@ -227,6 +232,7 @@ void MainWindow::actionImport()
     statusLabel->setText(prettyName);
 
     //parse
+    stringParser.preParseFile(fileName);
     //jsonParser->parseFile(&workingFile);
 }
 

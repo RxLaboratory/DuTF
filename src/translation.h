@@ -4,6 +4,7 @@
 #include <QString>
 #include <QCoreApplication>
 #include <QJsonObject>
+#include <QDebug>
 
 /**
  * @brief A translation
@@ -50,6 +51,12 @@ public:
      * @return True of false
      */
     friend bool operator==(const Translation&, const Translation&);
+
+    /**
+     * @brief Print out the translation in a debug stream
+     * @return
+     */
+    friend QDebug operator<<(QDebug, const Translation&);
 
 };
 

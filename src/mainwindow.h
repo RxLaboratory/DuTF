@@ -25,6 +25,7 @@
 #include "aboutdialog.h"
 #include "languagewidget.h"
 #include "jsonParser.h"
+#include "stringparser.h"
 #include "searchwidget.h"
 #include "rowbuttonswidget.h"
 #include "preferenceswidget.h"
@@ -353,6 +354,11 @@ private:
      * @brief The Parser
      */
     JsonParser jsonParser;
+
+    /**
+     * @brief stringParser
+     */
+    StringParser stringParser;
 
     /**
      * @brief The Preferences panel

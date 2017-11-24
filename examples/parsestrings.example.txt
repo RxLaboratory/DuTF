@@ -1,0 +1,22 @@
+var test1 = "test";
+var test2 = "te\"st";
+var test3 = "t'est";
+var test4 = "t'es't";
+var test5 = 'test';
+var test6 = 'te\'st';
+var test7 = 't"est';
+var test8 = 't"es"t';
+/*
+doesn't work within comments. '
+*/
+var regex = /"'"'/g; // or within regular expressions
+var t = 'abc"; // wrong syntax => no match
+
+tr("INSTALLATION COMPLETE")
+
+tr("INSTALLATION COMPLETE", 2)
+tr('test', "context")
+tr("INSTALLATION COMPLETE", 2, ["arg 1, QS])
+tr("INSTALLATION COMPLETE", "context", ["arg 1, QS])
+tr('INSTALLATION COMPLETE', "context", ["arg 1, QS])
+tr("INSTALLATION COMPLETE", 'context', ["arg 1, QS]) tr('test', "context")
