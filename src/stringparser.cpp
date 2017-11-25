@@ -27,6 +27,8 @@ void StringParser::parseFile(QString path)
     }
 
     std::vector<Translation> founds;
+    bool isInlineComment = false;
+    bool isMultilineComment = false;
     QString line;
     int lineNumber = 1;
 #ifdef QT_DEBUG
@@ -36,14 +38,23 @@ void StringParser::parseFile(QString path)
     qDebug() << "Ignore comments : " << translationMode_.testFlag(TranslationParsingMode::IgnoreStringComment) << "\n";
 #endif
 
-    bool inComment = false;
     while(!file.atEnd())
     {
         line = file.readLine();
+        int inLineIndex = line.indexOf("//");
+
+        if(!isMultilineComment)
+            isMultilineComment = line.startsWith("/*");
+        if(isMultilineComment)
+            isMultilineComment = !line.endsWith("*/");
+
         QRegularExpressionMatchIterator i = reg.globalMatch(line);
+
 #ifdef QT_DEBUG
         qDebug() << "Line " << lineNumber++ << "\n";
 #endif
+        isInlineComment = false;
+
         while(i.hasNext())
         {
             QRegularExpressionMatch match = i.next();
@@ -58,13 +69,19 @@ void StringParser::parseFile(QString path)
             Translation t;
             if(captLength == 3) // String only
             {
-                if(inComment && translationMode_.testFlag(TranslationParsingMode::IgnoreStringComment))
-                    continue; // Ignore the string
+                if(translationMode_.testFlag(TranslationParsingMode::IgnoreStringComment)){
+                    // Check inline for comment
+                    if(!isInlineComment && inLineIndex >= 0 && match.capturedStart(0) > inLineIndex) isInlineComment = true;
+                    if(isInlineComment || isMultilineComment)
+                        continue; // Ignore the string
+                }
+
                 if(match.captured(1) == "\"" && !translationMode_.testFlag(TranslationParsingMode::ParseDoubleQuotes))
                     continue; // Ignore double quote strings
                 if(match.captured(1) == "'" && !translationMode_.testFlag(TranslationParsingMode::ParseSingleQuote))
                     continue; // Ignore single quote strings
                 t.source = match.captured(2);
+                if(t.source == '"' || t.source == "'") continue;
             }
             else
             {

@@ -12,7 +12,7 @@ doesn't work within comments. '
 var regex = /"'"'/g; // or within regular expressions
 var t = 'abc"; // wrong syntax => no match
 
-tr("INSTALLATION COMPLETE")
+tr("INSTALLATION COMPLETE") /* Ignore this "also" and 'this' */
 
 tr("INSTALLATION COMPLETE", 2)
 tr('test', "context")  "coucou" // "texte dans un commentaire in line" tr("tr dans un commentaire inline")
