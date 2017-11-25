@@ -15,7 +15,7 @@ var t = 'abc"; // wrong syntax => no match
 tr("INSTALLATION COMPLETE")
 
 tr("INSTALLATION COMPLETE", 2)
-tr('test', "context")
+tr('test', "context")  "coucou" // "texte dans un commentaire in line" tr("tr dans un commentaire inline")
 tr("INSTALLATION COMPLETE", 2, ["arg 1, QS])
 tr("INSTALLATION COMPLETE", "context", ["arg 1, QS])
 tr('INSTALLATION COMPLETE', "context", ["arg 1, QS])

@@ -32,8 +32,8 @@ public:
     explicit Parser(QObject *parent = nullptr);
 
     enum ParsingError {
-        FileOpen = 0x0,
-        ParsingNotImplemented = 0x1
+        FileOpen = 0x01,
+        ParsingNotImplemented = 0x10
     };
     Q_DECLARE_FLAGS(ParsingErrors, ParsingError)
 
