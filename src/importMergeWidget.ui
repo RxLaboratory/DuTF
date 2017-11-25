@@ -98,6 +98,9 @@
               <property name="text">
                <string/>
               </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
             <item row="1" column="0">
@@ -143,7 +146,7 @@
             <item row="3" column="0">
              <widget class="QLabel" name="label_4">
               <property name="text">
-               <string>Ignore comments for strings</string>
+               <string>Ignore strings in comments</string>
               </property>
              </widget>
             </item>
@@ -155,20 +158,41 @@
               <property name="text">
                <string/>
               </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
            </layout>
           </item>
           <item>
-           <widget class="QPushButton" name="goButton">
-            <property name="text">
-             <string>Go</string>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <property name="topMargin">
+             <number>0</number>
             </property>
-            <property name="icon">
-             <iconset resource="resources.qrc">
-              <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
-            </property>
-           </widget>
+            <item>
+             <widget class="QPushButton" name="cancelButton">
+              <property name="text">
+               <string>Cancel</string>
+              </property>
+              <property name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/icons/close</normaloff>:/icons/close</iconset>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="goButton">
+              <property name="text">
+               <string>Go</string>
+              </property>
+              <property name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
            <spacer name="verticalSpacer_9">

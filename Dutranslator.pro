@@ -18,7 +18,8 @@ SOURCES += main.cpp\
     src/rowbuttonswidget.cpp \
     src/preferenceswidget.cpp \
     src/translation.cpp \
-    src/stringparser.cpp
+    src/stringparser.cpp \
+    src/importmergewidget.cpp
 
 HEADERS  += mainwindow.h \
     languagewidget.h \
@@ -30,7 +31,8 @@ HEADERS  += mainwindow.h \
     src/rowbuttonswidget.h \
     src/preferenceswidget.h \
     src/translation.h \
-    src/stringparser.h
+    src/stringparser.h \
+    src/importmergewidget.h
 
 FORMS    += mainwindow.ui \
     languagewidget.ui \

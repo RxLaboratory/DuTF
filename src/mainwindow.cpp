@@ -66,6 +66,11 @@ MainWindow::MainWindow(QWidget *parent) :
     preferences = new PreferencesWidget(this);
     preferencesLayout->addWidget(preferences);
 
+
+    // Import / Merge
+    importPreferences = new ImportMergeWidget(this);
+    importMergeLayout->addWidget(importPreferences);
+
     // window buttons
 
 #ifndef Q_OS_MAC
@@ -183,6 +188,12 @@ void MainWindow::mapEvents(){
     connect(preferences,SIGNAL(changeToolBarAppearance(int)),this,SLOT(setToolBarAppearance(int)));
     connect(preferences,SIGNAL(changeCSS(QString)),this,SLOT(updateCSS(QString)));
 
+    // Import / Merge
+    connect(importPreferences, SIGNAL(canceled()), this, SLOT(showMainPage()));
+    connect(importPreferences, SIGNAL(optionsSaved(StringParser::TranslationParsingModes)), this, SLOT(showMainPage()));
+    connect(importPreferences, SIGNAL(optionsSaved(StringParser::TranslationParsingModes)), this,
+            SLOT(startImportPorcess(StringParser::TranslationParsingModes)));
+
     // Window management
 #ifndef Q_OS_MAC
     // Windows and linux
@@ -210,30 +221,8 @@ void MainWindow::actionOpen()
 
 void MainWindow::actionImport()
 {
-    fillTableTimer.stop();
-
-    //get file
-    QString fileName = QFileDialog::getOpenFileName(this,
-                                                    tr("Import strings from a source file"),
-                                                    "",
-                                                    "All files (*.*)");
-
-    QFile file(fileName);
-
-    tableFreeIndex = 0;
-    languageWidget->clear();
-    workingFile.setFileName("");
-
-    file.fileName();
-    //waiting mode
-    QString prettyName = utils::fileName(fileName);
-    setWaiting(true,tr("Loading file %1...").arg(prettyName));
-    // The ui will be re-enabled when the parser sends an END signal
-    mainStatusBar->showMessage("Loading...");
-
-    //parse
-    stringParser.preParseFile(fileName);
-    //jsonParser->parseFile(&workingFile);
+    mainStack->setCurrentIndex(4);
+    return;
 }
 
 void MainWindow::openJsxinc(QString fileName)
@@ -562,6 +551,33 @@ void MainWindow::setToolBarAppearance(int appearance)
     {
         this->setToolButtonStyle(Qt::ToolButtonTextOnly);
     }
+}
+
+void MainWindow::startImportPorcess(StringParser::TranslationParsingModes flags)
+{
+    //get file
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Import strings from a source file"),
+                                                    "",
+                                                    "All files (*.*)");
+    QFile file(fileName);
+
+    fillTableTimer.stop();
+
+    tableFreeIndex = 0;
+    languageWidget->clear();
+    workingFile.setFileName("");
+
+    file.fileName();
+    //waiting mode
+    QString prettyName = utils::fileName(fileName);
+    setWaiting(true,tr("Loading file %1...").arg(prettyName));
+    // The ui will be re-enabled when the parser sends an END signal
+    mainStatusBar->showMessage("Loading...");
+
+    //parse
+    stringParser.preParseFile(fileName);
+    //jsonParser->parseFile(&workingFile);
 }
 
 bool MainWindow::checkLanguage()

@@ -29,6 +29,7 @@
 #include "searchwidget.h"
 #include "rowbuttonswidget.h"
 #include "preferenceswidget.h"
+#include "importmergewidget.h"
 #include "translation.h"
 
 namespace Ui {
@@ -230,6 +231,11 @@ private slots:
     void setToolBarAppearance(int appearance);
 
     /**
+     * @brief Start the actual import or merge process
+     */
+    void startImportPorcess(StringParser::TranslationParsingModes);
+
+    /**
      * @brief Updates the windows stylesheet
      *
      * @param cssFileName   The file name of the CSS to load
@@ -365,6 +371,13 @@ private:
      * @brief The Preferences panel
      */
     PreferencesWidget *preferences;
+
+    /**
+     * @brief The import merge preferences panel
+     */
+    ImportMergeWidget *importPreferences;
+
+
 
 protected:
 

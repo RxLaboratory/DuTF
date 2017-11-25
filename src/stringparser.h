@@ -11,6 +11,16 @@ class StringParser : public Parser
 {
     Q_OBJECT
 
+public:
+
+    enum TranslationParsingMode {
+        ParseTR = 0x0,
+        ParseSingleQuote = 0x1,
+        ParseDoubleQuotes = 0x2,
+        IgnoreStringComment = 0x3
+    };
+    Q_DECLARE_FLAGS(TranslationParsingModes, TranslationParsingMode)
+
 signals:
 
     /**
@@ -25,5 +35,7 @@ protected:
     void parseText(QString);
 
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(StringParser::TranslationParsingModes)
 
 #endif // STRINGPARSER_H
