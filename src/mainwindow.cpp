@@ -576,6 +576,7 @@ void MainWindow::startImportPorcess(StringParser::TranslationParsingModes flags)
     mainStatusBar->showMessage("Loading...");
 
     //parse
+    stringParser.setMode(flags);
     stringParser.preParseFile(fileName);
     //jsonParser->parseFile(&workingFile);
 }

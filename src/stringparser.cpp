@@ -5,6 +5,11 @@
 #include "translation.h"
 #include <vector>
 
+void StringParser::setMode(StringParser::TranslationParsingModes flags)
+{
+    translationMode_ = flags;
+}
+
 void StringParser::parseFile(QString path)
 {
 

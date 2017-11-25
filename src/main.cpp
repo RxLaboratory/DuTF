@@ -5,12 +5,16 @@
 #include <iostream>
 #include <QString>
 #include "translation.h"
+#include "stringparser.h"
+#include "parser.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
     qRegisterMetaType<Translation>();
+    qRegisterMetaType<Parser::ParsingErrors>();
+    qRegisterMetaType<StringParser::TranslationParsingModes>();
 
     QTranslator tr;
 

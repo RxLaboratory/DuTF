@@ -11,12 +11,12 @@ ImportMergeWidget::ImportMergeWidget(QWidget *parent) : QWidget(parent)
 
 void ImportMergeWidget::go()
 {
-    StringParser::TranslationParsingModes flags;
+    StringParser::TranslationParsingModes flags(0);
 
-    if(parseTrCalls->isChecked()) flags |= StringParser::TranslationParsingMode::ParseTR;
-    if(parseSimpleQuotes->isChecked()) flags |= StringParser::TranslationParsingMode::ParseSingleQuote;
-    if(parseSimpleQuotes->isChecked()) flags |= StringParser::TranslationParsingMode::ParseDoubleQuotes;
-    if(ignoreComments->isChecked()) flags |= StringParser::TranslationParsingMode::IgnoreStringComment;
+    if(parseTrCalls->isChecked()) flags.setFlag(StringParser::TranslationParsingMode::ParseTR, true);
+    if(parseSimpleQuotes->isChecked()) flags.setFlag(StringParser::TranslationParsingMode::ParseSingleQuote, true);
+    if(parseDoubleQuotes->isChecked()) flags.setFlag(StringParser::TranslationParsingMode::ParseDoubleQuotes, true);
+    if(ignoreComments->isChecked()) flags.setFlag(StringParser::TranslationParsingMode::IgnoreStringComment, true);
 
     emit optionsSaved(flags);
 }

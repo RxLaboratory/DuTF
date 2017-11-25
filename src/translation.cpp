@@ -1,6 +1,5 @@
 #include "translation.h"
 
-
 QJsonObject Translation::toJson()
 {
     return QJsonObject

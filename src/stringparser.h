@@ -14,12 +14,17 @@ class StringParser : public Parser
 public:
 
     enum TranslationParsingMode {
-        ParseTR = 0x0,
-        ParseSingleQuote = 0x1,
-        ParseDoubleQuotes = 0x2,
-        IgnoreStringComment = 0x3
+        ParseTR = 0x0001,
+        ParseSingleQuote = 0x0010,
+        ParseDoubleQuotes = 0x0100,
+        IgnoreStringComment = 0x1000
     };
     Q_DECLARE_FLAGS(TranslationParsingModes, TranslationParsingMode)
+
+    /**
+     * @brief Set the mode that will be used when parsing the file
+     */
+    void setMode(StringParser::TranslationParsingModes);
 
 signals:
 
@@ -34,8 +39,11 @@ protected:
 
     void parseText(QString);
 
+    StringParser::TranslationParsingModes translationMode_;
+
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(StringParser::TranslationParsingModes)
+Q_DECLARE_METATYPE(StringParser::TranslationParsingModes)
 
 #endif // STRINGPARSER_H

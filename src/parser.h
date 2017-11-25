@@ -105,5 +105,6 @@ protected:
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Parser::ParsingErrors)
+Q_DECLARE_METATYPE(Parser::ParsingErrors)
 
 #endif // PARSER_H
