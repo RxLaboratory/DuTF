@@ -4,6 +4,7 @@
 #include <QThread>
 #include <QObject>
 #include <QFile>
+#include <QFlag>
 
 /**
  * @brief The ParseMode enum
@@ -46,7 +47,7 @@ signals:
     /**
      * @brief Signal emited when the parsing has failed
      */
-    void parsingFailed(ParsingErrors);
+    void parsingFailed(Parser::ParsingErrors);
 
     /**
      * @brief The parsing process has stepped forward.
