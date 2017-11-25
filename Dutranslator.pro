@@ -37,7 +37,8 @@ FORMS    += mainwindow.ui \
     aboutdialog.ui \
     searchwidget.ui \
     src/rowbuttonswidget.ui \
-    src/preferenceswidget.ui
+    src/preferenceswidget.ui \
+    src/importMergeWidget.ui
 
 RESOURCES += resources.qrc
 
