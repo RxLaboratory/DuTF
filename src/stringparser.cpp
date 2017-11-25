@@ -43,7 +43,7 @@ void StringParser::parseFile(QString path)
             {
                 t.context = match.captured(5);
             }
-            if(std::find(founds.begin(), founds.end(), t) != founds.end())
+            if(std::find(founds.begin(), founds.end(), t) == founds.end()) // New translation
             {
                 founds.push_back(t);
                 emit newTranslation(t);

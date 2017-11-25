@@ -226,10 +226,9 @@ void MainWindow::actionImport()
     file.fileName();
     //waiting mode
     QString prettyName = utils::fileName(fileName);
-    setWaiting(true,tr("Loading file %1...").arg("%1f", prettyName));
+    setWaiting(true,tr("Loading file %1...").arg(prettyName));
     // The ui will be re-enabled when the parser sends an END signal
     mainStatusBar->showMessage("Loading...");
-    statusLabel->setText(prettyName);
 
     //parse
     stringParser.preParseFile(fileName);
