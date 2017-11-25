@@ -9,7 +9,7 @@ void JsonParser::parseFile(QString path)
     QFile file(path);
     if(!file.open(QIODevice::ReadOnly))
     {
-        emit parsingFailed();
+        emit parsingFailed(Parser::ParsingError::FileOpen);
         return;
     }
     QByteArray rawData = file.readAll();

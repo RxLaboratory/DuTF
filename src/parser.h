@@ -30,6 +30,12 @@ public:
      */
     explicit Parser(QObject *parent = nullptr);
 
+    enum ParsingError {
+        FileOpen = 0x0,
+        ParsingNotImplemented = 0x1
+    };
+    Q_DECLARE_FLAGS(ParsingErrors, ParsingError)
+
 signals:
 
     /**
@@ -40,7 +46,7 @@ signals:
     /**
      * @brief Signal emited when the parsing has failed
      */
-    void parsingFailed();
+    void parsingFailed(ParsingErrors);
 
     /**
      * @brief The parsing process has stepped forward.
@@ -96,5 +102,7 @@ protected:
     QString parseVal_string_;
 
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(Parser::ParsingErrors)
 
 #endif // PARSER_H

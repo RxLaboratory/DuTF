@@ -162,8 +162,9 @@ private slots:
 
     /**
      * @brief Alerts user that the parsing has failed
+     * @param   The error flag(s)
      */
-    void parsingFailed();
+    void parsingFailed(Parser::ParsingErrors);
 
     /**
      * @brief Adds an empty row in the table

@@ -5,6 +5,7 @@
 #include <QAction>
 #include <QKeySequence>
 #include <QJsonDocument>
+#include <QFlag>
 #include <QJsonArray>
 
 #ifdef QT_DEBUG
@@ -151,12 +152,12 @@ void MainWindow::mapEvents(){
     connect(&jsonParser,SIGNAL(applicationFound(QString)),this,SLOT(newApplication(QString)));
     connect(&jsonParser,SIGNAL(newTranslation(Translation)),this,SLOT(newTranslation(Translation)));
     connect(&jsonParser,SIGNAL(parsingFinished()),this,SLOT(parsingFinished()));
-    connect(&jsonParser,SIGNAL(parsingFailed()),this,SLOT(parsingFailed()));
+    connect(&jsonParser,SIGNAL(parsingFailed(Parser::ParsingErrors)),this,SLOT(parsingFailed(Parser::ParsingErrors)));
     connect(&jsonParser,SIGNAL(progress(int)),progressBar,SLOT(setValue(int)));
     connect(&jsonParser,SIGNAL(progress(int)),mainProgressBar,SLOT(setValue(int)));
 
     connect(&stringParser,SIGNAL(parsingFinished()),this,SLOT(parsingFinished()));
-    connect(&stringParser,SIGNAL(parsingFailed()),this,SLOT(parsingFailed()));
+    connect(&stringParser,SIGNAL(parsingFailed(Parser::ParsingErrors)),this,SLOT(parsingFailed(Parser::ParsingErrors)));
     connect(&stringParser,SIGNAL(newTranslation(Translation)),this,SLOT(newTranslation(Translation)));
 
     // Actions
@@ -283,14 +284,29 @@ void MainWindow::parsingFinished()
 
 }
 
-void MainWindow::parsingFailed(){
+void MainWindow::parsingFailed(Parser::ParsingErrors flag)
+{
     mainStatusBar->clearMessage();
     progressBar->hide();
     statusLabel->clear();
     this->setEnabled(true);
-    QMessageBox mb(QMessageBox::Information,"Parsing failed","An error has occured while parsing the file",QMessageBox::Ok,this,Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
-    mb.exec();
 
+    QString messageTitle = tr("Parsing failed");
+    QString messageContent;
+
+    if(flag.testFlag(Parser::ParsingError::FileOpen))
+        messageContent = tr("Unable to open the file.");
+    else if(flag.testFlag(Parser::ParsingError::ParsingNotImplemented))
+        messageContent = tr("Parsing not implemented.");
+    else
+        messageContent = tr("An error has occured while parsing the file.");
+
+    QMessageBox mb(QMessageBox::Warning,
+                   messageTitle, messageContent,
+                   QMessageBox::Ok,
+                   this,
+                   Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
+    mb.exec();
 }
 
 void MainWindow::addTableRow(int index){

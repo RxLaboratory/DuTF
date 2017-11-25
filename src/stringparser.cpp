@@ -17,7 +17,7 @@ void StringParser::parseFile(QString path)
     QFile file(path);
     if(!file.open(QIODevice::ReadOnly))
     {
-        emit parsingFailed();
+        emit parsingFailed(ParsingError::FileOpen);
         return;
     }
 
@@ -59,5 +59,5 @@ void StringParser::parseFile(QString path)
 
 void StringParser::parseText(QString)
 {
-   emit parsingFailed();
+   emit parsingFailed(ParsingError::ParsingNotImplemented);
 }
