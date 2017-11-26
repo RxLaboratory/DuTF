@@ -178,7 +178,8 @@ void MainWindow::actionOpen()
     fillTableTimer.stop();
 
     QFile checkFile(fileName);
-    if (!checkFile.exists()) openTranslationFile(fileName);
+    if (!checkFile.exists()) return;
+    openTranslationFile(fileName);
 
 }
 
@@ -791,6 +792,8 @@ void MainWindow::mapEvents(){
     connect(&stringParser,SIGNAL(parsingFinished()),this,SLOT(parsingFinished()));
     connect(&stringParser,SIGNAL(parsingFailed(Parser::ParsingErrors)),this,SLOT(parsingFailed(Parser::ParsingErrors)));
     connect(&stringParser,SIGNAL(newTranslation(Translation)),this,SLOT(newTranslation(Translation)));
+    connect(&stringParser,SIGNAL(progress(int)),progressBar,SLOT(setValue(int)));
+    connect(&stringParser,SIGNAL(progress(int)),mainProgressBar,SLOT(setValue(int)));
 
     // Actions
     connect(this->btn_actionSaveAs, SIGNAL(triggered(bool)), this, SLOT(actionSaveAs()));

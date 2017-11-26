@@ -50,6 +50,7 @@ void JsonParser::parseDocument(QByteArray raw)
 
     int i = 0;
     QJsonArray transList = appTr[1].toObject()["translations"].toArray();
+    float incProgress = 100 / float(transList.size());
     for(i = 0; i < transList.size(); i++){
         QJsonObject trans = transList.at(i).toObject();
 
@@ -60,7 +61,9 @@ void JsonParser::parseDocument(QByteArray raw)
         newTr.comment = trans["comment"].toString();
         newTr.contextId = trans["contextId"].toInt();
         emit newTranslation(newTr);
+        emit progress(i * incProgress);
     }
+    emit progress(100);
 
     emit parsingFinished();
 }
