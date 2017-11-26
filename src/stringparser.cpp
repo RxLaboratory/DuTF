@@ -26,10 +26,21 @@ void StringParser::parseFile(QString path)
         return;
     }
 
+    int countLines = 0;
+    while(!file.atEnd()){
+        countLines++;
+        file.readLine();
+    }
+    if(!file.seek(0)){
+        emit parsingFailed(ParsingError::ReadingFailed); // Return to start failed
+        return;
+    }
+
     std::vector<Translation> founds;
     bool isInlineComment = false;
     bool isMultilineComment = false;
     QString line;
+    float incProgress = 100 / (countLines);
     int lineNumber = 1;
 #ifdef QT_DEBUG
     qDebug() << "Parse tr : " << translationMode_.testFlag(TranslationParsingMode::ParseTR) << "\n";
@@ -114,11 +125,14 @@ void StringParser::parseFile(QString path)
                 emit newTranslation(t);
             }
 
+
         }
+        emit progress(lineNumber * incProgress);
 
     }
 
     file.close();
+    emit progress(100);
     emit parsingFinished();
 }
 
