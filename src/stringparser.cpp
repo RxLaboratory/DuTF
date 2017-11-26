@@ -40,7 +40,7 @@ void StringParser::parseFile(QString path)
     bool isInlineComment = false;
     bool isMultilineComment = false;
     QString line;
-    float incProgress = 100 / (countLines);
+    float incProgress = 100 / float(countLines);
     int lineNumber = 1;
 #ifdef QT_DEBUG
     qDebug() << "Parse tr : " << translationMode_.testFlag(TranslationParsingMode::ParseTR) << "\n";
