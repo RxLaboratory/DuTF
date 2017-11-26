@@ -4,37 +4,23 @@
 #define INC_TIMER 2  // Time span between each widget creation
 #define MAX_AUTO_ROW 500  // Maximum number of empty rows created in background
 
-#include "ui_mainwindow.h"
-#include <QStyleFactory>
 #include <QFile>
 #include <QLabel>
-#include <QFileDialog>
-#include <QJsonValue>
-#include <QMouseEvent>
-#include <QPushButton>
-#include <QTextEdit>
-#include <QSpinBox>
-#include <QMessageBox>
-#include <QTextStream>
-#include <QTextCodec>
-#include <QMimeData>
-#include <QThread>
-#include <QTimer>
 #include <QProgressBar>
-#include <QDesktopWidget>
+#include <QTimer>
+
+#include "ui_mainwindow.h"
+
 #include "aboutdialog.h"
 #include "languagewidget.h"
 #include "jsonParser.h"
-#include "stringparser.h"
 #include "searchwidget.h"
+#include "stringparser.h"
 #include "rowbuttonswidget.h"
 #include "preferenceswidget.h"
 #include "importmergewidget.h"
 #include "translation.h"
 
-namespace Ui {
-    class MainWindow;
-}
 
 /**
  * @brief The aplication's main window class
@@ -43,7 +29,6 @@ class MainWindow : public QMainWindow, private Ui::MainWindow
 {
     Q_OBJECT
 
-    static MainWindow* instance_;
 
 public:
 
@@ -66,18 +51,20 @@ public:
 
 private slots:
 
-#ifndef Q_OS_MAC
     /**
-     * @brief Maximize the window
-     * Has effect only on Windows and Linux
+     * @brief Opens an about dialog
      */
-    void maximize();
-#endif
+    void actionAbout();
 
+    /**
+     * @brief Adds a row below the current row
+     */
+    void actionAddRow();
 
-
-    // =======ACTIONS
-
+    /**
+     * @brief Import strings from a file
+     */
+    void actionImport();
 
     /**
      * @brief Creates a dialog for openning a new file
@@ -85,9 +72,15 @@ private slots:
     void actionOpen();
 
     /**
-     * @brief Import strings from a file
+     * @brief Shows the preferences panel
      */
-    void actionImport();
+    void actionPreferences(bool checked);
+
+    /**
+     * @brief Asks for the user confirmation to remove a row
+     *
+     */
+    void actionRemoveRow();
 
     /**
      * @brief Saves the current file
@@ -100,72 +93,9 @@ private slots:
     void actionSaveAs();
 
     /**
-     * @brief Opens an about dialog
-     */
-    void actionAbout();
-
-    /**
-     * @brief Shows the preferences panel
-     */
-    void actionPreferences(bool checked);
-
-    /**
      * @brief Shows the tools panel
      */
     void actionTools(bool checked);
-
-
-    // =======OTHER USER INTERACTIONS
-
-
-    /**
-     * @brief Searches for a given string in the translation file
-     * @param s		The string to look for
-     */
-    void search(QString s);
-
-    /**
-     * @brief Clears the current search
-     */
-    void clearSearch();
-
-    /**
-     * @brief Asks for a location then saves a translator according to the selection in btn_selectGenerateTranslator (QComboBox)
-     */
-    void btn_generateTranslator_clicked();
-
-
-    // =======OTHER
-
-
-    /**
-     * @brief Adds a new translation to the current translation file
-     * @param translation	Translation to add
-     */
-    void newTranslation(Translation pTr);
-
-    /**
-     * @brief Starts a new language translation
-     * @param language		Langauge name and code
-     */
-    void newLanguage(QStringList language);
-
-    /**
-     * @brief Slot to run when a new application is being translated
-     * @param app
-     */
-    void newApplication(QString app);
-
-    /**
-     * @brief Marks the end of the  parsing
-     */
-    void parsingFinished();
-
-    /**
-     * @brief Alerts user that the parsing has failed
-     * @param   The error flag(s)
-     */
-    void parsingFailed(Parser::ParsingErrors);
 
     /**
      * @brief Adds an empty row in the table
@@ -177,13 +107,6 @@ private slots:
     void addTableRow(int index = -1);
 
     /**
-     * @brief Removes a row
-     *
-     * @param index     The index of the row to remove
-     */
-    void removeTableRow(int index);
-
-    /**
      * @brief Adds content to the last row available
      * If no row is available, a new one is created
      *
@@ -192,11 +115,84 @@ private slots:
     void addTableRowContent(Translation);
 
     /**
+     * @brief Asks for a location then saves a translator according to the selection in btn_selectGenerateTranslator (QComboBox)
+     */
+    void btn_generateTranslator_clicked();
+
+    /**
+     * @brief Clears the current search
+     */
+    void clearSearch();
+
+    /**
      * @brief Clears the table content
      * The clear goes from tableFreeIndex to the last row
      * This allows to modify the rows and to clear only the rows not in use
      */
     void clearTableToTheEnd();
+
+#ifndef Q_OS_MAC
+    /**
+     * @brief Maximize the window
+     * Has effect only on Windows and Linux
+     */
+    void maximize();
+#endif
+
+    /**
+     * @brief Slot to run when a new application is being translated
+     * @param app
+     */
+    void newApplication(QString app);
+
+    /**
+     * @brief Starts a new language translation
+     * @param language		Langauge name and code
+     */
+    void newLanguage(QStringList language);
+
+    /**
+     * @brief Adds a new translation to the current translation file
+     * @param translation	Translation to add
+     */
+    void newTranslation(Translation pTr);
+
+    /**
+     * @brief Open the given translation file.
+     * Has to be a json file.
+     */
+    void openTranslationFile(QString);
+
+    /**
+     * @brief Alerts user that the parsing has failed
+     * @param   The error flag(s)
+     */
+    void parsingFailed(Parser::ParsingErrors);
+
+    /**
+     * @brief Marks the end of the  parsing
+     */
+    void parsingFinished();
+
+    /**
+     * @brief Removes a row
+     *
+     * @param index     The index of the row to remove
+     */
+    void removeTableRow(int index);
+
+    /**
+     * @brief Searches for a given string in the translation file
+     * @param s		The string to look for
+     */
+    void search(QString s);
+
+    /**
+     * @brief Sets the appearance of the toolbar
+     *
+     * @param appearance        0-Text under, 1-Text Beside, 2-Icon only, 3-Text Only
+     */
+    void setToolBarAppearance(int appearance);
 
     /**
      * @brief Sets the window in waiting mode, showing a progress bar and a label
@@ -208,27 +204,9 @@ private slots:
     void setWaiting(bool wait = true, QString status = "", int max = 100 );
 
     /**
-     * @brief Asks for the user confirmation to remove a row
-     *
-     */
-    void actionRemoveRow();
-
-    /**
-     * @brief Adds a row below the current row
-     */
-    void actionAddRow();
-
-    /**
      * @brief Shows the main page (hide preferences, about, etc.)
      */
     void showMainPage();
-
-    /**
-     * @brief Sets the appearance of the toolbar
-     *
-     * @param appearance        0-Text under, 1-Text Beside, 2-Icon only, 3-Text Only
-     */
-    void setToolBarAppearance(int appearance);
 
     /**
      * @brief Start the actual import or merge process
@@ -244,14 +222,10 @@ private slots:
 
 private:
 
-
-    // METHODS
-
     /**
-     * @brief Connects required signals and slots
-     * Executed on construction only
+     * @brief Adjusts the column sizes to use all available space
      */
-    void mapEvents();
+    void adjustColumnSizes();
 
     /**
      * @brief Checks if languages fields are completed
@@ -260,35 +234,15 @@ private:
     bool checkLanguage();
 
     /**
-     * @brief Opens a js translation file
-     * @param fileName	Js file name
-     */
-    void openJsxinc(QString fileName);
-
-    /**
-     * @brief Parses a js translation text
-     * @param jsxinc	The text to parse
-     */
-    void parseJsxinc(QTextStream *jsxinc);
-
-    /**
      * @brief Makes the last adjustments after initializing the application
      */
     void endInit();
 
     /**
-     * @brief Adjusts the column sizes to use all available space
+     * @brief Connects required signals and slots
+     * Executed on construction only
      */
-    void adjustColumnSizes();
-
-
-    // OBJECTS
-
-
-    /**
-     * @brief The current translation working file
-     */
-    QFile workingFile;
+    void mapEvents();
 
     /**
      * @brief Drag position
@@ -302,17 +256,25 @@ private:
     QTimer fillTableTimer;
 
     /**
-     * @brief Is the tool bar currently clicked or not
+     * @brief The import merge preferences panel
      */
-    bool toolBarClicked;
+    ImportMergeWidget *importPreferences;
 
     /**
-     * @brief The index of the first availabe row in the table
+     * @brief Instance of the application
      */
-    int tableFreeIndex;
+    static MainWindow* instance_;
 
+    /**
+     * @brief The Parser
+     */
+    JsonParser jsonParser;
 
-    // BUTTONS
+    /**
+     * @brief The language widget
+     * Contains the language code and name
+     */
+    LanguageWidget *languageWidget;
 
 #ifndef Q_OS_MAC
     /**
@@ -329,21 +291,9 @@ private:
 #endif
 
     /**
-     * @brief Quits application button
+     * @brief The Preferences panel
      */
-    QPushButton *quitButton;
-
-    /**
-     * @brief The language widget
-     * Contains the language code and name
-     */
-    LanguageWidget *languageWidget;
-
-    /**
-     * @brief A status label
-     * Used to give feedback to the user
-     */
-    QLabel *statusLabel;
+    PreferencesWidget *preferences;
 
     /**
      * @brief A progressbar
@@ -353,14 +303,20 @@ private:
     QProgressBar *progressBar;
 
     /**
+     * @brief Quits application button
+     */
+    QPushButton *quitButton;
+
+    /**
      * @brief The search bar
      */
     SearchWidget *searchWidget;
 
     /**
-     * @brief The Parser
+     * @brief A status label
+     * Used to give feedback to the user
      */
-    JsonParser jsonParser;
+    QLabel *statusLabel;
 
     /**
      * @brief stringParser
@@ -368,25 +324,27 @@ private:
     StringParser stringParser;
 
     /**
-     * @brief The Preferences panel
+     * @brief The index of the first availabe row in the table
      */
-    PreferencesWidget *preferences;
+    int tableFreeIndex;
 
     /**
-     * @brief The import merge preferences panel
+     * @brief Is the tool bar currently clicked or not
      */
-    ImportMergeWidget *importPreferences;
+    bool toolBarClicked;
 
-
+    /**
+     * @brief The current translation working file
+     */
+    QFile workingFile;
 
 protected:
 
-    // Reimplemented methods
-    bool eventFilter(QObject *obj, QEvent *event);
-    void dropEvent(QDropEvent *event);
     void dragEnterEvent(QDragEnterEvent *event);
     void dragMoveEvent(QDragMoveEvent *event);
     void dragLeaveEvent(QDragLeaveEvent *event);
+    void dropEvent(QDropEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event);
     void resizeEvent(QResizeEvent *event);
 };
 
