@@ -209,10 +209,12 @@ void MainWindow::mapEvents(){
 
 void MainWindow::actionOpen()
 {
-    fillTableTimer.stop();
 
     //get file
     QString fileName = QFileDialog::getOpenFileName(this,"Open a translation file","","JSON (*.json);;Text files (*.txt);;All files (*.*)");
+
+    if(fileName.isEmpty()) return; // Dialog canceled
+    fillTableTimer.stop();
 
     QFile checkFile(fileName);
     if (checkFile.exists()) openJsxinc(fileName);
@@ -560,6 +562,7 @@ void MainWindow::startImportPorcess(StringParser::TranslationParsingModes flags)
                                                     tr("Import strings from a source file"),
                                                     "",
                                                     "All files (*.*)");
+    if(fileName.isEmpty()) return; // Dialog canceled
     QFile file(fileName);
 
     fillTableTimer.stop();
