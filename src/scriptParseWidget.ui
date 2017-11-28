@@ -166,6 +166,67 @@
            </layout>
           </item>
           <item>
+           <layout class="QFormLayout" name="exportLayout">
+            <item row="0" column="1">
+             <widget class="QCheckBox" name="replaceSimpleStrings">
+              <property name="minimumSize">
+               <size>
+                <width>40</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::RightToLeft</enum>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>Replace simple quote strings</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_6">
+              <property name="text">
+               <string>Replace double quotes strings</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_7">
+              <property name="text">
+               <string>Ignore strings in comment</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QCheckBox" name="replaceIgnoreComments">
+              <property name="layoutDirection">
+               <enum>Qt::RightToLeft</enum>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QCheckBox" name="replaceDoubleStrings">
+              <property name="layoutDirection">
+               <enum>Qt::RightToLeft</enum>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
            <layout class="QHBoxLayout" name="horizontalLayout">
             <property name="topMargin">
              <number>0</number>
