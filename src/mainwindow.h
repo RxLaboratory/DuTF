@@ -18,7 +18,7 @@
 #include "stringparser.h"
 #include "rowbuttonswidget.h"
 #include "preferenceswidget.h"
-#include "importmergewidget.h"
+#include "scriptparsewidget.h"
 #include "translation.h"
 
 
@@ -258,7 +258,7 @@ private:
     /**
      * @brief The import merge preferences panel
      */
-    ImportMergeWidget *importPreferences;
+    ScriptParseWidget *scriptParsePreferences;
 
     /**
      * @brief Instance of the application

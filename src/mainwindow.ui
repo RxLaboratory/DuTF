@@ -269,8 +269,8 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="importMergePage">
-       <layout class="QVBoxLayout" name="importMergeLayout"/>
+      <widget class="QWidget" name="scriptParsePage">
+       <layout class="QVBoxLayout" name="scriptParseLayout"/>
       </widget>
      </widget>
     </item>

@@ -19,7 +19,7 @@ SOURCES += main.cpp\
     src/preferenceswidget.cpp \
     src/translation.cpp \
     src/stringparser.cpp \
-    src/importmergewidget.cpp
+    src/scriptparsewidget.cpp
 
 HEADERS  += mainwindow.h \
     languagewidget.h \
@@ -32,7 +32,7 @@ HEADERS  += mainwindow.h \
     src/preferenceswidget.h \
     src/translation.h \
     src/stringparser.h \
-    src/importmergewidget.h
+    src/scriptparsewidget.h
 
 FORMS    += mainwindow.ui \
     languagewidget.ui \
@@ -40,7 +40,7 @@ FORMS    += mainwindow.ui \
     searchwidget.ui \
     src/rowbuttonswidget.ui \
     src/preferenceswidget.ui \
-    src/importMergeWidget.ui
+    src/scriptParseWidget.ui
 
 RESOURCES += resources.qrc
 

@@ -1,6 +1,6 @@
-#include "importmergewidget.h"
+#include "scriptparsewidget.h"
 
-ImportMergeWidget::ImportMergeWidget(QWidget *parent) : QWidget(parent)
+ScriptParseWidget::ScriptParseWidget(QWidget *parent) : QWidget(parent)
 {
 
     setupUi(this);
@@ -9,7 +9,7 @@ ImportMergeWidget::ImportMergeWidget(QWidget *parent) : QWidget(parent)
 
 }
 
-void ImportMergeWidget::go()
+void ScriptParseWidget::go()
 {
     StringParser::TranslationParsingModes flags(0);
 
@@ -21,7 +21,7 @@ void ImportMergeWidget::go()
     emit optionsSaved(flags);
 }
 
-void ImportMergeWidget::cancel()
+void ScriptParseWidget::cancel()
 {
     emit canceled();
 }

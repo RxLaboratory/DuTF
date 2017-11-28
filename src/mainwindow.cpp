@@ -74,8 +74,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     // Import / Merge
-    importPreferences = new ImportMergeWidget(this);
-    importMergeLayout->addWidget(importPreferences);
+    scriptParsePreferences = new ScriptParseWidget(this);
+    scriptParseLayout->addWidget(scriptParsePreferences);
 
     // window buttons
 
@@ -819,9 +819,9 @@ void MainWindow::mapEvents(){
     connect(preferences,SIGNAL(changeCSS(QString)),this,SLOT(updateCSS(QString)));
 
     // Import / Merge
-    connect(importPreferences, SIGNAL(canceled()), this, SLOT(showMainPage()));
-    connect(importPreferences, SIGNAL(optionsSaved(StringParser::TranslationParsingModes)), this, SLOT(showMainPage()));
-    connect(importPreferences, SIGNAL(optionsSaved(StringParser::TranslationParsingModes)), this,
+    connect(scriptParsePreferences, SIGNAL(canceled()), this, SLOT(showMainPage()));
+    connect(scriptParsePreferences, SIGNAL(optionsSaved(StringParser::TranslationParsingModes)), this, SLOT(showMainPage()));
+    connect(scriptParsePreferences, SIGNAL(optionsSaved(StringParser::TranslationParsingModes)), this,
             SLOT(startImportPorcess(StringParser::TranslationParsingModes)));
 
     // Window management

@@ -1,15 +1,15 @@
-#ifndef IMPORTMERGEWIDGET_H
-#define IMPORTMERGEWIDGET_H
+#ifndef SCRIPTPARSE_H
+#define SCRIPTPARSE_H
 
-#include "ui_importMergeWidget.h"
+#include "ui_scriptParseWidget.h"
 #include "stringparser.h"
 #include <QWidget>
 
-class ImportMergeWidget : public QWidget, private Ui::ImportMergeWidget
+class ScriptParseWidget : public QWidget, private Ui::ScriptParseWidget
 {
     Q_OBJECT
 public:
-    explicit ImportMergeWidget(QWidget *parent = nullptr);
+    explicit ScriptParseWidget(QWidget *parent = nullptr);
 
 signals:
 
@@ -32,4 +32,4 @@ private slots:
     void cancel();
 };
 
-#endif // IMPORTMERGEWIDGET_H
+#endif
