@@ -474,6 +474,24 @@ void MainWindow::clearTableToTheEnd(){
    }
 }
 
+std::vector<Translation> MainWindow::getTranslations() const
+{
+    std::vector<Translation> list;
+
+    for (int row = 0 ; row < tableFreeIndex ; row++)
+    {
+        Translation t;
+        t.source = ((QTextEdit*)(displayTable->cellWidget(row, 1)))->toPlainText();
+        t.translated = ((QTextEdit*)(displayTable->cellWidget(row, 2)))->toPlainText();
+        t.context = ((QLineEdit*)(displayTable->cellWidget(row, 3)))->text();
+        t.comment = ((QLineEdit*)(displayTable->cellWidget(row, 4)))->text();
+        t.contextId = ((QSpinBox*)(displayTable->cellWidget(row, 5)))->value();
+        list.push_back(t);
+    }
+
+    return list;
+}
+
 #ifndef Q_OS_MAC
 void MainWindow::maximize()
 {

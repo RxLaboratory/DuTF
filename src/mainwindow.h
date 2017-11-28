@@ -9,6 +9,8 @@
 #include <QProgressBar>
 #include <QTimer>
 
+#include <vector>
+
 #include "ui_mainwindow.h"
 
 #include "aboutdialog.h"
@@ -130,6 +132,12 @@ private slots:
      * This allows to modify the rows and to clear only the rows not in use
      */
     void clearTableToTheEnd();
+
+    /**
+     * @brief Returns a list of translations currently in the table
+     * @return
+     */
+    std::vector<Translation> getTranslations() const;
 
 #ifndef Q_OS_MAC
     /**
