@@ -164,6 +164,7 @@ void MainWindow::actionAddRow()
 
 void MainWindow::actionImport()
 {
+    scriptParsePreferences->setMode(ScriptParseWidget::Mode::ImportMerge);
     mainStack->setCurrentIndex(4);
     return;
 }
@@ -838,8 +839,8 @@ void MainWindow::mapEvents(){
 
     // Import / Merge
     connect(scriptParsePreferences, SIGNAL(canceled()), this, SLOT(showMainPage()));
-    connect(scriptParsePreferences, SIGNAL(optionsSaved(StringParser::TranslationParsingModes)), this, SLOT(showMainPage()));
-    connect(scriptParsePreferences, SIGNAL(optionsSaved(StringParser::TranslationParsingModes)), this,
+    connect(scriptParsePreferences, SIGNAL(importOptionsSaved(StringParser::TranslationParsingModes)), this, SLOT(showMainPage()));
+    connect(scriptParsePreferences, SIGNAL(importOptionsSaved(StringParser::TranslationParsingModes)), this,
             SLOT(startImportPorcess(StringParser::TranslationParsingModes)));
 
     // Window management

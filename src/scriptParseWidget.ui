@@ -174,7 +174,7 @@
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_3">
                <item>
-                <widget class="QPushButton" name="cancelImport">
+                <widget class="QPushButton" name="cancelImportBtn">
                  <property name="text">
                   <string>Cancel</string>
                  </property>
@@ -185,7 +185,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="goImport">
+                <widget class="QPushButton" name="goImportBtn">
                  <property name="text">
                   <string>Go</string>
                  </property>
@@ -267,7 +267,7 @@
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout">
                <item>
-                <widget class="QPushButton" name="cancelExport">
+                <widget class="QPushButton" name="cancelExportBtn">
                  <property name="text">
                   <string>Cancel</string>
                  </property>
@@ -278,7 +278,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="goExport">
+                <widget class="QPushButton" name="goExportBtn">
                  <property name="text">
                   <string>Go</string>
                  </property>

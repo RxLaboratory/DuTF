@@ -4,6 +4,8 @@
 #include "parser.h"
 #include "translation.h"
 
+#include <QRegularExpressionMatch>
+
 /**
  * @brief Use this parser to extract string and tr calls from a file
  */
@@ -17,7 +19,8 @@ public:
         ParseTR = 0x0001,
         ParseSingleQuote = 0x0010,
         ParseDoubleQuotes = 0x0100,
-        IgnoreStringComment = 0x1000
+        IgnoreStringComment = 0x1000,
+        Export = 0x10000
     };
     Q_DECLARE_FLAGS(TranslationParsingModes, TranslationParsingMode)
 
@@ -40,6 +43,26 @@ protected:
     void parseText(QString);
 
     StringParser::TranslationParsingModes translationMode_;
+
+    /**
+     * @brief Process the text matched by the regex
+     *
+     * The method wil take care of checking if the translation is already present or not
+     *
+     * @param   The regex match
+     * @param   The resulting list of translations
+     */
+    void processImportMatch(QRegularExpressionMatch, std::vector<Translation>&);
+
+    /**
+     * @brief Process the current line while exporting
+     *
+     * Depending on the flags, add tr or not on the line
+     *
+     * @param   The line
+     * @param   The output file
+     */
+    void processExportLine(QString, QFile&);
 
 };
 

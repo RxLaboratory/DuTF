@@ -15,8 +15,7 @@ void StringParser::parseFile(QString path)
 
     // https://regexr.com/3h8qq
     // (?:("|')((?:\\\1|(?:(?!\1).))*)\1)|(?:tr\(("|')((?:\\\3|(?:(?!\3).))*)\3(?:\)|(?:\,[ ]?(?:(\d+)|(?:("|')((?:\\\6|(?:(?!\6).))*)\6)))))
-    static QString pattern = QByteArray::fromBase64(
-"KD86KCJ8JykoKD86XFxcMXwoPzooPyFcMSkuKSkqKVwxKXwoPzp0clwoKCJ8JykoKD86XFxcM3woPzooPyFcMykuKSkqKVwzKD86XCl8KD86XCxbIF0/KD86KFxkKyl8KD86KCJ8JykoKD86XFxcNnwoPzooPyFcNikuKSkqKVw2KSkpKSk=");
+    static QString pattern = QByteArray::fromBase64("KD86KCJ8JykoKD86XFxcMXwoPzooPyFcMSkuKSkqKVwxKXwoPzp0clwoKCJ8JykoKD86XFxcM3woPzooPyFcMykuKSkqKVwzKD86XCl8KD86XCxbIF0/KD86KFxkKyl8KD86KCJ8JykoKD86XFxcNnwoPzooPyFcNikuKSkqKVw2KSkpKSk=");
     static QRegularExpression reg(pattern);
 
     QFile file(path);
@@ -36,12 +35,21 @@ void StringParser::parseFile(QString path)
         return;
     }
 
+    bool doExport = translationMode_.testFlag(TranslationParsingMode::Export);
+    QFile * exportFile;
+    if(doExport){
+        // Generate file name
+        // Create file
+        // Open it
+    }
+
     std::vector<Translation> founds;
     bool isInlineComment = false;
     bool isMultilineComment = false;
     QString line;
     float incProgress = 100 / float(countLines);
     int lineNumber = 1;
+
 #ifdef QT_DEBUG
     qDebug() << "Parse tr : " << translationMode_.testFlag(TranslationParsingMode::ParseTR) << "\n";
     qDebug() << "Parse single : " << translationMode_.testFlag(TranslationParsingMode::ParseSingleQuote) << "\n";
@@ -59,84 +67,106 @@ void StringParser::parseFile(QString path)
         if(isMultilineComment)
             isMultilineComment = !line.endsWith("*/");
 
-        QRegularExpressionMatchIterator i = reg.globalMatch(line);
-
-#ifdef QT_DEBUG
-        qDebug() << "Line " << lineNumber++ << "\n";
-#endif
-        isInlineComment = false;
-
-        while(i.hasNext())
+        if(doExport) // Export
         {
-            QRegularExpressionMatch match = i.next();
-            int captLength = match.lastCapturedIndex() + 1;
+            processExportLine(line, *exportFile);
+        }
+        else // Import
+        {
+            QRegularExpressionMatchIterator i = reg.globalMatch(line);
 #ifdef QT_DEBUG
-            for(int i = 0; i < captLength; i++)
-            {
-                QString cap = match.captured(i);
-                qDebug() << " CAPTURE AT " << i << " IS " << cap << "\n";
-            }
+            qDebug() << "Line " << lineNumber++ << "\n";
 #endif
-            Translation t;
-            if(captLength == 3) // String only
+            isInlineComment = false;
+
+            while(i.hasNext())
             {
-                if(translationMode_.testFlag(TranslationParsingMode::IgnoreStringComment)){
+                QRegularExpressionMatch match = i.next();
+
+                if(match.lastCapturedIndex() == 2 && translationMode_.testFlag(TranslationParsingMode::IgnoreStringComment)){
                     // Check inline for comment
                     if(!isInlineComment && inLineIndex >= 0 && match.capturedStart(0) > inLineIndex) isInlineComment = true;
                     if(isInlineComment || isMultilineComment)
                         continue; // Ignore the string
                 }
 
-                if(match.captured(1) == "\"" && !translationMode_.testFlag(TranslationParsingMode::ParseDoubleQuotes))
-                    continue; // Ignore double quote strings
-                if(match.captured(1) == "'" && !translationMode_.testFlag(TranslationParsingMode::ParseSingleQuote))
-                    continue; // Ignore single quote strings
-                t.source = match.captured(2);
-                if(t.source == '"' || t.source == "'") continue;
+                processImportMatch(match, founds);
             }
-            else
-            {
-                if(!translationMode_.testFlag(TranslationParsingMode::ParseTR)) continue; // Ignore tr
-
-                t.source = match.captured(4);
-                if(captLength == 5) // TR with no arg
-                {
-                    // Nothing to do
-                }
-                else if(captLength == 6) // TR with id
-                {
-                    t.contextId = match.captured(5).toInt();
-                }
-                else if(captLength == 8) // TR with context string
-                {
-                    t.context = match.captured(7);
-                }
-
-            }
-
-#ifdef QT_DEBUG
-            qDebug() << "TR = " << t << "\n";
-#endif
-
-
-            if(std::find(founds.begin(), founds.end(), t) == founds.end()) // New translation
-            {
-                founds.push_back(t);
-                emit newTranslation(t);
-            }
-
-
         }
         emit progress(lineNumber * incProgress);
-
     }
 
     file.close();
+    if(doExport)
+    {
+        // Close export file
+    }
+
     emit progress(100);
     emit parsingFinished();
 }
 
 void StringParser::parseText(QString)
 {
-   emit parsingFailed(ParsingError::ParsingNotImplemented);
+    emit parsingFailed(ParsingError::ParsingNotImplemented);
+}
+
+void StringParser::processImportMatch(QRegularExpressionMatch match, std::vector<Translation> & founds)
+{
+    int captLength = match.lastCapturedIndex() + 1;
+
+#ifdef QT_DEBUG
+    for(int i = 0; i < captLength; i++)
+    {
+        QString cap = match.captured(i);
+        qDebug() << " CAPTURE AT " << i << " IS " << cap << "\n";
+    }
+
+#endif
+
+    Translation t;
+    if(captLength == 3) // String only
+    {
+        if(match.captured(1) == "\"" && !translationMode_.testFlag(TranslationParsingMode::ParseDoubleQuotes))
+            return; // Ignore double quote strings
+        if(match.captured(1) == "'" && !translationMode_.testFlag(TranslationParsingMode::ParseSingleQuote))
+            return; // Ignore single quote strings
+        t.source = match.captured(2);
+        if(t.source == '"' || t.source == "'") return;
+    }
+    else
+    {
+        if(!translationMode_.testFlag(TranslationParsingMode::ParseTR)) return; // Ignore tr
+
+        t.source = match.captured(4);
+        if(captLength == 5) // TR with no arg
+        {
+            // Nothing to do
+        }
+        else if(captLength == 6) // TR with id
+        {
+            t.contextId = match.captured(5).toInt();
+        }
+        else if(captLength == 8) // TR with context string
+        {
+            t.context = match.captured(7);
+        }
+
+    }
+
+#ifdef QT_DEBUG
+    qDebug() << "TR = " << t << "\n";
+#endif
+
+
+    if(std::find(founds.begin(), founds.end(), t) == founds.end()) // New translation
+    {
+        founds.push_back(t);
+        emit newTranslation(t);
+    }
+}
+
+void StringParser::processExportLine(QString, QFile &)
+{
+    emit parsingFailed(ParsingError::ParsingNotImplemented);
 }
