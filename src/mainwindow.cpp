@@ -309,6 +309,26 @@ void MainWindow::actionTools(bool checked)
     }
 }
 
+void MainWindow::actionUpdateSourceCode()
+{
+    if(translations.size() < 1)
+    {
+        QString messageTitle = tr("Update failed");
+        QString messageContent;
+        messageContent = tr("You need to have a some translations opened to be able to update your source code.");
+        QMessageBox mb(QMessageBox::Warning,
+                       messageTitle, messageContent,
+                       QMessageBox::Ok,
+                       this,
+                       Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
+        mb.exec();
+        return;
+    }
+    scriptParsePreferences->setMode(ScriptParseWidget::Mode::Export);
+    mainStack->setCurrentIndex(4);
+    return;
+}
+
 void MainWindow::addTableRow(int index){
 
     bool userRow = false;
@@ -524,6 +544,7 @@ void MainWindow::newLanguage(QStringList language)
 
 void MainWindow::newTranslation(Translation pTr)
 {
+    translations.push_back(pTr);
     addTableRowContent(pTr);
 }
 
@@ -586,8 +607,21 @@ void MainWindow::parsingFinished()
 
 void MainWindow::removeTableRow(int index)
 {
-          displayTable->selectRow(index); // To avoid automatic scroll
-          displayTable->removeRow(index);
+    // Update tr list
+    Translation cmp;
+    cmp.source = ((QTextEdit*)displayTable->cellWidget(index, 1))->toPlainText();
+    cmp.translated = ((QTextEdit*)displayTable->cellWidget(index, 2))->toPlainText();
+    cmp.context = ((QLineEdit*)displayTable->cellWidget(index, 3))->text();
+    cmp.comment = ((QLineEdit*)displayTable->cellWidget(index, 4))->text();
+    cmp.contextId = ((QSpinBox*)displayTable->cellWidget(index, 5))->value();
+
+    translations.erase(std::remove(
+                            translations.begin(),
+                            translations.end(),
+                            cmp), translations.end());
+    // Update ui
+    displayTable->selectRow(index); // To avoid automatic scroll
+    displayTable->removeRow(index);
 }
 
 void MainWindow::search(QString s)
@@ -614,7 +648,7 @@ void MainWindow::search(QString s)
         }
         if (translated || (!original && !translated && !comment))
         {
-            QTextEdit *translatedEdit = (QTextEdit*)displayTable->cellWidget(row,3);
+            QTextEdit *translatedEdit = (QTextEdit*)displayTable->cellWidget(row,2);
             if (translatedEdit->toPlainText().indexOf(s,0,caseSensitive) >= 0) found = true;
         }
         if (comment || (!original && !translated && !comment))
@@ -685,6 +719,31 @@ void MainWindow::showMainPage()
     mainStack->setCurrentIndex(0);
 }
 
+void MainWindow::startExportPorcess(StringParser::TranslationParsingModes flags)
+{
+    //get file
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Source code"),
+                                                    "",
+                                                    "All files (*.*)");
+    if(fileName.isEmpty()) return; // Dialog canceled
+    QFile file(fileName);
+
+    fillTableTimer.stop();
+
+    tableFreeIndex = 0;
+
+    //waiting mode
+    QString prettyName = utils::fileName(fileName);
+    setWaiting(true,tr("Parsing file %1...").arg(prettyName));
+    // The ui will be re-enabled when the parser sends an END signal
+    mainStatusBar->showMessage("Parsing...");
+
+    // update
+    stringParser.setMode(flags);
+    stringParser.preParseFile(fileName);
+}
+
 void MainWindow::startImportPorcess(StringParser::TranslationParsingModes flags)
 {
     //get file
@@ -701,7 +760,6 @@ void MainWindow::startImportPorcess(StringParser::TranslationParsingModes flags)
     languageWidget->clear();
     workingFile.setFileName("");
 
-    file.fileName();
     //waiting mode
     QString prettyName = utils::fileName(fileName);
     setWaiting(true,tr("Loading file %1...").arg(prettyName));
@@ -831,6 +889,7 @@ void MainWindow::mapEvents(){
 
     // Tools
     connect(btn_generateTranslator,SIGNAL(clicked()),this,SLOT(btn_generateTranslator_clicked()));
+    connect(btn_updateSourceCode, SIGNAL(clicked()), this, SLOT(actionUpdateSourceCode()));
 
     // Preferences
     connect(preferences,SIGNAL(hidePreferences()),this,SLOT(showMainPage()));
@@ -842,6 +901,9 @@ void MainWindow::mapEvents(){
     connect(scriptParsePreferences, SIGNAL(importOptionsSaved(StringParser::TranslationParsingModes)), this, SLOT(showMainPage()));
     connect(scriptParsePreferences, SIGNAL(importOptionsSaved(StringParser::TranslationParsingModes)), this,
             SLOT(startImportPorcess(StringParser::TranslationParsingModes)));
+    connect(scriptParsePreferences, SIGNAL(exportOptionsSaved(StringParser::TranslationParsingModes)), this, SLOT(showMainPage()));
+    connect(scriptParsePreferences, SIGNAL(exportOptionsSaved(StringParser::TranslationParsingModes)), this,
+            SLOT(startExportPorcess(StringParser::TranslationParsingModes)));
 
     // Window management
 #ifndef Q_OS_MAC
@@ -965,7 +1027,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
   }
 }
 
-void MainWindow::resizeEvent(QResizeEvent *event)
+void MainWindow::resizeEvent(QResizeEvent *)
 {
     adjustColumnSizes();
 }

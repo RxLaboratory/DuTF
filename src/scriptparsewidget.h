@@ -29,11 +29,18 @@ public:
 signals:
 
     void importOptionsSaved(StringParser::TranslationParsingModes);
+    void exportOptionsSaved(StringParser::TranslationParsingModes);
     void canceled();
 
 public slots:
 
 private slots:
+
+    /**
+     * @brief Create a flag using user settings and tell the
+     * sends a signal with those flags
+     */
+    void goExport();
 
     /**
      * @brief Create a flag using user settings and tell the

@@ -100,6 +100,11 @@ private slots:
     void actionTools(bool checked);
 
     /**
+     * @brief Will add tr calls in the user source code
+     */
+    void actionUpdateSourceCode();
+
+    /**
      * @brief Adds an empty row in the table
      * Stops when the MAX_AUTO_ROW is reached
      *
@@ -215,6 +220,11 @@ private slots:
      * @brief Shows the main page (hide preferences, about, etc.)
      */
     void showMainPage();
+
+    /**
+     * @brief Start the actual export process for adding tr calls in user source code
+     */
+    void startExportPorcess(StringParser::TranslationParsingModes);
 
     /**
      * @brief Start the actual import or merge process
@@ -340,6 +350,11 @@ private:
      * @brief Is the tool bar currently clicked or not
      */
     bool toolBarClicked;
+
+    /**
+     * @brief The list of current translations
+     */
+    std::vector<Translation> translations;
 
     /**
      * @brief The current translation working file

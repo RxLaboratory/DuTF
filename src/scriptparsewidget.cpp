@@ -6,6 +6,7 @@ ScriptParseWidget::ScriptParseWidget(QWidget *parent) : QWidget(parent)
     connect(cancelImportBtn,SIGNAL(clicked()),this,SLOT(cancel()));
     connect(cancelExportBtn,SIGNAL(clicked()),this,SLOT(cancel()));
     connect(goImportBtn, SIGNAL(clicked()),this,SLOT(goImport()));
+    connect(goExportBtn, SIGNAL(clicked()),this,SLOT(goExport()));
 
     setMode(Mode::ImportMerge);
 }
@@ -25,6 +26,18 @@ void ScriptParseWidget::setMode(ScriptParseWidget::Mode pMode)
         break;
     }
 
+}
+
+void ScriptParseWidget::goExport()
+{
+    StringParser::TranslationParsingModes flags(0);
+
+    if(replaceSimpleStrings->isChecked()) flags.setFlag(StringParser::TranslationParsingMode::ParseSingleQuote, true);
+    if(replaceDoubleStrings->isChecked()) flags.setFlag(StringParser::TranslationParsingMode::ParseDoubleQuotes, true);
+    if(replaceIgnoreComments->isChecked()) flags.setFlag(StringParser::TranslationParsingMode::IgnoreStringComment, true);
+    flags.setFlag(StringParser::TranslationParsingMode::Export);
+
+    emit exportOptionsSaved(flags);
 }
 
 void ScriptParseWidget::goImport()
