@@ -41,6 +41,11 @@ public:
 signals:
 
     /**
+     * @brief Emited when an export operations has been completed
+     */
+    void exportFinished();
+
+    /**
      * @brief Signal emited when the parsing is over
      */
     void parsingFinished();

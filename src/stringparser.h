@@ -5,6 +5,7 @@
 #include "translation.h"
 
 #include <QRegularExpressionMatch>
+#include <vector>
 
 /**
  * @brief Use this parser to extract string and tr calls from a file
@@ -25,9 +26,20 @@ public:
     Q_DECLARE_FLAGS(TranslationParsingModes, TranslationParsingMode)
 
     /**
+     * @brief Set the file path to which the parser will export the new source code
+     */
+    void setExportFileName(const QString&);
+
+    /**
      * @brief Set the mode that will be used when parsing the file
      */
     void setMode(StringParser::TranslationParsingModes);
+
+    /**
+     * @brief Give a link to the current wip translations.
+     * Used for updating user source code
+     */
+    void setTranslations(std::vector<Translation>*);
 
 signals:
 
@@ -63,6 +75,16 @@ protected:
      * @param   The output file
      */
     void processExportLine(QString, QFile&);
+
+    /**
+     * @brief Translations that the user is currently working on
+     */
+    std::vector<Translation> * translations;
+
+    /**
+     * @brief The filename of the exported file if any
+     */
+    QString exportFileName;
 
 };
 

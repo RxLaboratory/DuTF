@@ -139,6 +139,12 @@ private slots:
     void clearTableToTheEnd();
 
     /**
+     * @brief Called when updating the user source code is over.
+     * Just diplay a message
+     */
+    void exportFinished();
+
+    /**
      * @brief Returns a list of translations currently in the table
      * @return
      */

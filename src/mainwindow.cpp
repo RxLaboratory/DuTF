@@ -495,6 +495,21 @@ void MainWindow::clearTableToTheEnd(){
    }
 }
 
+void MainWindow::exportFinished()
+{
+    mainStatusBar->clearMessage();
+    setWaiting(false);
+
+    QMessageBox mb(QMessageBox::Information,
+                   tr("Export info"),
+                   tr("Your source has correctly been updated."),
+                   QMessageBox::Ok,
+                   this,
+                   Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
+    mb.exec();
+
+}
+
 std::vector<Translation> MainWindow::getTranslations() const
 {
     std::vector<Translation> list;
@@ -729,18 +744,27 @@ void MainWindow::startExportPorcess(StringParser::TranslationParsingModes flags)
     if(fileName.isEmpty()) return; // Dialog canceled
     QFile file(fileName);
 
-    fillTableTimer.stop();
-
-    tableFreeIndex = 0;
-
     //waiting mode
     QString prettyName = utils::fileName(fileName);
     setWaiting(true,tr("Parsing file %1...").arg(prettyName));
     // The ui will be re-enabled when the parser sends an END signal
     mainStatusBar->showMessage("Parsing...");
 
+    // Generating export file name
+    QString exportFileName = fileName + ".translated";
+    stringParser.setExportFileName(exportFileName);
+    // Ui info
+    QMessageBox mb(QMessageBox::Information,
+                   tr("Export info"),
+                   tr("Your updated source code will be exported to %1.").arg(exportFileName),
+                   QMessageBox::Ok,
+                   this,
+                   Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
+    mb.exec();
+
     // update
     stringParser.setMode(flags);
+    stringParser.setTranslations(&translations);
     stringParser.preParseFile(fileName);
 }
 
@@ -867,6 +891,7 @@ void MainWindow::mapEvents(){
     connect(&jsonParser,SIGNAL(progress(int)),mainProgressBar,SLOT(setValue(int)));
 
     connect(&stringParser,SIGNAL(parsingFinished()),this,SLOT(parsingFinished()));
+    connect(&stringParser,SIGNAL(exportFinished()),this,SLOT(exportFinished()));
     connect(&stringParser,SIGNAL(parsingFailed(Parser::ParsingErrors)),this,SLOT(parsingFailed(Parser::ParsingErrors)));
     connect(&stringParser,SIGNAL(newTranslation(Translation)),this,SLOT(newTranslation(Translation)));
     connect(&stringParser,SIGNAL(progress(int)),progressBar,SLOT(setValue(int)));

@@ -5,9 +5,19 @@
 #include "translation.h"
 #include <vector>
 
+void StringParser::setExportFileName(const QString & pfile)
+{
+   exportFileName = pfile;
+}
+
 void StringParser::setMode(StringParser::TranslationParsingModes flags)
 {
     translationMode_ = flags;
+}
+
+void StringParser::setTranslations(std::vector<Translation> * plist)
+{
+   translations = plist;
 }
 
 void StringParser::parseFile(QString path)
@@ -97,13 +107,17 @@ void StringParser::parseFile(QString path)
     }
 
     file.close();
+    emit progress(100);
     if(doExport)
     {
         // Close export file
+        emit exportFinished();
+    }
+    else
+    {
+        emit parsingFinished();
     }
 
-    emit progress(100);
-    emit parsingFinished();
 }
 
 void StringParser::parseText(QString)
