@@ -1,11 +1,13 @@
-var test1 = "test";
-var test2 = "te\"st";
-var test3 = "t'est";
-var test4 = "t'es't";
-var test5 = 'test';
-var test6 = 'te\'st';
-var test7 = 't"est';
-var test8 = 't"es"t';
+var test1 = "2test";
+var test2 = "2te\"st";
+var test3 = "2t'est";
+var test4 = "2t'es't";
+var test5 = '1test';
+var test6 = '1te\'st';
+var test7 = '1t"est';
+var test8 = '1t"es"t';
+var test8 = 'same';
+var test8 = "same";
 /*
 doesn't work within comments. '
 */

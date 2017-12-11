@@ -41,16 +41,22 @@ void StringParser::parseFile(QString path)
         file.readLine();
     }
     if(!file.seek(0)){
+        file.close();
         emit parsingFailed(ParsingError::ReadingFailed); // Return to start failed
         return;
     }
 
     bool doExport = translationMode_.testFlag(TranslationParsingMode::Export);
-    QFile * exportFile;
-    if(doExport){
-        // Generate file name
-        // Create file
-        // Open it
+    QFile exportFile(exportFileName);
+    QTextStream * out;
+    if(doExport){ // Export file
+        if(!exportFile.open(QIODevice::WriteOnly))
+        {
+            file.close();
+            emit parsingFailed(ParsingError::FileOpen);
+            return;
+        }
+        out = new QTextStream(&exportFile);
     }
 
     std::vector<Translation> founds;
@@ -77,32 +83,130 @@ void StringParser::parseFile(QString path)
         if(isMultilineComment)
             isMultilineComment = !line.endsWith("*/");
 
-        if(doExport) // Export
-        {
-            processExportLine(line, *exportFile);
-        }
-        else // Import
-        {
-            QRegularExpressionMatchIterator i = reg.globalMatch(line);
+        QRegularExpressionMatchIterator i = reg.globalMatch(line);
+
 #ifdef QT_DEBUG
-            qDebug() << "Line " << lineNumber++ << "\n";
+        qDebug() << "Line " << lineNumber++ << "\n";
 #endif
-            isInlineComment = false;
+        isInlineComment = false;
+        int lastStartPos = 0;
 
-            while(i.hasNext())
+        while(i.hasNext())
+        {
+            QRegularExpressionMatch match = i.next();
+            if(doExport)
+                *out << line.mid(
+                            lastStartPos,
+                            match.capturedStart() - lastStartPos
+                            ); // The gaps between current and last match
+
+            lastStartPos = match.capturedStart();
+            int endPos = match.capturedEnd();
+
+            if(match.lastCapturedIndex() == 2 && translationMode_.testFlag(TranslationParsingMode::IgnoreStringComment)){
+                // Check inline for comment
+                if(!isInlineComment && inLineIndex >= 0 && match.capturedStart(0) > inLineIndex) isInlineComment = true;
+                if(isInlineComment || isMultilineComment)
+                {
+                    continue; // Ignore the string
+                }
+            }
+
+            int captLength = match.lastCapturedIndex() + 1;
+
+#ifdef QT_DEBUG
+            for(int i = 0; i < captLength; i++)
             {
-                QRegularExpressionMatch match = i.next();
+                QString cap = match.captured(i);
+                qDebug() << " CAPTURE AT " << i << " IS " << cap << "\n";
+            }
 
-                if(match.lastCapturedIndex() == 2 && translationMode_.testFlag(TranslationParsingMode::IgnoreStringComment)){
-                    // Check inline for comment
-                    if(!isInlineComment && inLineIndex >= 0 && match.capturedStart(0) > inLineIndex) isInlineComment = true;
-                    if(isInlineComment || isMultilineComment)
-                        continue; // Ignore the string
+#endif
+
+            Translation t;
+            if(captLength == 3) // String only
+            {
+                t.source = match.captured(2);
+                if(doExport && (
+                        (match.captured(1) == "\"" && translationMode_.testFlag(TranslationParsingMode::ParseDoubleQuotes)) ||
+                        (match.captured(1) == "'" && translationMode_.testFlag(TranslationParsingMode::ParseSingleQuote))) &&
+                        std::find((*translations).begin(), (*translations).end(), t) != (*translations).end())
+                {
+                    *out << "tr(" << match.captured(0) << ")";
+                }
+                else if(doExport)
+                {
+                    *out << match.captured(0);
                 }
 
-                processImportMatch(match, founds);
+
+                if(match.captured(1) == "\"" && !translationMode_.testFlag(TranslationParsingMode::ParseDoubleQuotes))
+                {
+                    lastStartPos = endPos;
+                    continue; // Ignore double quote strings
+                }
+                if(match.captured(1) == "'" && !translationMode_.testFlag(TranslationParsingMode::ParseSingleQuote))
+                {
+                    lastStartPos = endPos;
+                    continue; // Ignore single quote strings
+                }
+                t.source = match.captured(2);
+                if(t.source == '"' || t.source == "'") // "'"
+                {
+                    lastStartPos = endPos;
+                    continue;
+                }
             }
+            else
+            {
+                if(doExport) // Dont need to add tr here
+                {
+                    *out << line.mid(
+                                lastStartPos,
+                                match.capturedLength()
+                                );
+                }
+
+                if(!translationMode_.testFlag(TranslationParsingMode::ParseTR))
+                {
+                    lastStartPos = endPos;
+                    continue; // Ignore tr
+                }
+
+                t.source = match.captured(4);
+                if(captLength == 5) // TR with no arg
+                {
+                    // Nothing to do
+                }
+                else if(captLength == 6) // TR with id
+                {
+                    t.contextId = match.captured(5).toInt();
+                }
+                else if(captLength == 8) // TR with context string
+                {
+                    t.context = match.captured(7);
+                }
+
+            }
+
+#ifdef QT_DEBUG
+            qDebug() << "TR = " << t << "\n";
+#endif
+
+
+            if(!doExport && std::find(founds.begin(), founds.end(), t) == founds.end()) // New translation
+            {
+                founds.push_back(t);
+                emit newTranslation(t);
+            }
+            lastStartPos = endPos;
         }
+
+        if(doExport)
+        {
+            *out << line.mid(lastStartPos);
+        }
+
         emit progress(lineNumber * incProgress);
     }
 
@@ -111,6 +215,7 @@ void StringParser::parseFile(QString path)
     if(doExport)
     {
         // Close export file
+        exportFile.close();
         emit exportFinished();
     }
     else
@@ -121,66 +226,6 @@ void StringParser::parseFile(QString path)
 }
 
 void StringParser::parseText(QString)
-{
-    emit parsingFailed(ParsingError::ParsingNotImplemented);
-}
-
-void StringParser::processImportMatch(QRegularExpressionMatch match, std::vector<Translation> & founds)
-{
-    int captLength = match.lastCapturedIndex() + 1;
-
-#ifdef QT_DEBUG
-    for(int i = 0; i < captLength; i++)
-    {
-        QString cap = match.captured(i);
-        qDebug() << " CAPTURE AT " << i << " IS " << cap << "\n";
-    }
-
-#endif
-
-    Translation t;
-    if(captLength == 3) // String only
-    {
-        if(match.captured(1) == "\"" && !translationMode_.testFlag(TranslationParsingMode::ParseDoubleQuotes))
-            return; // Ignore double quote strings
-        if(match.captured(1) == "'" && !translationMode_.testFlag(TranslationParsingMode::ParseSingleQuote))
-            return; // Ignore single quote strings
-        t.source = match.captured(2);
-        if(t.source == '"' || t.source == "'") return;
-    }
-    else
-    {
-        if(!translationMode_.testFlag(TranslationParsingMode::ParseTR)) return; // Ignore tr
-
-        t.source = match.captured(4);
-        if(captLength == 5) // TR with no arg
-        {
-            // Nothing to do
-        }
-        else if(captLength == 6) // TR with id
-        {
-            t.contextId = match.captured(5).toInt();
-        }
-        else if(captLength == 8) // TR with context string
-        {
-            t.context = match.captured(7);
-        }
-
-    }
-
-#ifdef QT_DEBUG
-    qDebug() << "TR = " << t << "\n";
-#endif
-
-
-    if(std::find(founds.begin(), founds.end(), t) == founds.end()) // New translation
-    {
-        founds.push_back(t);
-        emit newTranslation(t);
-    }
-}
-
-void StringParser::processExportLine(QString, QFile &)
 {
     emit parsingFailed(ParsingError::ParsingNotImplemented);
 }
