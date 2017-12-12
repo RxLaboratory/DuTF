@@ -77,6 +77,9 @@ MainWindow::MainWindow(QWidget *parent) :
     scriptParsePreferences = new ScriptParseWidget(this);
     scriptParseLayout->addWidget(scriptParsePreferences);
 
+    mergeWidget = new MergeWidget(this);
+    mergePageLayout->addWidget(mergeWidget);
+
     // window buttons
 
 #ifndef Q_OS_MAC
@@ -167,6 +170,12 @@ void MainWindow::actionImport()
     scriptParsePreferences->setMode(ScriptParseWidget::Mode::ImportMerge);
     mainStack->setCurrentIndex(4);
     return;
+}
+
+void MainWindow::actionMerge()
+{
+   mainStack->setCurrentIndex(5);
+   return;
 }
 
 void MainWindow::actionOpen()
@@ -709,6 +718,8 @@ void MainWindow::setWaiting(bool wait, QString status, int max)
         btn_actionAbout->setEnabled(false);
         btn_actionOpen->setEnabled(false);
         btn_actionSave->setEnabled(false);
+        btn_actionMerge->setEnabled(false);
+        btn_actionImport->setEnabled(false);
         btn_actionSaveAs->setEnabled(false);
         btn_actionPreferences->setEnabled(false);
         languageWidget->setEnabled(false);
@@ -722,6 +733,8 @@ void MainWindow::setWaiting(bool wait, QString status, int max)
         btn_actionOpen->setEnabled(true);
         btn_actionSave->setEnabled(true);
         btn_actionSaveAs->setEnabled(true);
+        btn_actionMerge->setEnabled(true);
+        btn_actionImport->setEnabled(true);
         btn_actionPreferences->setEnabled(true);
         languageWidget->setEnabled(true);
         searchWidget->setEnabled(true);
@@ -794,6 +807,47 @@ void MainWindow::startImportPorcess(StringParser::TranslationParsingModes flags)
     stringParser.setMode(flags);
     stringParser.preParseFile(fileName);
     //jsonParser->parseFile(&workingFile);
+}
+
+void MainWindow::startMergeProcess(MergeWidget::MergeKind mergeFlag)
+{
+    QString fileName;
+    if(mergeFlag == MergeWidget::MergeKind::MergeSourceCode)
+        fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Open a source code file"),
+                                                    "",
+                                                    "All files (*.*)");
+    else if(mergeFlag == MergeWidget::MergeKind::MergeTrFile)
+        fileName = QFileDialog::getOpenFileName(this,
+                                                tr("Open a translation file"),
+                                                "",
+                                                "JSON (*.json);;Text files (*.txt);;All files (*.*)");
+    else
+    {
+        return;
+    }
+
+    if(fileName.isEmpty()) return; // Dialog canceled
+
+
+    QFile checkFile(fileName);
+    if (!checkFile.exists()) return;
+
+    // Json
+    if(mergeFlag == MergeWidget::MergeKind::MergeTrFile)
+    {
+        // Restart table
+        fillTableTimer.stop();
+
+        //waiting mode
+        QString prettyName = utils::fileName(fileName);
+        setWaiting(true,"Loading " + prettyName + "...");
+        mainStatusBar->showMessage("Loading...");
+        statusLabel->setText(prettyName);
+
+        //parse
+        jsonParser.preParseFile(fileName);
+    }
 }
 
 void MainWindow::updateCSS(QString cssFileName)
@@ -903,6 +957,7 @@ void MainWindow::mapEvents(){
     connect(this->menu_save, SIGNAL(triggered(bool)), this, SLOT(actionSave()));
     connect(this->btn_actionOpen, SIGNAL(triggered(bool)), this, SLOT(actionOpen()));
     connect(this->btn_actionImport, SIGNAL(triggered(bool)), this, SLOT(actionImport()));
+    connect(this->btn_actionMerge, SIGNAL(triggered(bool)), this, SLOT(actionMerge()));
     connect(this->menu_open, SIGNAL(triggered(bool)), this, SLOT(actionOpen()));
     connect(this->btn_actionAbout, SIGNAL(triggered(bool)), this, SLOT(actionAbout()));
     connect(this->btn_actionPreferences, SIGNAL(triggered(bool)), this, SLOT(actionPreferences(bool)));
@@ -929,6 +984,11 @@ void MainWindow::mapEvents(){
     connect(scriptParsePreferences, SIGNAL(exportOptionsSaved(StringParser::TranslationParsingModes)), this, SLOT(showMainPage()));
     connect(scriptParsePreferences, SIGNAL(exportOptionsSaved(StringParser::TranslationParsingModes)), this,
             SLOT(startExportPorcess(StringParser::TranslationParsingModes)));
+
+    // Merge
+    connect(mergeWidget, SIGNAL(canceled()), this, SLOT(showMainPage()));
+    connect(mergeWidget, SIGNAL(mergeOptionsSaved(MergeWidget::MergeKind)), this,
+            SLOT(startMergeProcess(MergeWidget::MergeKind)));
 
     // Window management
 #ifndef Q_OS_MAC

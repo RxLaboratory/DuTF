@@ -49,7 +49,7 @@
     <item>
      <widget class="QStackedWidget" name="mainStack">
       <property name="currentIndex">
-       <number>0</number>
+       <number>5</number>
       </property>
       <widget class="QWidget" name="tablePage">
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -288,6 +288,9 @@
       </widget>
       <widget class="QWidget" name="scriptParsePage">
        <layout class="QVBoxLayout" name="scriptParseLayout"/>
+      </widget>
+      <widget class="QWidget" name="mergePage">
+       <layout class="QVBoxLayout" name="mergePageLayout"/>
       </widget>
      </widget>
     </item>

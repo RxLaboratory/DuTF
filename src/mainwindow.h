@@ -21,6 +21,7 @@
 #include "rowbuttonswidget.h"
 #include "preferenceswidget.h"
 #include "scriptparsewidget.h"
+#include "mergewidget.h"
 #include "translation.h"
 
 
@@ -67,6 +68,11 @@ private slots:
      * @brief Import strings from a file
      */
     void actionImport();
+
+    /**
+     * @brief Display merge settings to the user
+     */
+    void actionMerge();
 
     /**
      * @brief Creates a dialog for openning a new file
@@ -238,6 +244,11 @@ private slots:
     void startImportPorcess(StringParser::TranslationParsingModes);
 
     /**
+     * @brief Starts the actual merge process
+     */
+    void startMergeProcess(MergeWidget::MergeKind);
+
+    /**
      * @brief Updates the windows stylesheet
      *
      * @param cssFileName   The file name of the CSS to load
@@ -313,6 +324,11 @@ private:
      */
     QPushButton *minimizeButton;
 #endif
+
+    /**
+     * @brief Widget displaying options for merging two files
+     */
+    MergeWidget * mergeWidget;
 
     /**
      * @brief The Preferences panel
