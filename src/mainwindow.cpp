@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "utils.h"
+#include "commentlineedit.h"
 
 #include <QDesktopWidget>
 #include <QFileDialog>
@@ -366,7 +367,7 @@ void MainWindow::addTableRow(int index){
     QLineEdit *contextItem = new QLineEdit();
     contextItem->setEnabled(userRow);
 
-    QLineEdit *commentItem = new QLineEdit();
+    CommentLineEdit *commentItem = new CommentLineEdit();
     commentItem->setEnabled(userRow);
 
     QSpinBox *contextIdItem = new QSpinBox();
@@ -588,7 +589,7 @@ void MainWindow::newTranslation(Translation pTr)
 
     }
 
-    if(trBehave.testFlag(NewTranslationsBehavior::Merge))
+    if(trBehave.testFlag(NewTranslationsBehavior::Merge) && !pTr.comment.startsWith("NEW "))
         pTr.comment = "NEW " + pTr.comment;
 
     translations.push_back(pTr);

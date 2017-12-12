@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     src/translation.cpp \
     src/stringparser.cpp \
     src/scriptparsewidget.cpp \
-    src/mergewidget.cpp
+    src/mergewidget.cpp \
+    src/commentlineedit.cpp
 
 HEADERS  += mainwindow.h \
     languagewidget.h \
@@ -34,7 +35,8 @@ HEADERS  += mainwindow.h \
     src/translation.h \
     src/stringparser.h \
     src/scriptparsewidget.h \
-    src/mergewidget.h
+    src/mergewidget.h \
+    src/commentlineedit.h
 
 FORMS    += mainwindow.ui \
     languagewidget.ui \
