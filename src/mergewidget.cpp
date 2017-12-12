@@ -9,8 +9,16 @@ MergeWidget::MergeWidget(QWidget *parent) : QWidget(parent)
 
 void MergeWidget::goMerge()
 {
-    if(mergeCombo->currentIndex() == 0) emit mergeOptionsSaved(MergeKind::MergeTrFile);
-    else if(mergeCombo->currentIndex() == 1) emit mergeOptionsSaved(MergeKind::MergeSourceCode);
+    MergeKind fmerge;
+    DuplicateBehavior fduplicate;
+
+    if(mergeCombo->currentIndex() == 0) fmerge = MergeKind::MergeTrFile;
+    else if(mergeCombo->currentIndex() == 1) fmerge = MergeKind::MergeSourceCode;
+
+    if(duplicatesCombo->currentIndex() == 0) fduplicate = DuplicateBehavior::Ignore;
+    else if(duplicatesCombo->currentIndex() == 1) fduplicate = DuplicateBehavior::NewContext;
+
+    emit mergeOptionsSaved(fmerge, fduplicate);
 }
 
 void MergeWidget::cancel()

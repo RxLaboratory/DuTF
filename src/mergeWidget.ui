@@ -84,7 +84,7 @@
              <item>
               <layout class="QFormLayout" name="importFormLayout">
                <property name="horizontalSpacing">
-                <number>3</number>
+                <number>30</number>
                </property>
                <property name="verticalSpacing">
                 <number>3</number>
@@ -105,6 +105,34 @@
                  <item>
                   <property name="text">
                    <string>Merge translations from a source code</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label">
+                 <property name="text">
+                  <string>File type</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_2">
+                 <property name="text">
+                  <string>Duplicates behavior</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QComboBox" name="duplicatesCombo">
+                 <item>
+                  <property name="text">
+                   <string>Ignore them</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Add them with &quot;imported&quot; as context</string>
                   </property>
                  </item>
                 </widget>

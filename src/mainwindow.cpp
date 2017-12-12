@@ -167,6 +167,7 @@ void MainWindow::actionAddRow()
 
 void MainWindow::actionImport()
 {
+    trBehave = NewTranslationsBehavior::Normal;
     cleanOnImport = true;
     scriptParsePreferences->setMode(ScriptParseWidget::Mode::ImportMerge);
     mainStack->setCurrentIndex(4);
@@ -181,6 +182,7 @@ void MainWindow::actionMerge()
 
 void MainWindow::actionOpen()
 {
+    trBehave = NewTranslationsBehavior::Normal;
 
     //get file
     QString fileName = QFileDialog::getOpenFileName(this,"Open a translation file","","JSON (*.json);;Text files (*.txt);;All files (*.*)");
@@ -569,6 +571,20 @@ void MainWindow::newLanguage(QStringList language)
 
 void MainWindow::newTranslation(Translation pTr)
 {
+    if(trBehave == NewTranslationsBehavior::IgnoreExisting)
+    {
+        if(std::find(translations.begin(), translations.end(), pTr) != translations.end()) return; // Ignore
+    }
+    else if(trBehave == NewTranslationsBehavior::NewContextForExisting)
+    {
+        auto it = std::find(translations.begin(), translations.end(), pTr);
+        if(it != translations.end())
+        {
+            pTr = *it; // Will copy contextId, translated and all...
+            pTr.context = "DT_Imported " + pTr.context;
+        }
+
+    }
     translations.push_back(pTr);
     addTableRowContent(pTr);
 }
@@ -815,9 +831,14 @@ void MainWindow::startImportPorcess(StringParser::TranslationParsingModes flags)
     //jsonParser->parseFile(&workingFile);
 }
 
-void MainWindow::startMergeProcess(MergeWidget::MergeKind mergeFlag)
+void MainWindow::startMergeProcess(MergeWidget::MergeKind mergeFlag, MergeWidget::DuplicateBehavior duplicateFlag)
 {
     // Json
+    if(duplicateFlag == MergeWidget::DuplicateBehavior::NewContext)
+        trBehave = NewTranslationsBehavior::NewContextForExisting;
+    else
+        trBehave = NewTranslationsBehavior::IgnoreExisting;
+
     if(mergeFlag == MergeWidget::MergeKind::MergeTrFile)
     {
         QString fileName = QFileDialog::getOpenFileName(this,
@@ -987,8 +1008,8 @@ void MainWindow::mapEvents(){
 
     // Merge
     connect(mergeWidget, SIGNAL(canceled()), this, SLOT(showMainPage()));
-    connect(mergeWidget, SIGNAL(mergeOptionsSaved(MergeWidget::MergeKind)), this,
-            SLOT(startMergeProcess(MergeWidget::MergeKind)));
+    connect(mergeWidget, SIGNAL(mergeOptionsSaved(MergeWidget::MergeKind, MergeWidget::DuplicateBehavior)), this,
+            SLOT(startMergeProcess(MergeWidget::MergeKind, MergeWidget::DuplicateBehavior)));
 
     // Window management
 #ifndef Q_OS_MAC

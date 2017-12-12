@@ -19,9 +19,14 @@ public:
         MergeSourceCode
     };
 
+    enum DuplicateBehavior{
+        Ignore,
+        NewContext
+    };
+
 signals:
 
-    void mergeOptionsSaved(MergeWidget::MergeKind);
+    void mergeOptionsSaved(MergeWidget::MergeKind, MergeWidget::DuplicateBehavior);
     void canceled();
 
 public slots:

@@ -52,6 +52,12 @@ public:
      */
     static MainWindow & instance();
 
+    enum NewTranslationsBehavior {
+        Normal = 0x0001,
+        IgnoreExisting = 0x0010,
+        NewContextForExisting = 0x0100
+    };
+
 private slots:
 
     /**
@@ -246,7 +252,7 @@ private slots:
     /**
      * @brief Starts the actual merge process
      */
-    void startMergeProcess(MergeWidget::MergeKind);
+    void startMergeProcess(MergeWidget::MergeKind, MergeWidget::DuplicateBehavior);
 
     /**
      * @brief Updates the windows stylesheet
@@ -289,6 +295,8 @@ private:
      * Used for drag n drop feature
      */
     QPoint dragPosition;
+
+    NewTranslationsBehavior trBehave = NewTranslationsBehavior::Normal;
 
     /**
      * @brief Timer used to create the table widgets
