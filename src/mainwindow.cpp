@@ -167,6 +167,7 @@ void MainWindow::actionAddRow()
 
 void MainWindow::actionImport()
 {
+    cleanOnImport = true;
     scriptParsePreferences->setMode(ScriptParseWidget::Mode::ImportMerge);
     mainStack->setCurrentIndex(4);
     return;
@@ -793,9 +794,14 @@ void MainWindow::startImportPorcess(StringParser::TranslationParsingModes flags)
 
     fillTableTimer.stop();
 
-    tableFreeIndex = 0;
-    languageWidget->clear();
-    workingFile.setFileName("");
+    if(cleanOnImport)
+    {
+        tableFreeIndex = 0;
+        languageWidget->clear();
+        workingFile.setFileName("");
+    }
+
+    cleanOnImport = false;
 
     //waiting mode
     QString prettyName = utils::fileName(fileName);
@@ -811,31 +817,16 @@ void MainWindow::startImportPorcess(StringParser::TranslationParsingModes flags)
 
 void MainWindow::startMergeProcess(MergeWidget::MergeKind mergeFlag)
 {
-    QString fileName;
-    if(mergeFlag == MergeWidget::MergeKind::MergeSourceCode)
-        fileName = QFileDialog::getOpenFileName(this,
-                                                    tr("Open a source code file"),
-                                                    "",
-                                                    "All files (*.*)");
-    else if(mergeFlag == MergeWidget::MergeKind::MergeTrFile)
-        fileName = QFileDialog::getOpenFileName(this,
-                                                tr("Open a translation file"),
-                                                "",
-                                                "JSON (*.json);;Text files (*.txt);;All files (*.*)");
-    else
-    {
-        return;
-    }
-
-    if(fileName.isEmpty()) return; // Dialog canceled
-
-
-    QFile checkFile(fileName);
-    if (!checkFile.exists()) return;
-
     // Json
     if(mergeFlag == MergeWidget::MergeKind::MergeTrFile)
     {
+        QString fileName = QFileDialog::getOpenFileName(this,
+                                                tr("Open a translation file"),
+                                                "",
+                                                "JSON (*.json);;Text files (*.txt);;All files (*.*)");
+        if(fileName.isEmpty()) return; // Dialog canceled
+        QFile checkFile(fileName);
+        if (!checkFile.exists()) return;
         // Restart table
         fillTableTimer.stop();
 
@@ -847,6 +838,12 @@ void MainWindow::startMergeProcess(MergeWidget::MergeKind mergeFlag)
 
         //parse
         jsonParser.preParseFile(fileName);
+    }
+    else if(mergeFlag == MergeWidget::MergeKind::MergeSourceCode)
+    {
+        cleanOnImport = true;
+        scriptParsePreferences->setMode(ScriptParseWidget::Mode::ImportMerge);
+        mainStack->setCurrentIndex(4);
     }
 }
 
@@ -978,6 +975,9 @@ void MainWindow::mapEvents(){
 
     // Import / Merge
     connect(scriptParsePreferences, SIGNAL(canceled()), this, SLOT(showMainPage()));
+    connect(scriptParsePreferences, &ScriptParseWidget::canceled, this, [this]{
+        cleanOnImport = false;
+    });
     connect(scriptParsePreferences, SIGNAL(importOptionsSaved(StringParser::TranslationParsingModes)), this, SLOT(showMainPage()));
     connect(scriptParsePreferences, SIGNAL(importOptionsSaved(StringParser::TranslationParsingModes)), this,
             SLOT(startImportPorcess(StringParser::TranslationParsingModes)));

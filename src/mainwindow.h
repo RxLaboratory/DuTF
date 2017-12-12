@@ -280,6 +280,11 @@ private:
     void mapEvents();
 
     /**
+     * @brief Used to tell if a script import is a poart of a merge or not
+     */
+    bool cleanOnImport = false;
+
+    /**
      * @brief Drag position
      * Used for drag n drop feature
      */
