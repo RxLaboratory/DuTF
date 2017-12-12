@@ -55,8 +55,10 @@ public:
     enum NewTranslationsBehavior {
         Normal = 0x0001,
         IgnoreExisting = 0x0010,
-        NewContextForExisting = 0x0100
+        NewContextForExisting = 0x0100,
+        Merge = 0x1000
     };
+    Q_DECLARE_FLAGS(TranslationBehaviors, NewTranslationsBehavior)
 
 private slots:
 
@@ -296,7 +298,7 @@ private:
      */
     QPoint dragPosition;
 
-    NewTranslationsBehavior trBehave = NewTranslationsBehavior::Normal;
+    TranslationBehaviors trBehave;
 
     /**
      * @brief Timer used to create the table widgets
@@ -405,5 +407,8 @@ protected:
     bool eventFilter(QObject *obj, QEvent *event);
     void resizeEvent(QResizeEvent *event);
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(MainWindow::TranslationBehaviors)
+Q_DECLARE_METATYPE(MainWindow::TranslationBehaviors)
 
 #endif // MAINWINDOW_H

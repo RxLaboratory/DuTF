@@ -167,7 +167,8 @@ void MainWindow::actionAddRow()
 
 void MainWindow::actionImport()
 {
-    trBehave = NewTranslationsBehavior::Normal;
+    trBehave = 0;
+    trBehave.setFlag(NewTranslationsBehavior::Normal);
     cleanOnImport = true;
     scriptParsePreferences->setMode(ScriptParseWidget::Mode::ImportMerge);
     mainStack->setCurrentIndex(4);
@@ -182,7 +183,8 @@ void MainWindow::actionMerge()
 
 void MainWindow::actionOpen()
 {
-    trBehave = NewTranslationsBehavior::Normal;
+    trBehave = 0;
+    trBehave.setFlag(NewTranslationsBehavior::Normal);
 
     //get file
     QString fileName = QFileDialog::getOpenFileName(this,"Open a translation file","","JSON (*.json);;Text files (*.txt);;All files (*.*)");
@@ -571,11 +573,11 @@ void MainWindow::newLanguage(QStringList language)
 
 void MainWindow::newTranslation(Translation pTr)
 {
-    if(trBehave == NewTranslationsBehavior::IgnoreExisting)
+    if(trBehave.testFlag(NewTranslationsBehavior::IgnoreExisting))
     {
         if(std::find(translations.begin(), translations.end(), pTr) != translations.end()) return; // Ignore
     }
-    else if(trBehave == NewTranslationsBehavior::NewContextForExisting)
+    else if(trBehave.testFlag(NewTranslationsBehavior::NewContextForExisting))
     {
         auto it = std::find(translations.begin(), translations.end(), pTr);
         if(it != translations.end())
@@ -585,6 +587,10 @@ void MainWindow::newTranslation(Translation pTr)
         }
 
     }
+
+    if(trBehave.testFlag(NewTranslationsBehavior::Merge))
+        pTr.comment = "NEW " + pTr.comment;
+
     translations.push_back(pTr);
     addTableRowContent(pTr);
 }
@@ -833,12 +839,14 @@ void MainWindow::startImportPorcess(StringParser::TranslationParsingModes flags)
 
 void MainWindow::startMergeProcess(MergeWidget::MergeKind mergeFlag, MergeWidget::DuplicateBehavior duplicateFlag)
 {
-    // Json
+    trBehave = 0;
+    trBehave.setFlag(NewTranslationsBehavior::Merge);
     if(duplicateFlag == MergeWidget::DuplicateBehavior::NewContext)
-        trBehave = NewTranslationsBehavior::NewContextForExisting;
+        trBehave.setFlag(NewTranslationsBehavior::NewContextForExisting);
     else
-        trBehave = NewTranslationsBehavior::IgnoreExisting;
+        trBehave.setFlag(NewTranslationsBehavior::IgnoreExisting);
 
+    // Json
     if(mergeFlag == MergeWidget::MergeKind::MergeTrFile)
     {
         QString fileName = QFileDialog::getOpenFileName(this,
@@ -996,9 +1004,10 @@ void MainWindow::mapEvents(){
 
     // Import / Merge
     connect(scriptParsePreferences, SIGNAL(canceled()), this, SLOT(showMainPage()));
-    connect(scriptParsePreferences, &ScriptParseWidget::canceled, this, [this]{
+    /*connect(scriptParsePreferences, &ScriptParseWidget::canceled, this, [this]{
         cleanOnImport = false;
     });
+    */
     connect(scriptParsePreferences, SIGNAL(importOptionsSaved(StringParser::TranslationParsingModes)), this, SLOT(showMainPage()));
     connect(scriptParsePreferences, SIGNAL(importOptionsSaved(StringParser::TranslationParsingModes)), this,
             SLOT(startImportPorcess(StringParser::TranslationParsingModes)));
