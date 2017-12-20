@@ -184,7 +184,7 @@ Dutranslator.getAvailable = function ()
           
           // Determine the language name and the language id by reading the file
           // Values are stored at the top so it should be fase
-          var file = new File(folder + "/" + fileName);
+          var file = new File(folder.fullName + "/" + fileName);
           if(!file.open("r")) return 1; // Unable to open the file
          
           // Line by line reading
@@ -274,6 +274,7 @@ Dutranslator.getPrettyNames = function()
  * 0    Everything went ok
  * 1    The file linked to the given id can't be opened
  * 2    The json content doesn't match a translation file
+ * 3    No language match the given id
  */
 Dutranslator.setLanguage = function (languageId) {
 
@@ -307,6 +308,7 @@ Dutranslator.setLanguage = function (languageId) {
 
 		}
 	}
+     return 3;
 }
 
 /**
@@ -324,6 +326,44 @@ Dutranslator.setPrettyLanguage = function (languageName) {
     
     return Dutranslator.setLanguage(langId);
 }    
+
+/**
+ * Set the current language using application language (after effects, photoshop...)
+ * @return success code
+ * 0    Everything went ok
+  * -1   Can't access the application API
+  * -2   The application language is undefined
+  * -3    Unknown language application
+ * >0  Call to setLanguage(languageId) failed
+ */
+Dutranslator.setAppLanguage = function(){
+    if(typeof app == 'undefined') return -1;
+    if(typeof Language == 'undefined') return -1;
+    
+    var langNum = app.language;
+    if(langNum == 'undefined') return -2;
+    
+    var langId;
+    switch(langNum) {
+        case Language.ENGLISH: // English
+            langId = 'en'; break;
+        case Language.JAPANESE: // Japan
+            langId = 'jp'; break;
+        case Language.GERMAN: // Deutsh
+            langId = 'de'; break;
+        case Language.FRENCH: //French
+            langId = 'fr'; break;        
+        case Language.ITALIAN: // Italian
+            langId = 'it'; break;        
+        case Language.SPANISH: // Spannish
+            langId = 'es'; break;
+        default:
+            return -3;
+        
+     }
+     return Dutranslator.setLanguage(langId);
+    
+}
     
 /**
  * Translate a given string based on the current seted language
@@ -339,7 +379,6 @@ Dutranslator.setPrettyLanguage = function (languageName) {
 function tr(s, context, args) {
 	// Default args
     var useContextId = true;	
-    $.writeln (typeof(context));
     if(typeof(context) === 'string' || context instanceof String) useContextId = false;
     if(typeof(context) === 'undefined') context = -1;
     else if(context < 0) context = -1;

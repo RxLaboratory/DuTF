@@ -28,7 +28,7 @@ if(Dutranslator.setPrettyLanguage("Français") == 0)
 
 
 var names = Dutranslator.getPrettyNames();
-output += "Available languages: \n" + names + "\n";
+output += "Available languages: \n" + names.toString() + "\n";
 
 
 for(var i = 0; i < names.length; i++)
@@ -40,8 +40,15 @@ for(var i = 0; i < names.length; i++)
     output += "setPrettyLanguage took " + (end - start) + " ms\n";
     if(status != 0) output += "Setting the lang to " + names[i] + " went wrong, error code: " + status + "\n";
     else output += "Translation in " + names[i] + " of Launch Duik is \n   " + tr("Launch Duik") + "\n";       
+    output += "\nCurrent language is " + Dutranslator.current + "\n";
     output += "--------\n";
 }
 
+
 output += "\n\nTest ends.";
+output += "\nSetting App language:\nCode : " + Dutranslator.setAppLanguage() + "\n";
+var app;
+output += "\nCurrent language is " + Dutranslator.current + "\n";
 alert(output);
+
+
