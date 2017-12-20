@@ -5,6 +5,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TEMPLATE = app
 
+DEFINES += APPVERSION=\\\"0.6-Beta\\\"
+
 VPATH += ./src
 
 SOURCES += main.cpp\

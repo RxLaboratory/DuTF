@@ -2,6 +2,7 @@
 #include <QtDebug>
 #include <QApplication>
 #include <QTranslator>
+#include <QMessageBox>
 #include "mainwindow.h"
 
 PreferencesWidget::PreferencesWidget(QWidget *parent) :
@@ -15,47 +16,24 @@ PreferencesWidget::PreferencesWidget(QWidget *parent) :
 
     currentLanguage_ = -1;
 
-    //SQLite database
-    db = QSqlDatabase::addDatabase("QSQLITE");
-
-    //check if the file already exists, if not, extract it from resources
-    QString prefsPath = "";
-#ifdef Q_OS_MAC
-    prefsPath = QDir::homePath() + "/Dutranslator/prefs.s3db";
-#else
-    prefsPath = "prefs.s3db";
-#endif
-
-    QFile dbFile(prefsPath);
-
-    if (!dbFile.exists())
-    {
-        QFile dbResource(":/misc/prefs");
-        //on mac, we can not write inside the app, so create folder at home
-#ifdef Q_OS_MAC
-        QDir home = QDir::home();
-        home.mkdir("Dutranslator");
-#endif
-        //copy the default file from the resources
-        dbResource.copy(prefsPath);
-        QFile::setPermissions(prefsPath,QFileDevice::ReadUser | QFileDevice::WriteUser | QFileDevice::ReadGroup | QFileDevice::WriteGroup | QFileDevice::ReadOther | QFileDevice::WriteOther);
-    }
-
-    //open database
-    db.setDatabaseName(prefsPath);
-    db.open();
+    // Language
+    QString appLanguage = settings_.value("dutranslator/language").toString();
+    if(appLanguage == "/lang/fr")
+        languageBox->setCurrentIndex(1);
+    else if(appLanguage == ":/lang/es")
+        languageBox->setCurrentIndex(2);
+    else if(appLanguage == ":/lang/zh")
+        languageBox->setCurrentIndex(3);
 
     //get preferences
-    QSqlQuery q("SELECT css,toolBar FROM preferences WHERE user='default' ;");
-    // TODO fix "not positioned on a valid record" ???
-    q.next();
-    QString cssFile = q.value(0).toString();
-    int toolBar = q.value(1).toInt();
-    if (cssFile == "")
+    QString cssFile = settings_.value("dutranslator/css", "").toString();
+    int toolBar = settings_.value("dutranslator/toolBar", 0).toInt();
+
+    if (cssFile == "default")
     {
         styleBox->setCurrentIndex(1);
     }
-    else if (cssFile == ":/styles/default")
+    else if (cssFile == ":/styles/default" || cssFile == "")
     {
         styleBox->setCurrentIndex(0);
     }
@@ -64,6 +42,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent) :
         styleBox->setCurrentIndex(2);
         styleBox->setItemData(2,cssFile);
     }
+
 
     toolBarStyleBox->setCurrentIndex(toolBar);
 }
@@ -80,14 +59,15 @@ void PreferencesWidget::on_styleBox_currentIndexChanged(int index)
         updateCSSButton->setEnabled(false);
         styleBox->setToolTip("Dutranslator default style");
         //update prefs database
-        QSqlQuery("UPDATE preferences SET css = ':/styles/default' WHERE user = 'default' ;");
+        settings_.setValue("dutranslator/css", ":/styles/default");
     }
     else if (index == 1)
     {
         updateCSSButton->setEnabled(false);
         styleBox->setToolTip("Current system style");
         //update prefs database
-        QSqlQuery q("UPDATE preferences SET css = '' WHERE user = 'default' ;");
+        settings_.setValue("dutranslator/css", "default");
+
     }
     else if (index == 2)
     {
@@ -99,7 +79,7 @@ void PreferencesWidget::on_styleBox_currentIndexChanged(int index)
         if (checkFile.exists()) styleBox->setItemData(2,cssFileName);
         styleBox->setToolTip("Your own style");
         //update prefs database
-        QSqlQuery("UPDATE preferences SET css = \"" + cssFileName + "\" WHERE user = 'default' ;");
+        settings_.setValue("dutranslator/css", cssFileName);
     }
 
     emit changeCSS(styleBox->currentData().toString());
@@ -109,7 +89,7 @@ void PreferencesWidget::on_toolBarStyleBox_currentIndexChanged(int index)
 {
     emit changeToolBarAppearance(index);
     //update prefs database
-    QSqlQuery q("UPDATE preferences SET toolBar = " + QString::number(index) + " WHERE user = 'default' ;");
+    settings_.setValue("dutranslator/toolBar", index);
 }
 
 void PreferencesWidget::on_updateCSSButton_clicked()
@@ -132,25 +112,30 @@ void PreferencesWidget::on_languageBox_currentIndexChanged(int index)
 
     if(index == currentLanguage_) return;
     currentLanguage_ = index;
-    QTranslator tr;
 
+    QString lang = "default";
     switch (index) {
-    case 0:
-        break;
     case 1:
-        tr.load(":/lang/fr");
+        lang = ":/lang/fr";
         break;
     case 2:
-        tr.load(":/lang/es");
+        lang = ":/lang/es";
         break;
     case 3:
-        tr.load(":/lang/zh");
+        lang = ":/lang/zh";
         break;
     default:
         break;
     }
 
-    QApplication::instance()->installTranslator(&tr);
-    retranslateUi(&(MainWindow::instance()));
-}
+    if(settings_.value("dutranslator/language").toString() == lang) return;
 
+    settings_.setValue("dutranslator/language", lang);
+
+    QMessageBox mb(QMessageBox::Information,
+                   tr("Dutranslator"), tr("You will need to restart the application to load the new language."),
+                   QMessageBox::Ok,
+                   this,
+                   Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
+    mb.exec();
+}

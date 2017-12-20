@@ -3,9 +3,7 @@
 
 #include "ui_preferenceswidget.h"
 #include <QFileDialog>
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlError>
+#include <QSettings>
 
 class PreferencesWidget : public QWidget, private Ui::PreferencesWidget
 {
@@ -81,10 +79,11 @@ private slots:
     void on_languageBox_currentIndexChanged(int index);
 
 private:
+
     /**
-     * @brief database access to the preferences file (SQLite)
+     * @brief App settings
      */
-    QSqlDatabase db;
+    QSettings settings_;
 
     /**
      * @brief Current index in the language combo
