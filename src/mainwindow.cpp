@@ -675,6 +675,8 @@ void MainWindow::removeTableRow(int index)
     // Update ui
     displayTable->selectRow(index); // To avoid automatic scroll
     displayTable->removeRow(index);
+
+    tableFreeIndex--;
 }
 
 void MainWindow::search(QString s)
