@@ -8,8 +8,8 @@
 #include <QLabel>
 #include <QProgressBar>
 #include <QTimer>
-
 #include <vector>
+#include <QSettings>
 
 #include "ui_mainwindow.h"
 
@@ -397,6 +397,11 @@ private:
      * @brief The current translation working file
      */
     QFile workingFile;
+
+    /**
+     * @brief The application settings
+     */
+    QSettings settings_;
 
 protected:
 

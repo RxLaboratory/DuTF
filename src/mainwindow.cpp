@@ -188,9 +188,12 @@ void MainWindow::actionOpen()
     trBehave.setFlag(NewTranslationsBehavior::Normal);
 
     //get file
-    QString fileName = QFileDialog::getOpenFileName(this,"Open a translation file","","JSON (*.json);;Text files (*.txt);;All files (*.*)");
+    QString fileName = QFileDialog::getOpenFileName(this,"Open a translation file",settings_.value("dutranslator/openFolder","").toString(),"JSON (*.json);;Text files (*.txt);;All files (*.*)");
 
     if(fileName.isEmpty()) return; // Dialog canceled
+
+    settings_.setValue("dutranslator/openFolder",QFileInfo(fileName).absolutePath());
+
     fillTableTimer.stop();
 
     QFile checkFile(fileName);
@@ -854,9 +857,12 @@ void MainWindow::startMergeProcess(MergeWidget::MergeKind mergeFlag, MergeWidget
     {
         QString fileName = QFileDialog::getOpenFileName(this,
                                                 tr("Open a translation file"),
-                                                "",
+                                                settings_.value("dutranslator/openFolder","").toString(),
                                                 "JSON (*.json);;Text files (*.txt);;All files (*.*)");
         if(fileName.isEmpty()) return; // Dialog canceled
+
+        settings_.setValue("dutranslator/openFolder",QFileInfo(fileName).absolutePath());
+
         QFile checkFile(fileName);
         if (!checkFile.exists()) return;
         // Restart table
