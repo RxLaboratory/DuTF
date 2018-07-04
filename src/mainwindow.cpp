@@ -574,14 +574,16 @@ void MainWindow::newLanguage(QStringList language)
 
 void MainWindow::newTranslation(Translation pTr)
 {
+    if (pTr.source == "") return; // Ignore empty
+
     if(trBehave.testFlag(NewTranslationsBehavior::IgnoreExisting))
     {
-        if(std::find(translations.begin(), translations.end(), pTr) != translations.end()) return; // Ignore
+        if (std::find(translations.begin(), translations.end(), pTr) != translations.end()) return; // Ignore
     }
     else if(trBehave.testFlag(NewTranslationsBehavior::NewContextForExisting))
     {
         auto it = std::find(translations.begin(), translations.end(), pTr);
-        if(it != translations.end())
+        if (it != translations.end())
         {
             pTr = *it; // Will copy contextId, translated and all...
             pTr.context = "DT_Imported " + pTr.context;
