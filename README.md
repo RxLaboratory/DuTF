@@ -1,11 +1,11 @@
 # Dutranslator
 Translation framework for Adobe ExtendScript/JavaScript UI
 
-/src/ Contains the translation tool source
+`/src/` Contains the translation tool source
 
-/resources/ Contains needed files to run the tools
+`/resources/` Contains needed files to run the tools
 
-/examples/ Contains example and test translations
+`/examples/` Contains example and test translations
 
 ## Contribute to the translations of Dustranlator
 
@@ -52,7 +52,7 @@ Just open the `Dutranslator.pro` file with Qt Creator and follow the steps.
 ### From the terminal :v:
 
 1. `cd` into the project directory;
-2. run `qmake Dutranslator.pro`, this will generate a Makefille;
+2. run `qmake Dutranslator.pro`, this will generate a `Makefile`;
 
 	You can run this command only when the pro file has been modified.
 
