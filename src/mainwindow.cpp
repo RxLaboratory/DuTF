@@ -242,8 +242,8 @@ void MainWindow::actionSave()
         QSpinBox *contextIdBox = (QSpinBox*)displayTable->cellWidget(row,5);
 
         // Access values
-        QString original = utils::escape(originalEdit->toPlainText());
-        QString translated = utils::escape(translatedEdit->toPlainText());
+        QString original = originalEdit->toPlainText();
+        QString translated = translatedEdit->toPlainText();
         QString context = utils::escape(contextEdit->text());
         QString comment = utils::escape(commentEdit->text());
         int contextId = contextIdBox->value();
