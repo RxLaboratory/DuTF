@@ -261,7 +261,7 @@ private slots:
      *
      * @param cssFileName   The file name of the CSS to load
      */
-    void updateCSS(QString cssFileName);
+    void updateCSS(QString cssFileName, QString appName = "");
 
 private:
 
@@ -403,6 +403,7 @@ private:
      */
     QSettings settings_;
 
+    QString loadCSS(QStringList cssFileNames);
 protected:
 
     void dragEnterEvent(QDragEnterEvent *event);

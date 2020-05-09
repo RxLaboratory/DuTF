@@ -25,5 +25,6 @@
         <file alias="lang/fr">../resources/languages/app_fr.qm</file>
         <file alias="lang/es">../resources/languages/app_es.qm</file>
         <file alias="lang/zh">../resources/languages/app_zh_cn.qm</file>
+        <file alias="styles/default-values">default-values.rui</file>
     </qresource>
 </RCC>
