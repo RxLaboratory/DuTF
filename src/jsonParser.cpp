@@ -47,7 +47,6 @@ void JsonParser::parseDocument(QByteArray raw)
 
     // Look for translations
 
-
     int i = 0;
     QJsonArray transList = appTr[1].toObject()["translations"].toArray();
     float incProgress = 100 / float(transList.size());

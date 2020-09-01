@@ -16,6 +16,7 @@ SOURCES += main.cpp\
     parser.cpp \
     jsonParser.cpp \
     searchwidget.cpp \
+    src/updatewidget.cpp \
     utils.cpp \
     src/rowbuttonswidget.cpp \
     src/preferenceswidget.cpp \
@@ -31,6 +32,7 @@ HEADERS  += mainwindow.h \
     parser.h \
     jsonParser.h \
     searchwidget.h \
+    src/updatewidget.h \
     utils.h \
     src/rowbuttonswidget.h \
     src/preferenceswidget.h \
@@ -47,7 +49,8 @@ FORMS    += mainwindow.ui \
     src/rowbuttonswidget.ui \
     src/preferenceswidget.ui \
     src/scriptParseWidget.ui \
-    src/mergeWidget.ui
+    src/mergeWidget.ui \
+    src/updatewidget.ui
 
 RESOURCES += resources.qrc
 
@@ -60,3 +63,8 @@ RC_ICONS = ./resources/icons/dutr_win.ico
 #MAC ICON
 ICON = ./resources/icons/dutr_mac.icns
 
+unix {
+    # Fix issue with c++ version used to compile Qt in some distros (Ubuntu) with Qt <= 5.12.
+    # Need to check the version of c++ used with distros providing Qt > 12
+    equals(QT_MAJOR_VERSION, 5):lessThan(QT_MINOR_VERSION, 13):QMAKE_CXXFLAGS += "-fno-sized-deallocation"
+}

@@ -9,14 +9,14 @@ MergeWidget::MergeWidget(QWidget *parent) : QWidget(parent)
 
 void MergeWidget::goMerge()
 {
-    MergeKind fmerge;
+    FileType fmerge;
     DuplicateBehavior fduplicate;
 
-    if(mergeCombo->currentIndex() == 0) fmerge = MergeKind::MergeTrFile;
-    else if(mergeCombo->currentIndex() == 1) fmerge = MergeKind::MergeSourceCode;
+    if(mergeCombo->currentIndex() == 0) fmerge = FileType::TrFile;
+    else if(mergeCombo->currentIndex() == 1) fmerge = FileType::SourceCode;
 
     if(duplicatesCombo->currentIndex() == 0) fduplicate = DuplicateBehavior::Ignore;
-    else if(duplicatesCombo->currentIndex() == 1) fduplicate = DuplicateBehavior::NewContext;
+    else if(duplicatesCombo->currentIndex() == 2) fduplicate = DuplicateBehavior::NewContext;
 
     emit mergeOptionsSaved(fmerge, fduplicate);
 }

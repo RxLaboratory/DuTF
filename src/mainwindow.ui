@@ -49,7 +49,7 @@
     <item>
      <widget class="QStackedWidget" name="mainStack">
       <property name="currentIndex">
-       <number>5</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="tablePage">
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -292,6 +292,9 @@
       <widget class="QWidget" name="mergePage">
        <layout class="QVBoxLayout" name="mergePageLayout"/>
       </widget>
+      <widget class="QWidget" name="updatePage">
+       <layout class="QVBoxLayout" name="updatePageLayout"/>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -465,6 +468,21 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="btn_actionUpdate">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/merge</normaloff>:/icons/merge</iconset>
+   </property>
+   <property name="text">
+    <string>Update</string>
+   </property>
+   <property name="toolTip">
+    <string>Update source strings</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+U</string>
    </property>
   </action>
  </widget>

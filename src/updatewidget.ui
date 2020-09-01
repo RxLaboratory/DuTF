@@ -1,35 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MergeWidget</class>
- <widget class="QWidget" name="MergeWidget">
+ <class>UpdateWidget</class>
+ <widget class="QWidget" name="UpdateWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>633</width>
-    <height>373</height>
+    <width>581</width>
+    <height>252</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
-   <property name="spacing">
-    <number>0</number>
-   </property>
-   <property name="leftMargin">
-    <number>0</number>
-   </property>
-   <property name="topMargin">
-    <number>0</number>
-   </property>
-   <property name="rightMargin">
-    <number>0</number>
-   </property>
-   <property name="bottomMargin">
-    <number>0</number>
-   </property>
-   <item>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
     <widget class="QScrollArea" name="scrollArea">
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
@@ -42,8 +27,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>633</width>
-        <height>373</height>
+        <width>565</width>
+        <height>236</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -71,7 +56,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Merge settings</string>
+             <string>Update source Settings</string>
             </property>
            </widget>
           </item>
@@ -119,7 +104,7 @@
                <item row="1" column="0">
                 <widget class="QLabel" name="label_2">
                  <property name="text">
-                  <string>Duplicates behavior</string>
+                  <string>Orphans</string>
                  </property>
                 </widget>
                </item>
@@ -127,12 +112,12 @@
                 <widget class="QComboBox" name="duplicatesCombo">
                  <item>
                   <property name="text">
-                   <string>Ignore</string>
+                   <string>Keep with a &quot;removed&quot; comment</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string>Add them with &quot;imported&quot; as context</string>
+                   <string>Remove</string>
                   </property>
                  </item>
                 </widget>
@@ -147,7 +132,7 @@
                   <string>Cancel</string>
                  </property>
                  <property name="icon">
-                  <iconset resource="resources.qrc">
+                  <iconset resource="src/resources.qrc">
                    <normaloff>:/icons/close</normaloff>:/icons/close</iconset>
                  </property>
                 </widget>
@@ -158,7 +143,7 @@
                   <string>Go</string>
                  </property>
                  <property name="icon">
-                  <iconset resource="resources.qrc">
+                  <iconset resource="src/resources.qrc">
                    <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
                  </property>
                 </widget>
@@ -204,7 +189,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="resources.qrc"/>
+  <include location="src/resources.qrc"/>
  </resources>
  <connections/>
 </ui>

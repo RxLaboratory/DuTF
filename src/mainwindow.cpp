@@ -58,6 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
     openMenu->addAction(btn_actionOpen);
     openMenu->addAction(btn_actionImport);
     openMenu->addAction(btn_actionMerge);
+    openMenu->addAction(btn_actionUpdate);
     menu_open->setMenu(openMenu);
     mainToolBar->insertAction(menu_save,menu_open);
 
@@ -81,6 +82,9 @@ MainWindow::MainWindow(QWidget *parent) :
     mergeWidget = new MergeWidget(this);
     mergePageLayout->addWidget(mergeWidget);
 
+    updateWidget = new UpdateWidget(this);
+    updatePageLayout->addWidget(updateWidget);
+
     // window buttons
 
 #ifndef Q_OS_MAC
@@ -99,6 +103,8 @@ MainWindow::MainWindow(QWidget *parent) :
     toolBarClicked = false;
     mainToolBar->installEventFilter(this);
 
+    //version
+    mainStatusBar->addWidget(new QLabel("v1.0.0-Beta1-"));
     //status
     statusLabel = new QLabel("");
     mainStatusBar->addWidget(statusLabel,10);
@@ -179,7 +185,11 @@ void MainWindow::actionImport()
 void MainWindow::actionMerge()
 {
    mainStack->setCurrentIndex(5);
-   return;
+}
+
+void MainWindow::actionUpdate()
+{
+    mainStack->setCurrentIndex(6);
 }
 
 void MainWindow::actionOpen()
@@ -234,21 +244,7 @@ void MainWindow::actionSave()
     //populate
     for (int row = 0; row < tableFreeIndex ; row++)
     {
-        // Access widgets
-        QTextEdit *originalEdit = (QTextEdit*)displayTable->cellWidget(row,1);
-        QTextEdit *translatedEdit = (QTextEdit*)displayTable->cellWidget(row,2);
-        QLineEdit *contextEdit = (QLineEdit*)displayTable->cellWidget(row,3);
-        QLineEdit *commentEdit = (QLineEdit*)displayTable->cellWidget(row,4);
-        QSpinBox *contextIdBox = (QSpinBox*)displayTable->cellWidget(row,5);
-
-        // Access values
-        QString original = originalEdit->toPlainText();
-        QString translated = translatedEdit->toPlainText();
-        QString context = utils::escape(contextEdit->text());
-        QString comment = utils::escape(commentEdit->text());
-        int contextId = contextIdBox->value();
-
-        Translation obj {original, translated, context, comment, contextId};
+        Translation obj = getTableRowContent(row);
         QJsonObject jRow = obj.toJson();
         transList.append(jRow);
     }
@@ -444,8 +440,6 @@ void MainWindow::addTableRowContent(Translation pTr){
 
     tableFreeIndex++;
 
-
-
 }
 
 void MainWindow::btn_generateTranslator_clicked()
@@ -579,22 +573,41 @@ void MainWindow::newTranslation(Translation pTr)
 {
     if (pTr.source == "") return; // Ignore empty
 
-    if(trBehave.testFlag(NewTranslationsBehavior::IgnoreExisting))
+    for (int row = 0; row < tableFreeIndex ; row++)
     {
-        if (std::find(translations.begin(), translations.end(), pTr) != translations.end()) return; // Ignore
-    }
-    else if(trBehave.testFlag(NewTranslationsBehavior::NewContextForExisting))
-    {
-        auto it = std::find(translations.begin(), translations.end(), pTr);
-        if (it != translations.end())
+        Translation cTr = getTableRowContent(row);
+        // If it already exists
+        if (cTr == pTr)
         {
-            pTr = *it; // Will copy contextId, translated and all...
-            pTr.context = "DT_Imported " + pTr.context;
-        }
+            if (trBehave.testFlag(NewTranslationsBehavior::Update))
+            {
+                QLineEdit *commentEdit = (QLineEdit*)displayTable->cellWidget(row,4);
+                QString comment = cTr.comment.replace("Removed - ", "");
+                commentEdit->setText(comment);
+            }
 
+            if (trBehave.testFlag(NewTranslationsBehavior::IgnoreDuplicates))
+                return;
+
+            if (trBehave.testFlag(NewTranslationsBehavior::NewContextForDuplicates))
+            {
+               pTr = cTr; // Will copy contextId, translated and all...
+               pTr.context = "Duplicate_Imported " + pTr.context;
+            }
+
+            break;
+        }
+        // If there is a source with the same context
+        if (pTr.source == cTr.source && pTr.context == cTr.context && pTr.contextId == cTr.contextId)
+        {
+            QLineEdit *commentEdit = (QLineEdit*)displayTable->cellWidget(row,4);
+            QString comment = cTr.comment.replace("Removed - ", "");
+            commentEdit->setText(comment);
+            return;
+        }
     }
 
-    if(trBehave.testFlag(NewTranslationsBehavior::Merge) && !pTr.comment.startsWith("NEW "))
+    if ( ( trBehave.testFlag(NewTranslationsBehavior::Merge) || trBehave.testFlag(NewTranslationsBehavior::Update) ) && !pTr.comment.startsWith("NEW "))
         pTr.comment = "NEW " + pTr.comment;
 
     translations.push_back(pTr);
@@ -648,6 +661,19 @@ void MainWindow::parsingFailed(Parser::ParsingErrors flag)
 
 void MainWindow::parsingFinished()
 {
+    //remove removed
+    if (trBehave.testFlag(NewTranslationsBehavior::RemoveOrphans))
+    {
+        for (int row = tableFreeIndex -1; row >= 0 ; row--)
+        {
+            QLineEdit *commentEdit = (QLineEdit*)displayTable->cellWidget(row,4);
+            if (commentEdit->text().startsWith("Removed - "))
+            {
+                removeTableRow(row);
+            }
+        }
+    }
+
     //resize sections
     clearTableToTheEnd();
     displayTable->resizeColumnsToContents();
@@ -677,6 +703,26 @@ void MainWindow::removeTableRow(int index)
     displayTable->removeRow(index);
 
     tableFreeIndex--;
+}
+
+Translation MainWindow::getTableRowContent(int index)
+{
+    // Access widgets
+    QTextEdit *originalEdit = (QTextEdit*)displayTable->cellWidget(index,1);
+    QTextEdit *translatedEdit = (QTextEdit*)displayTable->cellWidget(index,2);
+    QLineEdit *contextEdit = (QLineEdit*)displayTable->cellWidget(index,3);
+    QLineEdit *commentEdit = (QLineEdit*)displayTable->cellWidget(index,4);
+    QSpinBox *contextIdBox = (QSpinBox*)displayTable->cellWidget(index,5);
+
+    // Access values
+    QString original = originalEdit->toPlainText();
+    QString translated = translatedEdit->toPlainText();
+    QString context = utils::escape(contextEdit->text());
+    QString comment = utils::escape(commentEdit->text());
+    int contextId = contextIdBox->value();
+
+    Translation obj {original, translated, context, comment, contextId};
+    return obj;
 }
 
 void MainWindow::search(QString s)
@@ -778,7 +824,7 @@ void MainWindow::showMainPage()
     mainStack->setCurrentIndex(0);
 }
 
-void MainWindow::startExportPorcess(StringParser::TranslationParsingModes flags)
+void MainWindow::startExportProcess(StringParser::TranslationParsingModes flags)
 {
     //get file
     QString fileName = QFileDialog::getOpenFileName(this,
@@ -812,7 +858,7 @@ void MainWindow::startExportPorcess(StringParser::TranslationParsingModes flags)
     stringParser.preParseFile(fileName);
 }
 
-void MainWindow::startImportPorcess(StringParser::TranslationParsingModes flags)
+void MainWindow::startImportProcess(StringParser::TranslationParsingModes flags)
 {
     //get file
     QString fileName = QFileDialog::getOpenFileName(this,
@@ -845,17 +891,18 @@ void MainWindow::startImportPorcess(StringParser::TranslationParsingModes flags)
     //jsonParser->parseFile(&workingFile);
 }
 
-void MainWindow::startMergeProcess(MergeWidget::MergeKind mergeFlag, MergeWidget::DuplicateBehavior duplicateFlag)
+void MainWindow::startMergeProcess(MergeWidget::FileType mergeFlag, MergeWidget::DuplicateBehavior duplicateFlag)
 {
     trBehave = 0;
     trBehave.setFlag(NewTranslationsBehavior::Merge);
+
     if(duplicateFlag == MergeWidget::DuplicateBehavior::NewContext)
-        trBehave.setFlag(NewTranslationsBehavior::NewContextForExisting);
-    else
-        trBehave.setFlag(NewTranslationsBehavior::IgnoreExisting);
+        trBehave.setFlag(NewTranslationsBehavior::NewContextForDuplicates);
+    else if (duplicateFlag == MergeWidget::DuplicateBehavior::Ignore)
+        trBehave.setFlag(NewTranslationsBehavior::IgnoreDuplicates);
 
     // Json
-    if(mergeFlag == MergeWidget::MergeKind::MergeTrFile)
+    if(mergeFlag == MergeWidget::FileType::TrFile)
     {
         QString fileName = QFileDialog::getOpenFileName(this,
                                                 tr("Open a translation file"),
@@ -879,7 +926,60 @@ void MainWindow::startMergeProcess(MergeWidget::MergeKind mergeFlag, MergeWidget
         //parse
         jsonParser.preParseFile(fileName);
     }
-    else if(mergeFlag == MergeWidget::MergeKind::MergeSourceCode)
+    else if(mergeFlag == MergeWidget::FileType::SourceCode)
+    {
+        cleanOnImport = true;
+        scriptParsePreferences->setMode(ScriptParseWidget::Mode::ImportMerge);
+        mainStack->setCurrentIndex(4);
+    }
+}
+
+void MainWindow::startUpdateProcess(UpdateWidget::FileType typeFlag, UpdateWidget::OrphansBehavior orphansFlag)
+{
+    trBehave = 0;
+    trBehave.setFlag(NewTranslationsBehavior::Update);
+    trBehave.setFlag(NewTranslationsBehavior::IgnoreDuplicates);
+
+    // Comment all current
+    for (int row = 0; row < tableFreeIndex ; row++)
+    {
+        QLineEdit *commentEdit = (QLineEdit*)displayTable->cellWidget(row,4);
+        QString comment = "Removed - " + commentEdit->text();
+        commentEdit->setText(comment);
+        translations[row].comment = comment;
+    }
+
+    if (orphansFlag == UpdateWidget::OrphansBehavior::KeepAndComment)
+        trBehave.setFlag(NewTranslationsBehavior::CommentOrphans);
+    else if (orphansFlag == UpdateWidget::OrphansBehavior::Remove)
+          trBehave.setFlag(NewTranslationsBehavior::RemoveOrphans);
+
+    // Json
+    if(typeFlag == UpdateWidget::FileType::TrFile)
+    {
+        QString fileName = QFileDialog::getOpenFileName(this,
+                                                tr("Open a translation file"),
+                                                settings_.value("dutranslator/openFolder","").toString(),
+                                                "JSON (*.json);;Text files (*.txt);;All files (*.*)");
+        if (fileName.isEmpty()) return; // Dialog canceled
+
+        settings_.setValue("dutranslator/openFolder",QFileInfo(fileName).absolutePath());
+
+        QFile checkFile(fileName);
+        if (!checkFile.exists()) return;
+        // Restart table
+        fillTableTimer.stop();
+
+        //waiting mode
+        QString prettyName = utils::fileName(fileName);
+        setWaiting(true,"Loading " + prettyName + "...");
+        mainStatusBar->showMessage("Loading...");
+        statusLabel->setText(prettyName);
+
+        //parse
+        jsonParser.preParseFile(fileName);
+    }
+    else if(typeFlag == UpdateWidget::FileType::SourceCode)
     {
         cleanOnImport = true;
         scriptParsePreferences->setMode(ScriptParseWidget::Mode::ImportMerge);
@@ -1061,6 +1161,7 @@ void MainWindow::mapEvents(){
     connect(this->btn_actionOpen, SIGNAL(triggered(bool)), this, SLOT(actionOpen()));
     connect(this->btn_actionImport, SIGNAL(triggered(bool)), this, SLOT(actionImport()));
     connect(this->btn_actionMerge, SIGNAL(triggered(bool)), this, SLOT(actionMerge()));
+    connect(this->btn_actionUpdate, SIGNAL(triggered(bool)), this, SLOT(actionUpdate()));
     connect(this->menu_open, SIGNAL(triggered(bool)), this, SLOT(actionOpen()));
     connect(this->btn_actionAbout, SIGNAL(triggered(bool)), this, SLOT(actionAbout()));
     connect(this->btn_actionPreferences, SIGNAL(triggered(bool)), this, SLOT(actionPreferences(bool)));
@@ -1087,15 +1188,20 @@ void MainWindow::mapEvents(){
     */
     connect(scriptParsePreferences, SIGNAL(importOptionsSaved(StringParser::TranslationParsingModes)), this, SLOT(showMainPage()));
     connect(scriptParsePreferences, SIGNAL(importOptionsSaved(StringParser::TranslationParsingModes)), this,
-            SLOT(startImportPorcess(StringParser::TranslationParsingModes)));
+            SLOT(startImportProcess(StringParser::TranslationParsingModes)));
     connect(scriptParsePreferences, SIGNAL(exportOptionsSaved(StringParser::TranslationParsingModes)), this, SLOT(showMainPage()));
     connect(scriptParsePreferences, SIGNAL(exportOptionsSaved(StringParser::TranslationParsingModes)), this,
-            SLOT(startExportPorcess(StringParser::TranslationParsingModes)));
+            SLOT(startExportProcess(StringParser::TranslationParsingModes)));
 
     // Merge
     connect(mergeWidget, SIGNAL(canceled()), this, SLOT(showMainPage()));
-    connect(mergeWidget, SIGNAL(mergeOptionsSaved(MergeWidget::MergeKind, MergeWidget::DuplicateBehavior)), this,
-            SLOT(startMergeProcess(MergeWidget::MergeKind, MergeWidget::DuplicateBehavior)));
+    connect(mergeWidget, SIGNAL(mergeOptionsSaved(MergeWidget::FileType, MergeWidget::DuplicateBehavior)), this,
+            SLOT(startMergeProcess(MergeWidget::FileType, MergeWidget::DuplicateBehavior)));
+
+    // Update
+    connect(updateWidget, SIGNAL(canceled()), this, SLOT(showMainPage()));
+    connect(updateWidget, SIGNAL(updateOptionsSaved(UpdateWidget::FileType, UpdateWidget::OrphansBehavior)), this,
+            SLOT(startUpdateProcess(UpdateWidget::FileType, UpdateWidget::OrphansBehavior)));
 
     // Window management
 #ifndef Q_OS_MAC

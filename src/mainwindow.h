@@ -22,6 +22,7 @@
 #include "preferenceswidget.h"
 #include "scriptparsewidget.h"
 #include "mergewidget.h"
+#include "updatewidget.h"
 #include "translation.h"
 
 
@@ -53,10 +54,13 @@ public:
     static MainWindow & instance();
 
     enum NewTranslationsBehavior {
-        Normal = 0x0001,
-        IgnoreExisting = 0x0010,
-        NewContextForExisting = 0x0100,
-        Merge = 0x1000
+        Normal = 1 << 0,
+        IgnoreDuplicates = 1 << 1,
+        NewContextForDuplicates = 1 << 2,
+        RemoveOrphans = 1 << 3,
+        CommentOrphans = 1 << 4,
+        Merge = 1 << 5,
+        Update = 1 << 6
     };
     Q_DECLARE_FLAGS(TranslationBehaviors, NewTranslationsBehavior)
 
@@ -81,6 +85,11 @@ private slots:
      * @brief Display merge settings to the user
      */
     void actionMerge();
+
+    /**
+     * @brief Display update source settings to the user
+     */
+    void actionUpdate();
 
     /**
      * @brief Creates a dialog for openning a new file
@@ -215,6 +224,13 @@ private slots:
     void removeTableRow(int index);
 
     /**
+     * @brief gets the translation from a row
+     * @param index  The index of the row to get
+     * @return
+     */
+    Translation getTableRowContent(int index);
+
+    /**
      * @brief Searches for a given string in the translation file
      * @param s		The string to look for
      */
@@ -244,17 +260,22 @@ private slots:
     /**
      * @brief Start the actual export process for adding tr calls in user source code
      */
-    void startExportPorcess(StringParser::TranslationParsingModes);
+    void startExportProcess(StringParser::TranslationParsingModes);
 
     /**
      * @brief Start the actual import or merge process
      */
-    void startImportPorcess(StringParser::TranslationParsingModes);
+    void startImportProcess(StringParser::TranslationParsingModes);
 
     /**
      * @brief Starts the actual merge process
      */
-    void startMergeProcess(MergeWidget::MergeKind, MergeWidget::DuplicateBehavior);
+    void startMergeProcess(MergeWidget::FileType, MergeWidget::DuplicateBehavior);
+
+    /**
+     * @brief Starts the actual update process
+     */
+    void startUpdateProcess(UpdateWidget::FileType typeFlag, UpdateWidget::OrphansBehavior orphansFlag);
 
     /**
      * @brief Updates the windows stylesheet
@@ -344,6 +365,11 @@ private:
      * @brief Widget displaying options for merging two files
      */
     MergeWidget * mergeWidget;
+
+    /**
+     * @brief Widget displaying options for updating source
+     */
+    UpdateWidget * updateWidget;
 
     /**
      * @brief The Preferences panel

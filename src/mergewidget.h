@@ -14,9 +14,9 @@ public:
     /**
      * @brief Merge setting choosen by the user
      */
-    enum MergeKind{
-        MergeTrFile,
-        MergeSourceCode
+    enum FileType{
+        TrFile,
+        SourceCode
     };
 
     enum DuplicateBehavior{
@@ -26,7 +26,7 @@ public:
 
 signals:
 
-    void mergeOptionsSaved(MergeWidget::MergeKind, MergeWidget::DuplicateBehavior);
+    void mergeOptionsSaved(MergeWidget::FileType, MergeWidget::DuplicateBehavior);
     void canceled();
 
 public slots:
