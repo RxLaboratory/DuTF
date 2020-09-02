@@ -8,7 +8,7 @@
   
   <meta name="author" content="Nicolas Dufresne and contributors">
   <link rel="shortcut icon" href="img/favicon.ico">
-  <title>DuTranslator<br />Documentation<br /></title>
+  <title>Update - DuTranslator<br />Documentation<br /></title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="css/theme.css" type="text/css" />
@@ -16,6 +16,13 @@
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   <link href="style.css" rel="stylesheet">
   <link href="video.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Update";
+    var mkdocs_page_input_path = "update.md";
+    var mkdocs_page_url = "/update.html";
+  </script>
   
   <script src="js/jquery-2.1.1.min.js" defer></script>
   <script src="js/modernizr-2.8.3.min.js" defer></script>
@@ -33,7 +40,7 @@
       <div class="wy-side-nav-search">
         <a href="index.html" class="icon icon-home"> DuTranslator<br />Documentation<br /></a>
         <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="/search.html" method="get">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
@@ -60,9 +67,23 @@
                     
     <a class="" href="use.html">Basic use</a>
                 </li>
-                <li class="">
+                <li class=" current">
                     
-    <a class="" href="update.html">Update</a>
+    <a class="current" href="update.html">Update</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#update-translations">Update translations</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#1-get-the-new-translation-template">1. Get the new translation template</a></li>
+        
+            <li><a class="toctree-l4" href="#2-update-the-current-translation-with-the-new-template">2. Update the current translation with the new template</a></li>
+        
+        </ul>
+    
+
+    </ul>
                 </li>
                 <li class="">
                     
@@ -125,8 +146,16 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
     
+      
+        
+          <li>Translate &raquo;</li>
+        
+      
     
+    <li>Update</li>
     <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/Rainbox-dev/Dutranslator/tree/master/src-docs/docs/update.md"> Edit on Dutranslator-Docs</a>
       
     </li>
   </ul>
@@ -135,15 +164,36 @@
           <div role="main">
             <div class="section">
               
-
-  <h1 id="404-page-not-found">404</h1>
-
-  <p><strong>Page not found</strong></p>
-
-
+                <h1 id="update-translations">Update translations</h1>
+<p>Software is never finished. Your applications are constantly evolving, and their interfaces are regularly adjusted. This means the translations have to be updated according to these changes.</p>
+<p>DuTranslator provides an easy way to see what has changed and what needs to be updated.</p>
+<h2 id="1-get-the-new-translation-template">1. Get the new translation template</h2>
+<p>You first need to get a new (empty or not) translation file from the updated version of the application.</p>
+<p>The developper should provide this file, or you can generate it <a href="create.html">as if you were starting a new translation</a>.</p>
+<p>The important thing is to get a file containing all the text strings used in the new version of the application, and it can work with an existing translation file used for another language.</p>
+<h2 id="2-update-the-current-translation-with-the-new-template">2. Update the current translation with the new template</h2>
+<p><img alt="open" src="img/open.png" /></p>
+<p>Click on the right part of the <em>open</em> button and select <code>Update</code>.</p>
+<p><img alt="update" src="img/update.png" /></p>
+<p>Choose the file type you&rsquo;re importing: it is either another (template) translation file or the source code of the application.</p>
+<p>When updating, <em>DuTranslator</em> will ignore already existing text strings, add the new ones, and you have to choose what will be done with the text strings which have been removed from the application, which are called <em>orphans</em>. You can either automatically remove them, or keep them in the translation file, in which case <em>DuTranslator</em> will modify the associated comment to let you know which strings have been removed in the new version of the application.</p>
+<p><img alt="removed" src="img/removed.png" /></p>
+<p>New strings are appended to the table, and <code>NEW</code> is added to the comment (and the cell is highlighted) to help you easily see them.</p>
+<p><img alt="new" src="img/new.png" /></p>
+<p>You can now safely update the translations and save the file.</p>
+              
             </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="merge.html" class="btn btn-neutral float-right" title="Merge">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="use.html" class="btn btn-neutral" title="Basic use"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
@@ -169,10 +219,14 @@
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
+        <span><a href="use.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="merge.html" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
-    <script>var base_url = '';</script>
+    <script>var base_url = '.';</script>
     <script src="js/theme.js" defer></script>
       <script src="video.js" defer></script>
       <script src="search/main.js" defer></script>

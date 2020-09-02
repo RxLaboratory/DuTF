@@ -8,7 +8,7 @@
   
   <meta name="author" content="Nicolas Dufresne and contributors">
   <link rel="shortcut icon" href="img/favicon.ico">
-  <title>DuTranslator<br />Documentation<br /></title>
+  <title>Tools - DuTranslator<br />Documentation<br /></title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="css/theme.css" type="text/css" />
@@ -16,6 +16,13 @@
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   <link href="style.css" rel="stylesheet">
   <link href="video.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Tools";
+    var mkdocs_page_input_path = "tools.md";
+    var mkdocs_page_url = "/tools.html";
+  </script>
   
   <script src="js/jquery-2.1.1.min.js" defer></script>
   <script src="js/modernizr-2.8.3.min.js" defer></script>
@@ -33,7 +40,7 @@
       <div class="wy-side-nav-search">
         <a href="index.html" class="icon icon-home"> DuTranslator<br />Documentation<br /></a>
         <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="/search.html" method="get">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
@@ -68,9 +75,15 @@
                     
     <a class="" href="merge.html">Merge</a>
                 </li>
-                <li class="">
+                <li class=" current">
                     
-    <a class="" href="tools.html">Tools</a>
+    <a class="current" href="tools.html">Tools</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#tools">Tools</a></li>
+    
+
+    </ul>
                 </li>
     </ul>
 	    </li>
@@ -125,8 +138,16 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
     
+      
+        
+          <li>Translate &raquo;</li>
+        
+      
     
+    <li>Tools</li>
     <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/Rainbox-dev/Dutranslator/tree/master/src-docs/docs/tools.md"> Edit on Dutranslator-Docs</a>
       
     </li>
   </ul>
@@ -135,15 +156,24 @@
           <div role="main">
             <div class="section">
               
-
-  <h1 id="404-page-not-found">404</h1>
-
-  <p><strong>Page not found</strong></p>
-
-
+                <h1 id="tools">Tools</h1>
+<p><img alt="tools" src="img/tools.png" /></p>
+<p><img alt="options" src="img/tools_options.png" /></p>
+<p>From the tools, you can generate source files to be used in the target application to include <em>DuTF - The Duduf Translation Framework</em>.</p>
+<p>You can then update the source code of the application to add the necessary <code>tr()</code> function calls provided by the framework to all the strings which have to be translated.</p>
+              
             </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gnu-gpl.html" class="btn btn-neutral float-right" title="GNU GPLv3">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="merge.html" class="btn btn-neutral" title="Merge"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
@@ -169,10 +199,14 @@
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
+        <span><a href="merge.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="gnu-gpl.html" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
-    <script>var base_url = '';</script>
+    <script>var base_url = '.';</script>
     <script src="js/theme.js" defer></script>
       <script src="video.js" defer></script>
       <script src="search/main.js" defer></script>

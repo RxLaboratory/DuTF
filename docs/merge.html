@@ -8,7 +8,7 @@
   
   <meta name="author" content="Nicolas Dufresne and contributors">
   <link rel="shortcut icon" href="img/favicon.ico">
-  <title>DuTranslator<br />Documentation<br /></title>
+  <title>Merge - DuTranslator<br />Documentation<br /></title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="css/theme.css" type="text/css" />
@@ -16,6 +16,13 @@
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   <link href="style.css" rel="stylesheet">
   <link href="video.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Merge";
+    var mkdocs_page_input_path = "merge.md";
+    var mkdocs_page_url = "/merge.html";
+  </script>
   
   <script src="js/jquery-2.1.1.min.js" defer></script>
   <script src="js/modernizr-2.8.3.min.js" defer></script>
@@ -33,7 +40,7 @@
       <div class="wy-side-nav-search">
         <a href="index.html" class="icon icon-home"> DuTranslator<br />Documentation<br /></a>
         <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="/search.html" method="get">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
@@ -64,9 +71,15 @@
                     
     <a class="" href="update.html">Update</a>
                 </li>
-                <li class="">
+                <li class=" current">
                     
-    <a class="" href="merge.html">Merge</a>
+    <a class="current" href="merge.html">Merge</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#merge-two-translation-files">Merge two translation files</a></li>
+    
+
+    </ul>
                 </li>
                 <li class="">
                     
@@ -125,8 +138,16 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
     
+      
+        
+          <li>Translate &raquo;</li>
+        
+      
     
+    <li>Merge</li>
     <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/Rainbox-dev/Dutranslator/tree/master/src-docs/docs/merge.md"> Edit on Dutranslator-Docs</a>
       
     </li>
   </ul>
@@ -135,15 +156,25 @@
           <div role="main">
             <div class="section">
               
-
-  <h1 id="404-page-not-found">404</h1>
-
-  <p><strong>Page not found</strong></p>
-
-
+                <h1 id="merge-two-translation-files">Merge two translation files</h1>
+<p><img alt="open" src="img/open.png" /></p>
+<p>If you need to merge different translation files, just click on the right part of the <em>open</em> button and select <code>Merge</code>.</p>
+<p><img alt="merge" src="img/merge.png" /></p>
+<p>You can merge another translation file or get strings from a source code.</p>
+<p>When the incoming translation already exists, you can either ignore it or add it with a new context (&ldquo;<em>imported</em>&rdquo;) used to differenciate it from the already existing one. This means the two strings will be considered different in the target application.</p>
+              
             </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="tools.html" class="btn btn-neutral float-right" title="Tools">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="update.html" class="btn btn-neutral" title="Update"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
@@ -169,10 +200,14 @@
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
+        <span><a href="update.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="tools.html" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
-    <script>var base_url = '';</script>
+    <script>var base_url = '.';</script>
     <script src="js/theme.js" defer></script>
       <script src="video.js" defer></script>
       <script src="search/main.js" defer></script>
