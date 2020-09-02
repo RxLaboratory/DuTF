@@ -1,0 +1,34 @@
+site_name: DuTranslator<br />Documentation<br />
+site_url: http://rainboxlab.org
+repo_url: http://dutranslator-docs.rainboxlab.org
+edit_uri: https://github.com/Rainbox-dev/DuAEF_Duik_Docs/tree/master/src/docs/
+site_description: The DuTranslator comprehensive documentation
+site_author: Nicolas Dufresne and contributors
+copyright: 'Copyright © 2020 Rainbox Productions and Nicolas Dufresne'
+use_directory_urls: false
+theme:
+    name: readthedocs
+    custom_dir: theme/
+markdown_extensions:
+    - smarty
+    - footnotes
+    - tables
+    - admonition
+    - codehilite
+    - fenced_code
+    - toc
+extra_css:
+    - style.css
+    - video.css
+extra_javascript:
+    - video.js
+site_dir: ../docs/
+dev_addr: '127.0.0.1:8001'
+nav:
+    - Home: index.md
+    - License:
+        - GNU GPLv3: gnu-gpl.md
+        - Documentation license: doc-license.md
+    - Credits: credits.md
+    - Contact: https://rainboxlab.org/about/contact/
+    - Donate: https://rainboxlab.org/about/donate/
