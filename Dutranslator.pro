@@ -58,13 +58,14 @@ TRANSLATIONS += resources/languages/app_fr.ts \
     resources/languages/app_es.ts \
     resources/languages/app_zh_cn.ts 
 
-#WIN ICON
-RC_ICONS = ./resources/icons/dutr_win.ico
-#MAC ICON
-ICON = ./resources/icons/dutr_mac.icns
-
-unix {
+# OS Specific configurations
+win* {
+    RC_ICONS = ./resources/icons/dutr_win.ico
+} else:unix {
     # Fix issue with c++ version used to compile Qt in some distros (Ubuntu) with Qt <= 5.12.
     # Need to check the version of c++ used with distros providing Qt > 12
     equals(QT_MAJOR_VERSION, 5):lessThan(QT_MINOR_VERSION, 13):QMAKE_CXXFLAGS += "-fno-sized-deallocation"
+} else:macx {
+    #MAC ICON
+    ICON = ./resources/icons/dutr_mac.icns
 }
