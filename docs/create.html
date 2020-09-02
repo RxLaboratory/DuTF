@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Nicolas Dufresne and contributors">
+  <link rel="shortcut icon" href="img/favicon.ico">
+  <title>Create - DuTranslator<br />Documentation<br /></title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link href="style.css" rel="stylesheet">
+  <link href="video.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Create";
+    var mkdocs_page_input_path = "create.md";
+    var mkdocs_page_url = "/create.html";
+  </script>
+  
+  <script src="js/jquery-2.1.1.min.js" defer></script>
+  <script src="js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="index.html" class="icon icon-home"> DuTranslator<br />Documentation<br /></a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="index.html">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Translate</span>
+    <ul class="subnav">
+                <li class=" current">
+                    
+    <a class="current" href="create.html">Create</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#create-a-new-translation">Create a new translation</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#1-generate-an-empty-translation-file">1. Generate an empty translation file.</a></li>
+        
+            <li><a class="toctree-l4" href="#2-look-for-the-language-code-of-the-destination-language">2. Look for the language code of the destination language</a></li>
+        
+            <li><a class="toctree-l4" href="#2-save-the-empty-file">2. Save the empty file</a></li>
+        
+            <li><a class="toctree-l4" href="#3-input-the-destination-application-the-language-code-and-language-name">3. Input the destination application, the language code and language name</a></li>
+        
+        </ul>
+    
+
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="use.html">Basic use</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="update.md">Update</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="merge.md">Merge</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="tools.md">Tools</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">License</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="gnu-gpl.html">GNU GPLv3</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="doc-license.html">Documentation license</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="credits.html">Credits</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="https://rainboxlab.org/about/contact/">Contact</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="https://rainboxlab.org/about/donate/">Donate</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">DuTranslator<br />Documentation<br /></a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Translate &raquo;</li>
+        
+      
+    
+    <li>Create</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/Rainbox-dev/Dutranslator/tree/master/src-docs/docs/create.md"> Edit on Dutranslator-Docs</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="create-a-new-translation">Create a new translation</h1>
+<p>Creating a new translation is easy with DuTranslator. You just have to open a template file, which basically is an empty translation file with only the original text strings to translate.</p>
+<div class="toc">
+<ul>
+<li><a href="#create-a-new-translation">Create a new translation</a><ul>
+<li><a href="#1-generate-an-empty-translation-file">1. Generate an empty translation file.</a></li>
+<li><a href="#2-look-for-the-language-code-of-the-destination-language">2. Look for the language code of the destination language</a></li>
+<li><a href="#2-save-the-empty-file">2. Save the empty file</a></li>
+<li><a href="#3-input-the-destination-application-the-language-code-and-language-name">3. Input the destination application, the language code and language name</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>This template file is usually generated by the application you have to translate itself, or provided by the developper of the application. In this case, you can directly jump to the second step. If you do not have this file, read the following section.</p>
+<h2 id="1-generate-an-empty-translation-file">1. Generate an empty translation file.</h2>
+<p>In the case the developper of the application you want to translate does not provide the empty translation file, start by looking for a way to export this file from the application itself. If the application uses DuTF - The Duduf Translation Framework, this option should be available.</p>
+<p>If the application does not use this framework yet, or if the option has not been implemented, you can generate this translation file directly from the source code.</p>
+<p><img alt="open" src="img/open.png" /></p>
+<p>Click on the right part of the <em>open</em> button, then select <code>Import</code>.</p>
+<p><img alt="import options" src="img/import_options.png" /></p>
+<p>If the application has already implemented the translation framework, all strings to be translated should already be enclosed in <code>tr()</code> function calls. In this case DuTranslator will automatically generate the translation file from these strings.</p>
+<p>If the application is not using the framework yet, or if some strings miss the function call, you can check the option to detect the other strings from the source code.</p>
+<p>DuTranslator will create and load an empty translation file</p>
+<h2 id="2-look-for-the-language-code-of-the-destination-language">2. Look for the language code of the destination language</h2>
+<p>Before starting your new translation, you have to input the language code so that <em>DuTranslator</em> and the framework can recognize the language.</p>
+<p><em>DuTranslator</em> uses the two-letter <strong>ISO-639-1 language code</strong>. <a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">You can find the complete list here</a>. You will also need the language <strong>native name</strong>.</p>
+<h2 id="2-save-the-empty-file">2. Save the empty file</h2>
+<p>Before starting the translation, save it as a new file.</p>
+<p><img alt="save" src="img/save.png" /></p>
+<p>Click on the right part of the <em>save</em> button and select <code>Save as...</code>.</p>
+<p>The file has to be named after the application name followed by the underscore character <code>_</code> and the translation language code. The extension (file type) is <code>.json</code>.</p>
+<p>Example: <code>Duik Bassel_zh.json</code> is the Chinese translation file for <em>Duik Bassel</em>.</p>
+<h2 id="3-input-the-destination-application-the-language-code-and-language-name">3. Input the destination application, the language code and language name</h2>
+<p>In the upper right part of <em>DuTranslator</em>, next to the file name, you can input the application the translation is made for, the language code and the language native name.</p>
+<p><img alt="codes" src="img/codes.png" /></p>
+<p>You&rsquo;re now good to go! Just <a href="use.html">start translating</a>, save the file, and send it to the developper so it can be distributed with the application.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="use.html" class="btn btn-neutral float-right" title="Basic use">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>Copyright © 2020 Rainbox Productions and Nicolas Dufresne</p>
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="use.html" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme.js" defer></script>
+      <script src="video.js" defer></script>
+      <script src="search/main.js" defer></script>
+
+</body>
+</html>
