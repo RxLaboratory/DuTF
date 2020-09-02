@@ -721,7 +721,12 @@ Translation MainWindow::getTableRowContent(int index)
     QString comment = utils::escape(commentEdit->text());
     int contextId = contextIdBox->value();
 
-    Translation obj {original, translated, context, comment, contextId};
+    Translation obj;
+    obj.source = original;
+    obj.translated = translated;
+    obj.context = context;
+    obj.comment = comment;
+    obj.contextId = contextId;
     return obj;
 }
 
