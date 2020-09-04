@@ -33,6 +33,7 @@ HEADERS  += mainwindow.h \
     jsonParser.h \
     searchwidget.h \
     src/updatewidget.h \
+    src/version.h \
     utils.h \
     src/rowbuttonswidget.h \
     src/preferenceswidget.h \

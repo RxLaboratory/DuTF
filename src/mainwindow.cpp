@@ -14,6 +14,7 @@
 #include <QPushButton>
 #include <QSpinBox>
 #include <QTextEdit>
+#include "version.h"
 
 #ifdef QT_DEBUG
 #include <QtDebug>
@@ -104,7 +105,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mainToolBar->installEventFilter(this);
 
     //version
-    mainStatusBar->addWidget(new QLabel("v1.0.0-Beta1-"));
+    mainStatusBar->addWidget(new QLabel("v" + QString(STR_VERSION)));
     //status
     statusLabel = new QLabel("");
     mainStatusBar->addWidget(statusLabel,10);
