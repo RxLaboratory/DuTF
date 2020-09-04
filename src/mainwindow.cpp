@@ -120,9 +120,9 @@ MainWindow::MainWindow(QWidget *parent) :
     mainProgressBar->setMinimum(0);
     mainProgressBar->setMaximum(0);
 
-
     //set style
     updateCSS(preferences->getCSS());
+    setFont();
     setToolBarAppearance(preferences->getToolBarStyle());
 
     mapEvents();
@@ -1080,6 +1080,19 @@ QString MainWindow::loadCSS(QStringList cssFileNames)
 #endif
 
     return css;
+}
+
+void MainWindow::setFont(QString family)
+{
+    //add fonts
+    QFontDatabase::addApplicationFont(":/fonts/calibri");
+    QFontDatabase::addApplicationFont(":/fonts/calibrib");
+    QFontDatabase::addApplicationFont(":/fonts/calibrii");
+    QFontDatabase::addApplicationFont(":/fonts/calibril");
+    QFontDatabase::addApplicationFont(":/fonts/calibrili");
+    QFontDatabase::addApplicationFont(":/fonts/calibriz");
+
+    qApp->setFont(QFont(family,10,500),"QWidget");
 }
 
 void MainWindow::adjustColumnSizes()

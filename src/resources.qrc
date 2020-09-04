@@ -27,4 +27,12 @@
         <file alias="lang/zh">../resources/languages/app_zh_cn.qm</file>
         <file alias="styles/default-values">default-values.rui</file>
     </qresource>
+    <qresource prefix="/fonts">
+        <file alias="calibri">../resources/fonts/calibri.ttf</file>
+        <file alias="calibrib">../resources/fonts/calibrib.ttf</file>
+        <file alias="calibrii">../resources/fonts/calibrii.ttf</file>
+        <file alias="calibril">../resources/fonts/calibril.ttf</file>
+        <file alias="calibrili">../resources/fonts/calibrili.ttf</file>
+        <file alias="calibriz">../resources/fonts/calibriz.ttf</file>
+    </qresource>
 </RCC>

@@ -343,14 +343,14 @@ QToolBar {
         padding: @edit-padding;
 }
 
-QToolBar QWidget {
-    background: @color-medium;
-}
-
 QToolBar::separator {
         background: @color-dark;
         width:@border-size;
         height:@border-size;
+}
+
+QToolBar QLabel {
+    background: @color-medium;
 }
 
 QToolButton {

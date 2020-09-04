@@ -10,6 +10,7 @@
 #include <QTimer>
 #include <vector>
 #include <QSettings>
+#include <QFontDatabase>
 
 #include "ui_mainwindow.h"
 
@@ -430,6 +431,7 @@ private:
     QSettings settings_;
 
     QString loadCSS(QStringList cssFileNames);
+    static void setFont(QString family = "Calibri");
 protected:
 
     void dragEnterEvent(QDragEnterEvent *event);
