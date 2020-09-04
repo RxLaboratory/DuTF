@@ -13,11 +13,15 @@ void UpdateWidget::goUpdate()
     FileType fileType;
     OrphansBehavior orphans;
 
-    if(mergeCombo->currentIndex() == 0) fileType = FileType::TrFile;
-    else if(mergeCombo->currentIndex() == 1) fileType = FileType::SourceCode;
+    if (mergeCombo->currentIndex() == 1)
+        fileType = FileType::SourceCode;
+    else
+        fileType = FileType::TrFile;
 
-    if(duplicatesCombo->currentIndex() == 0) orphans = OrphansBehavior::KeepAndComment;
-    else if(duplicatesCombo->currentIndex() == 2) orphans = OrphansBehavior::Remove;
+    if (duplicatesCombo->currentIndex() == 1)
+        orphans = OrphansBehavior::Remove;
+    else
+        orphans = OrphansBehavior::KeepAndComment;
 
     emit updateOptionsSaved(fileType, orphans);
 }

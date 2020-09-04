@@ -662,11 +662,13 @@ void MainWindow::parsingFailed(Parser::ParsingErrors flag)
 void MainWindow::parsingFinished()
 {
     //remove removed
+    qDebug() << trBehave.testFlag(NewTranslationsBehavior::RemoveOrphans);
     if (trBehave.testFlag(NewTranslationsBehavior::RemoveOrphans))
     {
         for (int row = tableFreeIndex -1; row >= 0 ; row--)
         {
             QLineEdit *commentEdit = (QLineEdit*)displayTable->cellWidget(row,4);
+            qDebug() << commentEdit->text();
             if (commentEdit->text().startsWith("Removed - "))
             {
                 removeTableRow(row);
