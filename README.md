@@ -1,5 +1,5 @@
 # DuTF
-Translation framework used by [RxOT]().
+Translation framework used by [RxOT](https://github.com/Rainbox-dev/RxOT).
 
 `/src/` Contains the translation tool source
 
