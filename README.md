@@ -1,5 +1,5 @@
-# Dutranslator
-Translation framework for Adobe ExtendScript/JavaScript UI
+# DuTF
+Translation framework used by [RxOT]().
 
 `/src/` Contains the translation tool source
 
