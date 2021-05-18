@@ -240,7 +240,7 @@ def set_pretty_language(language_name):
     return set_language(lang_id)
 
 
-def generate_translations(strings):  # TODO : Verifier la MAJ
+def generate_translations(strings):
     """
     Converts a list of strings to a list of empty translations (dicts)
     Args:
@@ -269,7 +269,7 @@ def generate_translations(strings):  # TODO : Verifier la MAJ
 def generate_translation_file(file, translations=localized_strings, app_name="dutranslator",
                               version="0.0",
                               language_id=current_language_id,
-                              language_name=current_language_name):  # TODO : A verifier
+                              language_name=current_language_name):
     """
     Creates a file for translation with the given base strings.
     Args:
@@ -282,7 +282,6 @@ def generate_translation_file(file, translations=localized_strings, app_name="du
         language_name: (str) A version (as a string) for this translation file or app. [languageName=currentName]
     """
 
-    # if (!(file instanceof File)) file = new File(file);  JS ligne 330 !?
     app_name = app_name.lower()
     if len(translations) == 0:
         return None
@@ -327,7 +326,7 @@ def parse_json(file):
             return translations
 
 
-def save_json(data, file):  # TODO : Verifier la MAJ
+def save_json(data, file):
     """From a dict, with json, save in file"""
 
     with open(file, "w") as written_file:
