@@ -34,8 +34,9 @@ Dans l'ordre du "plus bas niveau" au "plus haut niveau"
 >>> OK ! [{'comment': '', 'context': '', 'contextId': 0, 'source': 'Help', 'translation': 'Aide'}, {'comment': '', 'context': '', 'contextId': 0, 'source': 'News', 'translation': 'News'}, etc etc]
 
 
-- [ ] generate_translations
+- [X] generate_translations
     donner une liste de strings bidon, et vérifier qu'on récupère bien une liste de dict avec les valeurs vides par défaut sauf la "source"
+>>> OK !
 
 - [ ] generate_translation_file()
     tester en donnant comme `translations` une liste de strings bidon

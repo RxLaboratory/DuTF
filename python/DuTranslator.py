@@ -252,15 +252,16 @@ def generate_translations(strings):  # TODO : Verifier la MAJ
     strings = remove_duplicates(strings)
 
     translations = []
-    translation = {}
-    for i in range(len(strings)):
+
+    for i in range(0, len(strings)):
+        translation = {}
         translation["source"] = strings[i]
         translation["translations"] = ""
         translation["comment"] = ""
         translation["context"] = ""
         translation["context_id"] = 0
 
-        translations.append(translations)
+        translations.append(translation)
 
     return translations
 

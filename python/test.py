@@ -12,11 +12,11 @@ file = "file_test"
 
 fichier = "E:/temp/test_fr2.json"
 
-print(parse_json(fichier))
+# print(parse_json(fichier))
 
 
 # ************* TEST : generate_translations *************
 
-liste_de_strings_bidons = ["bidon1", "bidon2", "bidon3", "bidon4"]
+liste_de_strings_bidons = ["bidon1", "bidon2", "bidon3", "bidon4", "bidon1"]
 
-#print(generate_translations(liste_de_strings_bidons))
+print(generate_translations(liste_de_strings_bidons))
