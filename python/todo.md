@@ -23,9 +23,11 @@ Créer un test.py commençant par `from DuTranslator import *` et tester individ
 
 Dans l'ordre du "plus bas niveau" au "plus haut niveau"
 
-- [ ] save_json
+- [X] save_json
     créer un dict bidon mais contenant des caractères spéciaux pour donner comme argument `data`, et file est un chemin du fichier qui sera créé
     le dict peut etre par exemple { "test": "truc", "héhéhé": "des accents", "en chinois": "不是", "une liste": [ 1, 2, 3]}
+>>> OK ! Sauf : pour les accents, il mets �� et pour les signes chinois, il sort une UnicodeEncodeError:
+
 
 - [ ] parse_json
     tester en donnant le chemin d'un des fichiers de traduction duik
