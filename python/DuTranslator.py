@@ -89,7 +89,7 @@ def get_available():
     language_files = (settings_prefix + "*" + settings_suffix)
 
     for i in range(len(
-            language_files)):  # TODO, si le "i" n'est pas utile dans la suite, autant écrire `for file_name in language_files:`
+            language_files)):
         file_name = language_files[i].name
         ## var langId = langName = ""; ??
         lang_id = lang_name = ""
@@ -105,7 +105,7 @@ def get_available():
         ## while(langName == "" || langId == "" && !file.eof ) JS : eof ??
         while (lang_name == "") or (lang_id == ""):
             line = file.readln()
-            index_name = line.rindex("language_name")
+            index_name = line.rindex("language_name")       # rindex == lastIndexOf (JS)
             index_id = line.rindex("language_id")
 
             if (index_name != -1) and (lang_name == ""):
@@ -115,6 +115,30 @@ def get_available():
             else:
                 continue
             # ..... "lang" : "value"
+            line = line[index: len(line)]       # line = line.substring(index, line.length); (JS)
+            # .lang" : "value"
+            line = line[line.index("\"") + 1 : len(line)]
+            # : "value"
+            line = line[line.index("\"") + 1 : len(line)]
+            # value"
+            line = line[0: line.index("\"")]
+            # value
+            if (index_name != -1) and (lang_name == ""):
+                lang_name = line
+            elif (index_id != -1) and (lang_id == ""):
+                lang_id = line
+            else:
+                continue
+
+        file.close()
+
+        if lang_id == "":
+            lang_id = file_name.replace(settings_prefix, "").replace(settings_suffix, "")
+        if lang_name == "":
+            lang_name = lang_id
+
+        languages[lang_id] = {"name": lang_name, "file": settings_folder + "/" + file_name}
+
 
 
 def get_pretty_name(lang_id):

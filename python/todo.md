@@ -15,7 +15,7 @@ Feedback & todo en français ;)
 - [X] remplacer translator_settings par de simples variables, pas beosin de tout mettre dans un dict
     idem pour settings je pense, on verra
 
-- [ ] finir get_available()
+- [X] finir get_available()
 
 ## Tests à faire
 
