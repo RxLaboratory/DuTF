@@ -252,7 +252,6 @@ Dutranslator.getLanguageId= function(prettyName)
 
 /**
   * Returns a list containing pretty names of all languages
-  * @param {string} langId - The id of the request language
  */
 Dutranslator.getPrettyNames = function()
 {
