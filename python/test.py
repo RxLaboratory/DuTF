@@ -1,9 +1,8 @@
 from DuTF.python.DuTranslator import *
 
-
 # ************* TEST : save_json() *************
 
-data = { "test": "truc", "une liste": [ 1, 2, 3]}
+data = {"test": "truc", "une liste": [1, 2, 3]}
 file = "file_test"
 # save_json(data, file)
 
@@ -24,6 +23,11 @@ liste_de_strings_bidons = ["bidon1", "bidon2", "bidon3", "bidon4", "bidon1", "bi
 
 # ************* TEST : generate_translation_file *************
 
+# generate_translation_file("file_test_2", liste_de_strings_bidons, "Nom_app", "2.0", "fr", "francais")
 
 
-generate_translation_file("file_test_2", liste_de_strings_bidons, "Nom_app", "2.0", "fr", "francais")
+# ************* TEST : get_available *************
+
+settings_folder = "E:/temp"
+
+get_available()

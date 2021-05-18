@@ -38,11 +38,12 @@ Dans l'ordre du "plus bas niveau" au "plus haut niveau"
     donner une liste de strings bidon, et vérifier qu'on récupère bien une liste de dict avec les valeurs vides par défaut sauf la "source"
 >>> OK !
 
-- [ ] generate_translation_file()
+- [X] generate_translation_file()
     tester en donnant comme `translations` une liste de strings bidon
     et `language_id` "fr" par exemple
     et `language_name` "français" par exemple
     vérifier le fichier écrit, qui doit etre semblable à un fichier de traduction de duik (bien que "vide" à part les "sources")
+>>> OK ! 
 
 - [ ] get_available()
     créer un dossier avec plusieurs fichiers de traduction (utiliser ceux de duik)
