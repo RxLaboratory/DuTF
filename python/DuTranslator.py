@@ -23,61 +23,44 @@
 
 import json
 
-# TODO on verra à la fin, mais au final on a meme aps besoin de tout foutre dans un dict
-# on poyurrait tout aussi bien juste avoir des variabkes simples
-# current_language_id,
-# current_language_name,
-# languages
-# etc etc
-# on changera à la fin, parce que faudra aller chercher et remplacer partout "translator_settings["truc"]
-
-translator_settings = {}
-
-translator_settings["current"] = ""
+current_language_id = ""
 """The current language id (fr, en, ..)."""
 
-translator_settings["current_name"] = ""
+current_language_name = ""
 """The current language name."""
 
-translator_settings["languages"] = {}
-"""
-A dict containing available languages.
+languages = {}
+"""A dict containing available languages.
 There is a language name and a file name for each language id.
 languages["fr_FR"] ["name"] is "Francais" for example.
-Will be filled when executing getAvailable().
-"""
+Will be filled when executing getAvailable()."""
 
-translator_settings["localized_strings"] = ()
-"""
-The translated strings  of the current language.
-An array of compounds containing the source, the translation and the context.
-"""
+localized_strings = ()
+"""The translated strings  of the current language.
+An array of compounds containing the source, the translation and the context."""
 
-translator_settings["settings"] = {}
-settings = translator_settings["settings"]
+settings = {}
 """Some Settings for the translator"""
 
-# TODO idem que translator settings, on a peut etre pas besoind e s'emmerder avec un dict, mais tout garder dans de simples variables
-
 # DuAEF.Dutranslator.Settings.folder = File($.fileName).path + "/";  (JS)
-settings["folder"] = "thisScriptFile/file/path/"
+settings_folder = "thisScriptFile/file/path/"
 """The folder containing the translation files (str)"""
 
 # DuAEF.Dutranslator.Settings.prefix = File($.fileName).name.substring(0,File($.fileName).name.lastIndexOf('.'))
 # + "_"; (JS)
-settings["prefix"] = "thisScriptFileName_"
+settings_prefix = "thisScriptFileName_"
 """The prefix in the translation filenames (str) @default "thisScriptFile/file/path/" """
 
-settings["suffix"] = ".json"
+settings_suffix = ".json"
 """The suffix (including file extension) in the translation filenames (str) @default ".json" """
 
-settings["name"] = "duaef"
+settings_name = "duaef"
 """The application name (root of the json translations) (str) @default "duaef" """
 
-settings["original_language_id"] = "en"
+settings_original_language_id = "en"
 """The original languageId"""
 
-settings["original_language_name"] = "English"
+settings_original_language_name = "English"
 """The original language name"""
 
 
@@ -92,8 +75,7 @@ def get_available():
     """
 
     # Add original language
-    languages = translator_settings["languages"]
-    languages[settings["original_language_id"]] = {"name": settings["original_language_name"], "file": None}
+    languages[settings_original_language_id] = {"name": settings_original_language_name, "file": None}
 
     # en JS : lignes 166 à 169
     # var folder = new Folder(DuAEF.Dutranslator.Settings.folder);
@@ -104,8 +86,7 @@ def get_available():
     # en python, tout ce qu'elle fait correspond aux os.path.isdir, os.path.listdir, etc etc
     # getFiles, c'est justement le os.path.listdir (cf Ramses file manager, on l'utilise celle là, pour lister des fichiers dans un dossier)
     # j'ai un doute c'esty peut etre os.listdir ou autre truc qui ressemble ^^
-    folder = settings["folder"]
-    language_files = (settings["prefix"] + "*" + settings["suffix"])
+    language_files = (settings_prefix + "*" + settings_suffix)
 
     for i in range(len(
             language_files)):  # TODO, si le "i" n'est pas utile dans la suite, autant écrire `for file_name in language_files:`
@@ -116,7 +97,7 @@ def get_available():
         # Determine the language name and the language id by reading the file
         # Values are stored at the top so it should be fase
         ## var file = new File(folder.absoluteURI + "/" + fileName);   JS
-        file = folder + "/" + file_name
+        file = settings_folder + "/" + file_name
         if not file.open("r"):
             return 1  # Unable to open the file
 
@@ -145,9 +126,9 @@ def get_pretty_name(lang_id):
     Returns:
 
     """
-    if not lang_id in translator_settings["languages"]:
+    if not lang_id in languages:
         return ""
-    return translator_settings["languages"][lang_id]["name"]
+    return languages[lang_id]["name"]
 
 
 def get_language_id(pretty_name):
@@ -159,8 +140,8 @@ def get_language_id(pretty_name):
     Returns:
 
     """
-    for lang_id in translator_settings["languages"]:
-        if translator_settings["languages"][lang_id]["name"] == pretty_name:
+    for lang_id in languages:
+        if languages[lang_id]["name"] == pretty_name:
             return lang_id
     return ""
 
@@ -170,8 +151,8 @@ def get_pretty_names():
     Returns a list containing pretty names of all languages
     """
     res = []
-    for lang_id in translator_settings["languages"]:
-        res.append(translator_settings["languages"][lang_id]["name"])
+    for lang_id in languages:
+        res.append(languages[lang_id]["name"])
 
     # Order the list by name
     res = sorted(res)
@@ -190,30 +171,28 @@ def set_language(language_id):
         1	The file linked to the given id can't be opened
         2	The json content doesn't match a translation file
     """
-    settings = translator_settings["settings"]
 
-    for lang_id in translator_settings["languages"]:
+    for lang_id in languages:
         if lang_id == language_id:
-            translator_settings["current"] = language_id
-            translator_settings["current_name"] = get_pretty_name(
-                language_id)  ## Donner un argument à la fonction ligne 148
+            current_language_id = language_id
+            current_language_name = get_pretty_name(language_id)  # Donner un argument à la fonction ligne 165  ?
 
-            if language_id == settings["original_language_id"]:
+            if language_id == settings_original_language_id:
                 return 0  # Default language, no translation
 
             # Parse process
-            f_path = translator_settings["languages"][lang_id]["file"]
+            f_path = languages[lang_id]["file"]
             # var file = new File(f_path);  ??   JS Ligne 284
             # var jsonData = DuAEF.DuJS.Fs.parseJSON(file);  ?? JS Ligne 286
             json_data = parse_json(f_path)
 
-            if (not json_data[settings["name"]]) or (
-                    len(json_data[settings["name"]]) != 2) or (
-                    not json_data[settings["name"][1]["translations"]]):
+            if (not json_data[settings_name]) or (
+                    len(json_data[settings_name]) != 2) or (
+                    not json_data[settings_name[1]["translations"]]):
                 return 2  # Wrong json format
 
-            translations = json_data[settings["name"][1]["translations"]]
-            translator_settings["localized_strings"] = translations
+            translations = json_data[settings_name[1]["translations"]]
+            localized_strings = translations
 
             return 0
 
@@ -262,10 +241,10 @@ def generate_translations(strings):  # TODO : Verifier la MAJ
     return translations
 
 
-def generate_translation_file(file, translations=translator_settings["localized_strings"], app_name="dutranslator",
+def generate_translation_file(file, translations=localized_strings, app_name="dutranslator",
                               version="0.0",
-                              language_id=translator_settings["current"],
-                              language_name=translator_settings["current_name"]):  # TODO : A verifier
+                              language_id=current_language_id,
+                              language_name=current_language_name):  # TODO : A verifier
     """
     Creates a file for translation with the given base strings.
     Args:
@@ -313,18 +292,17 @@ def remove_duplicates(l):
 def parse_json(file):
     """Open a file, loads the contents and with json, extract infos"""
 
-    translation = {}
     if file != None:
         with open(file, "r") as read_file:
             read_string = read_file.read()
             file_dict = json.loads(read_string)
 
-            translation["translations"] = file_dict["translations"]
+            translations = file_dict["translations"]
 
-            return translation["translations"]
+            return translations
 
 
-def save_json(data, file):      # TODO : Verifier la MAJ
+def save_json(data, file):  # TODO : Verifier la MAJ
     """From a dict, with json, save in file"""
 
     with open(file, "w") as written_file:
@@ -369,8 +347,8 @@ def tr(string, context, args):
 
     # a function to get the translation id from a given string
     def get_translation_id(stri, no_caps_nor_spaces=False):
-        for i in range(len(translator_settings["localized_strings"])):
-            localized_string = translator_settings["localized_strings"][i]
+        for i in range(len(localized_strings)):
+            localized_string = localized_strings[i]
             test_string = localized_string["source"]
             if no_caps_nor_spaces:
                 test_string = test_string.replace("\s", "\\n", "\\r", "\g", '')  ## ??
@@ -389,14 +367,14 @@ def tr(string, context, args):
         return -1
 
     # If a language is set, search for the translation
-    if translator_settings["current"] != settings["original_language_id"]:
+    if current_language_id != settings_original_language_id:
 
         # Get the translation
         string_number = get_translation_id(string)  # args : no_caps_nor_spaces ?
 
         # If a translation is found, set it to res
         if string_number > -1:
-            res = translator_settings["localized_strings"][string_number]["translation"]
+            res = localized_strings[string_number]["translation"]
         if res is None:
             res = string
         if res == "":

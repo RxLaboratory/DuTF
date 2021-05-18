@@ -12,7 +12,7 @@ Feedback & todo en français ;)
 - [X] save_json() :
     Je pense pas que le dict au début de la méthode soit nécessaire
 
-- [ ] remplacer translator_settings par de simples variables, pas beosin de tout mettre dans un dict
+- [X] remplacer translator_settings par de simples variables, pas beosin de tout mettre dans un dict
     idem pour settings je pense, on verra
 
 - [ ] finir get_available()
