@@ -4,12 +4,12 @@ Feedback & todo en français ;)
 
 ## Corrections / à modifier / finir
 
-- [ ] virer la déclaration du dict `translation` au début
+- [X] virer la déclaration du dict `translation` au début
 
-- [ ] generate_translations() :
+- [X] generate_translations() :
     Il faut faire une liste de dict et non pas une liste de string
 
-- [ ] save_json() :
+- [X] save_json() :
     Je pense pas que le dict au début de la méthode soit nécessaire
 
 - [ ] remplacer translator_settings par de simples variables, pas beosin de tout mettre dans un dict

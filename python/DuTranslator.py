@@ -23,28 +23,6 @@
 
 import json
 
-
-# TODO la déclaration du dict "translation" ici n'est pas utile
-# on avait en JS la déclaration d'une classe, mais c'est overkill ; un dict n'a pas besoin d'être préparé à l'avance comme ça,
-# juste on le crée au besoin dans la fonction qui l'utilise/le retourne (generate_translations par exemple)
-translation = {}
-"""A new string translation."""
-
-translation["source"] = ""
-"""The source string"""
-
-translation["translations"] = ""
-"""The translated string"""
-
-translation["comment"] = ""
-"""A comment to explain what needs to be explained"""
-
-translation["context"] = ""
-"""The context where the string is used"""
-
-translation["context_id"] = 0
-"""A unique id for the couple source/context"""
-
 # TODO on verra à la fin, mais au final on a meme aps besoin de tout foutre dans un dict
 # on poyurrait tout aussi bien juste avoir des variabkes simples
 # current_language_id,
@@ -129,7 +107,8 @@ def get_available():
     folder = settings["folder"]
     language_files = (settings["prefix"] + "*" + settings["suffix"])
 
-    for i in range(len(language_files)): # TODO, si le "i" n'est pas utile dans la suite, autant écrire `for file_name in language_files:`
+    for i in range(len(
+            language_files)):  # TODO, si le "i" n'est pas utile dans la suite, autant écrire `for file_name in language_files:`
         file_name = language_files[i].name
         ## var langId = langName = ""; ??
         lang_id = lang_name = ""
@@ -156,6 +135,7 @@ def get_available():
                 continue
             # ..... "lang" : "value"
 
+
 def get_pretty_name(lang_id):
     """
     Returns the pretty name of a given language.
@@ -168,6 +148,7 @@ def get_pretty_name(lang_id):
     if not lang_id in translator_settings["languages"]:
         return ""
     return translator_settings["languages"][lang_id]["name"]
+
 
 def get_language_id(pretty_name):
     """
@@ -183,17 +164,19 @@ def get_language_id(pretty_name):
             return lang_id
     return ""
 
-def get_pretty_names():  # docstring en JS ligne 246 : @param {string} langId - The id of the request language ?
+
+def get_pretty_names():
     """
     Returns a list containing pretty names of all languages
     """
     res = []
     for lang_id in translator_settings["languages"]:
-        res.append( translator_settings["languages"][lang_id]["name"] )
+        res.append(translator_settings["languages"][lang_id]["name"])
 
     # Order the list by name
     res = sorted(res)
     return res
+
 
 def set_language(language_id):
     """
@@ -234,6 +217,7 @@ def set_language(language_id):
 
             return 0
 
+
 def set_pretty_language(language_name):
     """
     Set the current language with a given pretty name
@@ -252,9 +236,10 @@ def set_pretty_language(language_name):
 
     return set_language(lang_id)
 
-def generate_translations(strings):
+
+def generate_translations(strings):  # TODO : Verifier la MAJ
     """
-    Converts an list of strings to a list of empty translations (dicts)
+    Converts a list of strings to a list of empty translations (dicts)
     Args:
         {string[]} strings - The base strings to convert.
 
@@ -264,21 +249,18 @@ def generate_translations(strings):
     strings = remove_duplicates(strings)
 
     translations = []
+    translation = {}
     for i in range(len(strings)):
-        translations.append(strings[i])
-        # TODO
-        # ne pas append strings[i]
-        # mais ce dict :
-        # translation = {}
-        # translation["source"] = strings[i]
-        # translation["translations"] = ""
-        # translation["comment"] = ""
-        # translation["context"] = ""
-        # translation["context_id"] = 0
-        # ce sont des valeurs par défaut, sauf la source qui est la chaine en question
-        # et puis là ya plus qu'à append ce dict à translations ; le dict remplace la classe Translation utilisée en js (et pas vraiment utile, c'est overkill une classe pour ça)
+        translation["source"] = strings[i]
+        translation["translations"] = ""
+        translation["comment"] = ""
+        translation["context"] = ""
+        translation["context_id"] = 0
+
+        translations.append(translations)
 
     return translations
+
 
 def generate_translation_file(file, translations=translator_settings["localized_strings"], app_name="dutranslator",
                               version="0.0",
@@ -319,6 +301,7 @@ def generate_translation_file(file, translations=translator_settings["localized_
 
     save_json(data, file)
 
+
 def remove_duplicates(l):
     newList = []
     for i in l:
@@ -326,53 +309,27 @@ def remove_duplicates(l):
             newList.append(i)
     return newList
 
+
 def parse_json(file):
     """Open a file, loads the contents and with json, extract infos"""
 
-    # est-ce que ça vaut le coup d'ajouter un : if file != None : pour éviter les erreurs ?
-    with open(file, "r") as read_file:
-        read_string = read_file.read()
-        file_dict = json.loads(read_string)
+    translation = {}
+    if file != None:
+        with open(file, "r") as read_file:
+            read_string = read_file.read()
+            file_dict = json.loads(read_string)
 
-        translation["translations"] = file_dict["translations"]
+            translation["translations"] = file_dict["translations"]
 
-        return translation["translations"]
+            return translation["translations"]
 
-        # if "name" in file_dict:
-        #     settings["name"] = file_dict["name"]
-        # if "folder" in file_dict:
-        #     settings["folder"] = file_dict["folder"]
-        # if "original_language_id" in file_dict:
-        #     settings["original_language_id"] = file_dict["original_language_id"]
-        # if "original_language_name" in file_dict:
-        #     settings["original_language_name"] = file_dict["original_language_name"]
-        # if "prefix" in file_dict:
-        #     settings["prefix"] = file_dict["prefix"]
-        # if "suffix" in file_dict:
-        #     settings["suffix"] = file_dict["suffix"]
-        #
-        #     return settings
 
-def save_json(data, file):
+def save_json(data, file):      # TODO : Verifier la MAJ
     """From a dict, with json, save in file"""
 
-    # TODO : pas besoin de ça je pense, la fonction est toute con en python, juste elle écrit direct la data 
-    dict = {
-        settings["name"]: data["name"],
-        translation["translations"]: data["translations"]
-    }
-
-    # ou alors :
-    # dict[settings["name"] = date["name"]
-    # dict[translation["translations"] = data["translations]
-
     with open(file, "w") as written_file:
-        # written_file.write(json.dumps(dict, indent=4))
-        json.dump(dict, written_file, indent=4)
+        json.dump(data, written_file, indent=4, ensure_ascii=False)
 
-    # TODO à tester oui !
-    # on peut éventuellement ajouter à la fonction .dump un paramètre pour les accents (è) 
-    # json.dumps(dict, written_file, ensure_ascii= False, indent=4)
 
 def tr(string, context, args):
     """
@@ -411,7 +368,7 @@ def tr(string, context, args):
     res = string
 
     # a function to get the translation id from a given string
-    def get_translation_id(stri, no_caps_nor_spaces = False):
+    def get_translation_id(stri, no_caps_nor_spaces=False):
         for i in range(len(translator_settings["localized_strings"])):
             localized_string = translator_settings["localized_strings"][i]
             test_string = localized_string["source"]
