@@ -321,7 +321,7 @@ def parse_json(file):
             read_string = read_file.read()
             file_dict = json.loads(read_string)
 
-            translations = file_dict["translations"]
+            translations = file_dict["duik"][1]["translations"]
 
             return translations
 

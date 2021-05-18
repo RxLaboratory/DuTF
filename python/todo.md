@@ -27,10 +27,12 @@ Dans l'ordre du "plus bas niveau" au "plus haut niveau"
     créer un dict bidon mais contenant des caractères spéciaux pour donner comme argument `data`, et file est un chemin du fichier qui sera créé
     le dict peut etre par exemple { "test": "truc", "héhéhé": "des accents", "en chinois": "不是", "une liste": [ 1, 2, 3]}
 >>> OK ! Sauf : pour les accents, il mets �� et pour les signes chinois, il sort une UnicodeEncodeError:
+    (attention quand même : vérifier ce qu'on mets dans "file")
 
-
-- [ ] parse_json
+- [X] parse_json
     tester en donnant le chemin d'un des fichiers de traduction duik
+>>> OK ! [{'comment': '', 'context': '', 'contextId': 0, 'source': 'Help', 'translation': 'Aide'}, {'comment': '', 'context': '', 'contextId': 0, 'source': 'News', 'translation': 'News'}, etc etc]
+
 
 - [ ] generate_translations
     donner une liste de strings bidon, et vérifier qu'on récupère bien une liste de dict avec les valeurs vides par défaut sauf la "source"
