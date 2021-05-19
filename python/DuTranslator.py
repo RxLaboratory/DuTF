@@ -22,6 +22,7 @@
 # along with DuAEF. If not, see <http://www.gnu.org/licenses/>.
 
 import json
+import os
 
 current_language_id = ""
 """The current language id (fr, en, ..)."""
@@ -86,20 +87,28 @@ def get_available():
     # en python, tout ce qu'elle fait correspond aux os.path.isdir, os.path.listdir, etc etc
     # getFiles, c'est justement le os.path.listdir (cf Ramses file manager, on l'utilise celle là, pour lister des fichiers dans un dossier)
     # j'ai un doute c'esty peut etre os.listdir ou autre truc qui ressemble ^^
-    language_files = (settings_prefix + "*" + settings_suffix)
+    settings_folder = "E:/temp"
+    dir_list = os.listdir(settings_folder)
+    machin = os.path.basename(settings_folder)
 
-    for i in range(len(
-            language_files)):
-        file_name = language_files[i].name
-        ## var langId = langName = ""; ??
-        lang_id = lang_name = ""
+    for file in dir_list:
+        if file.startswith(settings_prefix) and file.endswith(settings_suffix):
+            file_name = settings_prefix
+            lang_id = lang_name = ""
+
+
+    # language_files = (settings_prefix + "*" + settings_suffix)
+    #
+    # for file in language_files:
+    #     file_name = file.name
+    #     lang_id = lang_name = ""
 
         # Determine the language name and the language id by reading the file
         # Values are stored at the top so it should be fase
         ## var file = new File(folder.absoluteURI + "/" + fileName);   JS
-        file = settings_folder + "/" + file_name
-        if not file.open("r"):
-            return 1  # Unable to open the file
+            file = settings_folder + "/" + file_name
+            if not file.open("r"):
+                return 1  # Unable to open the file
 
         # Line by line reading
         ## while(langName == "" || langId == "" && !file.eof ) JS : eof ??

@@ -31,3 +31,5 @@ liste_de_strings_bidons = ["bidon1", "bidon2", "bidon3", "bidon4", "bidon1", "bi
 settings_folder = "E:/temp"
 
 get_available()
+
+print(languages)
