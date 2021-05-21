@@ -9,7 +9,7 @@ prefix = "thisScriptFileName_"
 suffix = ".json"
 """The suffix (including file extension) in the translation filenames (str) @default ".json" """
 
-name = "duaef"
+name = "dupyf"
 """The application name (root of the json translations) (str) @default "duaef" """
 
 original_language_id = "en"

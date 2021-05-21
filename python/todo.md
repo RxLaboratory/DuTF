@@ -50,34 +50,47 @@ Dans l'ordre du "plus bas niveau" au "plus haut niveau"
     mettre ce dossier dans translator_settings["settings]["folder"]
     et tester getAvailable() qui renvoie un numéro
     et vérifier après exécution que translator_settings["languages"] contient bien la liste des langues dispo
+>>> OK !
 
-- [ ] get_pretty_name()
+- [X] get_pretty_name()
     à partir de là, les fonctions utilisent la liste créée par get_available qu'il faut donc lancer une fois d'abord
+>>> OK !
 
-- [ ] get_language_id()
+- [X] get_language_id()
+>>> OK !
 
-- [ ] get_pretty_names()
+- [X] get_pretty_names()
+>>> OK ! ['Deutsch', 'English', 'Español', 'Français', 'Polski', '简体中文']
 
-- [ ] set_language(language_id)
+- [X] set_language(language_id)
     vérifier après exécution le contenu de
     translator_settings["current"]
     et
     translator_settings["current_name"]
     et
     translator_settings["localized_strings"]
+>>> OK !
 
-- [ ] set_pretty_language(language_id)
+- [X] set_pretty_language(language_id)
     vérifier après exécution le contenu de
     translator_settings["current"]
     et
     translator_settings["current_name"]
     et
     translator_settings["localized_strings"]
+>>> OK !
 
-- [ ] et enfin tester tr() qui fonctionnera après avoir fait
+- [X] et enfin tester tr() qui fonctionnera après avoir fait
     getAvailable()
     set_language("fr")
     (faut donc avoir un fichier "fr" dans le dossier qui contient les fichiers de traduction)
     tester avec une chaine qui existe dans le fichier de traduction et voir si ça renvoie bien la traduction
     tester aussi avec une chaine de caractères bidons, qui ne sera donc pas traduite
     pour le contexte et les args, on verra plus tard ;)
+
+
+# Pour duf
+
+- [ ] refactor exit codes
+- [ ] dict des langues
+

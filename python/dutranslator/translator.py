@@ -58,17 +58,10 @@ def get_available():
     # Languages are all files we can find in the folder containing translations
     dir_list = os.listdir(settings.folder)
 
-    print (settings.folder)
-    print (settings.prefix)
-
     for file_name in dir_list:
-
-        print(file_name)
 
         if not file_name.startswith(settings.prefix) or not file_name.endswith(settings.suffix):
             continue
-
-        print(file_name)
 
         lang_id = lang_name = ""
 
@@ -76,8 +69,6 @@ def get_available():
             settings.folder,
             file_name
         ))
-
-        print(file_path)
 
         with open( file_path , 'r') as file:
             lang_name = ""
@@ -112,8 +103,6 @@ def get_available():
 
         if lang_id == "":
             continue
-
-        print(lang_id)
 
         languages[lang_id] = {"name": lang_name, "file": file_path}
 
@@ -173,27 +162,22 @@ def set_language(language_id):
         2	The json content doesn't match a translation file
     """
 
+    global localized_strings
+    global current_language_id
+    global current_language_name
+
     for lang_id in languages:
         if lang_id == language_id:
             current_language_id = language_id
-            current_language_name = get_pretty_name(language_id)  # Donner un argument à la fonction ligne 165  ?
+            current_language_name = get_pretty_name(language_id)
 
             if language_id == settings.original_language_id:
                 return 0  # Default language, no translation
 
             # Parse process
             f_path = languages[lang_id]["file"]
-            # var file = new File(f_path);  ??   JS Ligne 284
-            # var jsonData = DuAEF.DuJS.Fs.parseJSON(file);  ?? JS Ligne 286
-            json_data = parse_json(f_path)
-
-            if (not json_data[settings.name]) or (
-                    len(json_data[settings.name]) != 2) or (
-                    not json_data[settings.name[1]["translations"]]):
-                return 2  # Wrong json format
-
-            translations = json_data[settings.name[1]["translations"]]
-            localized_strings = translations
+            
+            localized_strings = parse_json(f_path)
 
             return 0
 
@@ -296,11 +280,21 @@ def parse_json(file):
     if file != None:
         with open(file, "r") as read_file:
             read_string = read_file.read()
+            # avoid JSONDecodeError: Unexpected UTF-8 BOM (decode using utf-8-sig)
+            read_string = read_string.encode().decode('utf-8-sig')
+
             file_dict = json.loads(read_string)
 
-            translations = file_dict["duik"][1]["translations"]
+            if not settings.name in file_dict:
+                return []
 
-            return translations
+            if len( file_dict[settings.name]) != 2:
+                return []
+
+            if not 'translations' in file_dict[settings.name][1]:
+                return []
+
+            return file_dict[settings.name][1]["translations"]
 
 
 def save_json(data, file):
@@ -310,7 +304,7 @@ def save_json(data, file):
         json.dump(data, written_file, indent=4, ensure_ascii=False)
 
 
-def tr(string, context, args):
+def tr(string, context=-1, args=()):
     """
     Translate a given string based on the current setted language.
     see {@link DuAEF.Dutranslator} for more details about the translation framework.
@@ -325,6 +319,10 @@ def tr(string, context, args):
     Returns:
         (str) The translated text or s if nothing is set or available.
     """
+
+    global language_number
+    global localized_strings
+
     # Default args
     use_context_id = True
 
@@ -334,55 +332,54 @@ def tr(string, context, args):
 
     if isinstance(context, str):
         use_context_id = False
-    if context is None:
-        context = -1
-    elif context < 0:
-        context = -1
-    if args is None:
-        args = []
-    if isinstance(args, str):
-        args = [args]
+    if isinstance(context, int):
+        if context is None:
+            context = -1
+        elif context < 0:
+            context = -1
+        if args is None:
+            args = []
+        if isinstance(args, str):
+            args = [args]
 
-    language_number = -1
+
     res = string
-
-    # a function to get the translation id from a given string
-    def get_translation_id(stri, no_caps_nor_spaces=False):
-        for i in range(len(localized_strings)):
-            localized_string = localized_strings[i]
-            test_string = localized_string["source"]
-            if no_caps_nor_spaces:
-                test_string = test_string.replace("\s", "\\n", "\\r", "\g", '')  ## ??
-                ## if (noCapsNorSpaces) testString = testString.replace(/[\s\n\r]+/g,'');
-
-            if test_string == stri:
-                # Check context
-                if use_context_id and (context > -1):
-                    if localized_string["context_id"] == context:
-                        return i
-                elif not use_context_id:
-                    if localized_string["context"] == context:
-                        return i
-                else:
-                    return i
-        return -1
 
     # If a language is set, search for the translation
     if current_language_id != settings.original_language_id:
 
         # Get the translation
-        string_number = get_translation_id(string)  # args : no_caps_nor_spaces ?
+        # print(localized_strings)
+        for i in range(len(localized_strings)):
+            # print(localized_strings)
+            ls = localized_strings[i]
+            # print(localized_strings)
+            test_string = ls["source"]
+            # print(localized_str)
 
-        # If a translation is found, set it to res
-        if string_number > -1:
-            res = localized_strings[string_number]["translation"]
-        if res is None:
-            res = string
-        if res == "":
-            res = string
+            if test_string == string:
+                # Check context
+                if use_context_id and (context > -1):
+                    if ls["contextId"] == context:
+                        string_number = i
+                elif not use_context_id:
+                    if ls["context"] == context:
+                        string_number = i
+                else: 
+                    string_number = i
+            else:
+                string_number = -1
+
+            # If a translation is found, set it to res
+            if string_number > -1:
+                res = localized_strings[string_number]["translation"]
+            if res is None:
+                res = string
+            if res == "":
+                res = string
 
     # Args process
-    while res.index("{#}") != -1:
+    while res.find("{#}") != -1:
 
         # While there is stuff to format
         if len(args) < 1:
