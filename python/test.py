@@ -53,7 +53,7 @@ translator.get_available()
 
 # ************* TEST : set_language *************
 
-translator.set_language("zh_HANS")
+translator.set_language("fr")
 
 # print(translator.current_language_id)
 # print(translator.current_language_name)
@@ -70,21 +70,9 @@ translator.set_language("zh_HANS")
 # ************* TEST : tr *************
 
 
-# test avec fre : OK
-print ( translator.tr("Hello") )
-print ( translator.tr("Welcome {#}", -1, ("Paul")) )
-print ( translator.tr("The Thing") )
-print ( translator.tr("The Thing",1) )
-print ( translator.tr("The Thing",2) )
-print ( translator.tr("The Thing","Home Page") )
-print ( translator.tr("The Thing","Settings UI") )
-
-print("***")
-# test avec fr : OK
-print ( translator.tr("INSTALLATION_en") )
 print ( translator.tr("Next") )
 print ( translator.tr("ERROR") )
-print ( translator.tr("error") )
+print ( translator.tr("error") )    # Ne fonctionne pas à cause des Minuscules
 print ( translator.tr("Duik - Loading icons") )
 print ( translator.tr("Please, check the box called 'Allow Scripts to write files...' in the general preferences of After Effects."))
 

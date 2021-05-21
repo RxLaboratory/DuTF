@@ -280,7 +280,7 @@ def parse_json(file):
     if file != None:
         with open(file, "r") as read_file:
             read_string = read_file.read()
-            # avoid JSONDecodeError: Unexpected UTF-8 BOM (decode using utf-8-sig)
+            # avoid JSONDecodeError: Unexpected UTF-8 BOM (decode using utf-8-sig) :
             read_string = read_string.encode().decode('utf-8-sig')
 
             file_dict = json.loads(read_string)
@@ -327,7 +327,6 @@ def tr(string, context=-1, args=()):
     use_context_id = True
 
     if not isinstance(string, str):
-        ## DuAEF.Debug.throwTypeError( str, "str", "String", "DuTranslator::tr()");
         raise TypeError(string, "str", "String", "DuTranslator::tr()")
 
     if isinstance(context, str):
@@ -349,13 +348,9 @@ def tr(string, context=-1, args=()):
     if current_language_id != settings.original_language_id:
 
         # Get the translation
-        # print(localized_strings)
         for i in range(len(localized_strings)):
-            # print(localized_strings)
             ls = localized_strings[i]
-            # print(localized_strings)
             test_string = ls["source"]
-            # print(localized_str)
 
             if test_string == string:
                 # Check context

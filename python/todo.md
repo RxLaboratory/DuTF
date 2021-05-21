@@ -87,6 +87,7 @@ Dans l'ordre du "plus bas niveau" au "plus haut niveau"
     tester avec une chaine qui existe dans le fichier de traduction et voir si ça renvoie bien la traduction
     tester aussi avec une chaine de caractères bidons, qui ne sera donc pas traduite
     pour le contexte et les args, on verra plus tard ;)
+>>> OK !
 
 
 # Pour duf

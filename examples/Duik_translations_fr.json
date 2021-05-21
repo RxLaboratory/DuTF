@@ -11,8 +11,8 @@
                     "comment": "Un test de commentaire",
                     "context": "Basique 1",
                     "contextId": 0,
-                    "source": "INSTALLATION_en",
-                    "translation": "INSTALLATION_fr"
+                    "source": "INSTALLATION",
+                    "translation": "INSTALLATION"
                 },
                 {
                     "comment": "",
