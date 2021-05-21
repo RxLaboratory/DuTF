@@ -53,7 +53,7 @@ translator.get_available()
 
 # ************* TEST : set_language *************
 
-translator.set_language("fre")
+translator.set_language("zh_HANS")
 
 # print(translator.current_language_id)
 # print(translator.current_language_name)
