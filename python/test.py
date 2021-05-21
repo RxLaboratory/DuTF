@@ -1,4 +1,4 @@
-from DuTF.python.DuTranslator import *
+from dutranslator import translator, settings
 
 # ************* TEST : save_json() *************
 
@@ -28,8 +28,9 @@ liste_de_strings_bidons = ["bidon1", "bidon2", "bidon3", "bidon4", "bidon1", "bi
 
 # ************* TEST : get_available *************
 
-settings_folder = "E:/temp"
+settings.folder = "/home/rainbox/Documents/RAINBOX/DEV-SRC/RxOT/DuTF/examples"
+settings.prefix = "Duik_translations_"
 
-get_available()
+translator.get_available()
 
-print(languages)
+print(translator.languages)

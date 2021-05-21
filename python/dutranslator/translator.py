@@ -21,8 +21,8 @@
 # You should have received a copy of the GNU General Public License
 # along with DuAEF. If not, see <http://www.gnu.org/licenses/>.
 
-import json
-import os
+import json, os, re
+from . import settings, utils
 
 current_language_id = ""
 """The current language id (fr, en, ..)."""
@@ -40,31 +40,6 @@ localized_strings = ()
 """The translated strings  of the current language.
 An array of compounds containing the source, the translation and the context."""
 
-settings = {}
-"""Some Settings for the translator"""
-
-# DuAEF.Dutranslator.Settings.folder = File($.fileName).path + "/";  (JS)
-settings_folder = "thisScriptFile/file/path/"
-"""The folder containing the translation files (str)"""
-
-# DuAEF.Dutranslator.Settings.prefix = File($.fileName).name.substring(0,File($.fileName).name.lastIndexOf('.'))
-# + "_"; (JS)
-settings_prefix = "thisScriptFileName_"
-"""The prefix in the translation filenames (str) @default "thisScriptFile/file/path/" """
-
-settings_suffix = ".json"
-"""The suffix (including file extension) in the translation filenames (str) @default ".json" """
-
-settings_name = "duaef"
-"""The application name (root of the json translations) (str) @default "duaef" """
-
-settings_original_language_id = "en"
-"""The original languageId"""
-
-settings_original_language_name = "English"
-"""The original language name"""
-
-
 def get_available():
     """
     Load the list of available languages.
@@ -75,79 +50,72 @@ def get_available():
         1	One of the file haven't been correctly opened
     """
 
+    global languages
+    languages = {}
     # Add original language
-    languages[settings_original_language_id] = {"name": settings_original_language_name, "file": None}
+    languages[settings.original_language_id] = {"name": settings.original_language_name, "file": None}
 
-    # en JS : lignes 166 à 169
-    # var folder = new Folder(DuAEF.Dutranslator.Settings.folder);
-    # // Get the list of translations
-    # languageFiles = folder.getFiles(DuAEF.Dutranslator.Settings.prefix +'*'+ DuAEF.Dutranslator.Settings.suffix);
-    # >>> D'où sortent le "Folder" et le "getFiles" ?? :-O
-    # TODO Folder est une classe propre à Adobe qui permet de manipuler des dossiers.
-    # en python, tout ce qu'elle fait correspond aux os.path.isdir, os.path.listdir, etc etc
-    # getFiles, c'est justement le os.path.listdir (cf Ramses file manager, on l'utilise celle là, pour lister des fichiers dans un dossier)
-    # j'ai un doute c'esty peut etre os.listdir ou autre truc qui ressemble ^^
-    settings_folder = "E:/temp"
-    dir_list = os.listdir(settings_folder)
-    machin = os.path.basename(settings_folder)
+    # Languages are all files we can find in the folder containing translations
+    dir_list = os.listdir(settings.folder)
 
-    for file in dir_list:
-        if file.startswith(settings_prefix) and file.endswith(settings_suffix):
-            file_name = settings_prefix
-            lang_id = lang_name = ""
+    print (settings.folder)
+    print (settings.prefix)
 
+    for file_name in dir_list:
 
-    # language_files = (settings_prefix + "*" + settings_suffix)
-    #
-    # for file in language_files:
-    #     file_name = file.name
-    #     lang_id = lang_name = ""
+        print(file_name)
 
-        # Determine the language name and the language id by reading the file
-        # Values are stored at the top so it should be fase
-        ## var file = new File(folder.absoluteURI + "/" + fileName);   JS
-            file = settings_folder + "/" + file_name
-            if not file.open("r"):
-                return 1  # Unable to open the file
+        if not file_name.startswith(settings.prefix) or not file_name.endswith(settings.suffix):
+            continue
 
-        # Line by line reading
-        ## while(langName == "" || langId == "" && !file.eof ) JS : eof ??
-        while (lang_name == "") or (lang_id == ""):
-            line = file.readln()
-            index_name = line.rindex("language_name")       # rindex == lastIndexOf (JS)
-            index_id = line.rindex("language_id")
+        print(file_name)
 
-            if (index_name != -1) and (lang_name == ""):
-                index = index_name
-            elif (index_id != -1) and (lang_id == ""):
-                index = index_id
-            else:
-                continue
-            # ..... "lang" : "value"
-            line = line[index: len(line)]       # line = line.substring(index, line.length); (JS)
-            # .lang" : "value"
-            line = line[line.index("\"") + 1 : len(line)]
-            # : "value"
-            line = line[line.index("\"") + 1 : len(line)]
-            # value"
-            line = line[0: line.index("\"")]
-            # value
-            if (index_name != -1) and (lang_name == ""):
-                lang_name = line
-            elif (index_id != -1) and (lang_id == ""):
-                lang_id = line
-            else:
-                continue
+        lang_id = lang_name = ""
 
-        file.close()
+        file_path = utils.build_path((
+            settings.folder,
+            file_name
+        ))
+
+        print(file_path)
+
+        with open( file_path , 'r') as file:
+            lang_name = ""
+            lang_id = ""
+            line = " "
+
+            # Use a regular expression to check for the Language Id and Language Name keys
+            language_id_re = re.compile( '\\s*"languageId"\\s*:\\s*"(.{2,})"' )
+            language_name_re = re.compile( '\\s*"languageName"\\s*:\\s*"(.{2,})"' )
+
+            while (lang_name == "") or (lang_id == "") and line != "":
+                line = file.readline()
+
+                # Check id only if it is not found yet (improves perf)
+                if (lang_id == ""):
+                    match = re.match( language_id_re, line )
+                    if match:
+                        lang_id = match.group(1)
+                        continue
+
+                # Check name only if it is not found yet (improves perf)
+                if (lang_name == ""):
+                    match = re.match( language_name_re, line )
+                    if match:
+                        lang_name = match.group(1)
+                        continue
 
         if lang_id == "":
-            lang_id = file_name.replace(settings_prefix, "").replace(settings_suffix, "")
+            lang_id = file_name.replace(settings.prefix, "").replace(settings.suffix, "")
         if lang_name == "":
             lang_name = lang_id
 
-        languages[lang_id] = {"name": lang_name, "file": settings_folder + "/" + file_name}
+        if lang_id == "":
+            continue
 
+        print(lang_id)
+
+        languages[lang_id] = {"name": lang_name, "file": file_path}
 
 
 def get_pretty_name(lang_id):
@@ -210,7 +178,7 @@ def set_language(language_id):
             current_language_id = language_id
             current_language_name = get_pretty_name(language_id)  # Donner un argument à la fonction ligne 165  ?
 
-            if language_id == settings_original_language_id:
+            if language_id == settings.original_language_id:
                 return 0  # Default language, no translation
 
             # Parse process
@@ -219,12 +187,12 @@ def set_language(language_id):
             # var jsonData = DuAEF.DuJS.Fs.parseJSON(file);  ?? JS Ligne 286
             json_data = parse_json(f_path)
 
-            if (not json_data[settings_name]) or (
-                    len(json_data[settings_name]) != 2) or (
-                    not json_data[settings_name[1]["translations"]]):
+            if (not json_data[settings.name]) or (
+                    len(json_data[settings.name]) != 2) or (
+                    not json_data[settings.name[1]["translations"]]):
                 return 2  # Wrong json format
 
-            translations = json_data[settings_name[1]["translations"]]
+            translations = json_data[settings.name[1]["translations"]]
             localized_strings = translations
 
             return 0
@@ -400,7 +368,7 @@ def tr(string, context, args):
         return -1
 
     # If a language is set, search for the translation
-    if current_language_id != settings_original_language_id:
+    if current_language_id != settings.original_language_id:
 
         # Get the translation
         string_number = get_translation_id(string)  # args : no_caps_nor_spaces ?

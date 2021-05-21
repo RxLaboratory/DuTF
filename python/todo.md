@@ -45,7 +45,7 @@ Dans l'ordre du "plus bas niveau" au "plus haut niveau"
     vérifier le fichier écrit, qui doit etre semblable à un fichier de traduction de duik (bien que "vide" à part les "sources")
 >>> OK ! 
 
-- [ ] get_available()
+- [x] get_available()
     créer un dossier avec plusieurs fichiers de traduction (utiliser ceux de duik)
     mettre ce dossier dans translator_settings["settings]["folder"]
     et tester getAvailable() qui renvoie un numéro
